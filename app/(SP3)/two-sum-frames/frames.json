@@ -1,0 +1,421 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "narration": "An empty map, and one pass to fill it.",
+    "why": "Brute force re-scans the rest of the array for every element. If we instead remember every number we have already walked past, \"is its partner out there?\" collapses into a single lookup.",
+    "variables": {
+      "target": 9,
+      "n": 6,
+      "seen": "{}"
+    },
+    "scene": {
+      "array": {
+        "values": [
+          2,
+          7,
+          11,
+          15,
+          3,
+          6
+        ],
+        "states": [
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle"
+        ]
+      },
+      "map": {
+        "entries": []
+      },
+      "target": 9
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 5,
+    "narration": "i = 0. Pick up 2.",
+    "why": "Each element is touched exactly once. Everything else we need is already behind us, in the map.",
+    "variables": {
+      "target": 9,
+      "n": 6,
+      "seen": "{}",
+      "i": 0,
+      "num": 2
+    },
+    "scene": {
+      "array": {
+        "values": [
+          2,
+          7,
+          11,
+          15,
+          3,
+          6
+        ],
+        "states": [
+          "active",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle"
+        ]
+      },
+      "map": {
+        "entries": []
+      },
+      "target": 9
+    },
+    "changed": [
+      "line",
+      "scene.array.states",
+      "variables.i",
+      "variables.num"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 6,
+    "narration": "2 needs 7 to reach 9.",
+    "why": "This is the pivot. Instead of hunting for a pair, we turn each number into a question with exactly one right answer — and single answers are what a hash map is for.",
+    "variables": {
+      "target": 9,
+      "n": 6,
+      "seen": "{}",
+      "i": 0,
+      "num": 2,
+      "complement": 7
+    },
+    "scene": {
+      "array": {
+        "values": [
+          2,
+          7,
+          11,
+          15,
+          3,
+          6
+        ],
+        "states": [
+          "active",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle"
+        ]
+      },
+      "map": {
+        "entries": []
+      },
+      "target": 9
+    },
+    "changed": [
+      "line",
+      "variables.complement"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 8,
+    "narration": "Have we seen 7? The map is empty, so no.",
+    "why": "One hash lookup, O(1). This single step stands in for the whole of brute force’s inner loop.",
+    "variables": {
+      "target": 9,
+      "n": 6,
+      "seen": "{}",
+      "i": 0,
+      "num": 2,
+      "complement": 7,
+      "found": "no"
+    },
+    "scene": {
+      "array": {
+        "values": [
+          2,
+          7,
+          11,
+          15,
+          3,
+          6
+        ],
+        "states": [
+          "active",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle"
+        ]
+      },
+      "map": {
+        "entries": [],
+        "probeKey": 7
+      },
+      "target": 9
+    },
+    "changed": [
+      "line",
+      "scene.map.probeKey",
+      "variables.found"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 12,
+    "narration": "Remember 2 at index 0.",
+    "why": "The number is the key and the index is the value — the array turned inside out. We look up by value, but we have to return indices.",
+    "variables": {
+      "target": 9,
+      "n": 6,
+      "seen": "{ 2: 0 }",
+      "i": 0,
+      "num": 2,
+      "complement": 7
+    },
+    "scene": {
+      "array": {
+        "values": [
+          2,
+          7,
+          11,
+          15,
+          3,
+          6
+        ],
+        "states": [
+          "seen",
+          "idle",
+          "idle",
+          "idle",
+          "idle",
+          "idle"
+        ]
+      },
+      "map": {
+        "entries": [
+          [
+            2,
+            0
+          ]
+        ]
+      },
+      "target": 9
+    },
+    "changed": [
+      "line",
+      "scene.array.states",
+      "scene.map.entries",
+      "scene.map.probeKey",
+      "variables.found",
+      "variables.seen"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 5,
+    "narration": "i = 1. Pick up 7.",
+    "why": "Each element is touched exactly once. Everything else we need is already behind us, in the map.",
+    "variables": {
+      "target": 9,
+      "n": 6,
+      "seen": "{ 2: 0 }",
+      "i": 1,
+      "num": 7
+    },
+    "scene": {
+      "array": {
+        "values": [
+          2,
+          7,
+          11,
+          15,
+          3,
+          6
+        ],
+        "states": [
+          "seen",
+          "active",
+          "idle",
+          "idle",
+          "idle",
+          "idle"
+        ]
+      },
+      "map": {
+        "entries": [
+          [
+            2,
+            0
+          ]
+        ]
+      },
+      "target": 9
+    },
+    "changed": [
+      "line",
+      "scene.array.states",
+      "variables.complement",
+      "variables.i",
+      "variables.num"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 6,
+    "narration": "7 needs 2 to reach 9.",
+    "why": "This is the pivot. Instead of hunting for a pair, we turn each number into a question with exactly one right answer — and single answers are what a hash map is for.",
+    "variables": {
+      "target": 9,
+      "n": 6,
+      "seen": "{ 2: 0 }",
+      "i": 1,
+      "num": 7,
+      "complement": 2
+    },
+    "scene": {
+      "array": {
+        "values": [
+          2,
+          7,
+          11,
+          15,
+          3,
+          6
+        ],
+        "states": [
+          "seen",
+          "active",
+          "idle",
+          "idle",
+          "idle",
+          "idle"
+        ]
+      },
+      "map": {
+        "entries": [
+          [
+            2,
+            0
+          ]
+        ]
+      },
+      "target": 9
+    },
+    "changed": [
+      "line",
+      "variables.complement"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 8,
+    "narration": "Have we seen 2? Yes — index 0.",
+    "why": "Found by remembering, not by searching. That lookup would have cost the same if the array held six million numbers.",
+    "variables": {
+      "target": 9,
+      "n": 6,
+      "seen": "{ 2: 0 }",
+      "i": 1,
+      "num": 7,
+      "complement": 2,
+      "found": "yes"
+    },
+    "scene": {
+      "array": {
+        "values": [
+          2,
+          7,
+          11,
+          15,
+          3,
+          6
+        ],
+        "states": [
+          "seen",
+          "active",
+          "idle",
+          "idle",
+          "idle",
+          "idle"
+        ]
+      },
+      "map": {
+        "entries": [
+          [
+            2,
+            0
+          ]
+        ],
+        "probeKey": 2
+      },
+      "target": 9
+    },
+    "changed": [
+      "line",
+      "scene.map.probeKey",
+      "variables.found"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 9,
+    "narration": "2 + 7 = 9. Return [0, 1].",
+    "why": "The map bought an O(n) walk in place of O(n²) comparisons. The payoff scales with the length of the array, not with where the answer happens to sit.",
+    "variables": {
+      "target": 9,
+      "n": 6,
+      "seen": "{ 2: 0 }",
+      "i": 1,
+      "num": 7,
+      "complement": 2,
+      "result": "[0, 1]"
+    },
+    "scene": {
+      "array": {
+        "values": [
+          2,
+          7,
+          11,
+          15,
+          3,
+          6
+        ],
+        "states": [
+          "matched",
+          "matched",
+          "idle",
+          "idle",
+          "idle",
+          "idle"
+        ]
+      },
+      "map": {
+        "entries": [
+          [
+            2,
+            0
+          ]
+        ],
+        "probeKey": 2
+      },
+      "target": 9,
+      "result": [
+        0,
+        1
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.array.states",
+      "scene.result",
+      "variables.found",
+      "variables.result"
+    ]
+  }
+]
