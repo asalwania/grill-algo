@@ -6,6 +6,10 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
+# Progress Tracker
+
+Always update the `@specks/progress-tracker.md` progress tracker after any task you have done.
+
 # PROJECT CONTEXT — read before responding.
 
 I'm building a DSA learning web app. Current scope is ONE problem (Two Sum),

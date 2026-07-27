@@ -6,3 +6,4 @@ export {
   type PlayerAction,
 } from "./PlayerProvider";
 export { Controls } from "./Controls";
+export { ApproachTabs } from "./ApproachTabs";

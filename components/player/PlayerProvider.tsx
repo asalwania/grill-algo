@@ -19,6 +19,14 @@ export type PlayerState = {
   language: Language;
   approach: Approach;
   renderMode: RenderMode;
+  /**
+   * Incremented only by RESTART. Scrubbing or stepping back to step 0 via
+   * PREV/SEEK leaves it untouched — F12's camera choreography watches this
+   * (not `step === 0`) to tell "the user pressed restart" apart from "the
+   * user scrubbed back to the start," since only the former should lift its
+   * manual-orbit suspension.
+   */
+  restartNonce: number;
 };
 
 export type PlayerAction =
@@ -69,7 +77,7 @@ function createPlayerReducer(frameCounts: Record<Approach, number>) {
       case "PAUSE":
         return { ...state, isPlaying: false };
       case "RESTART":
-        return { ...state, step: 0 };
+        return { ...state, step: 0, restartNonce: state.restartNonce + 1 };
       case "SEEK":
         return {
           ...state,
@@ -150,6 +158,7 @@ export function PlayerProvider({
     language: initialLanguage,
     approach: initialApproach,
     renderMode: initialRenderMode,
+    restartNonce: 0,
   });
 
   // requestAnimationFrame, not setInterval: accumulating elapsed time against
