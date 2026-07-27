@@ -7,3 +7,4 @@ export {
 } from "./PlayerProvider";
 export { Controls } from "./Controls";
 export { ApproachTabs } from "./ApproachTabs";
+export { LanguageSelector } from "./LanguageSelector";

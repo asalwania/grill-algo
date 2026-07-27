@@ -97,7 +97,7 @@ with `path:line` where it helps a reader jump straight to the code.>
 | F11 | Lookup beam | Done | 2026-07-27 | other agent | `LookupBeam` in `content/problems/two-sum/scene.tsx`; landed in the working tree ahead of F12/F13, see full entry below |
 | F12 | Camera choreography | Done | 2026-07-27 | other agent | `CameraChoreography` in `content/problems/two-sum/scene.tsx`; wired to `SceneShellHandle` via the new `cameraRig` prop, `restartNonce` (`PlayerProvider.tsx`) releases manual-orbit suspension |
 | F13 | Approach toggle | Done | 2026-07-27 | Ajay | `ApproachTabs` (`components/player`), `ComplexityReadout` (`components/panels`), `ApproachTransition`/`HashMapWall`/`LookupBeam`/`CompareBeam`/`CrissCrossBeams` in `content/problems/two-sum/scene.tsx`; see full entry below |
-| F14 | Languages | - | | | |
+| F14 | Languages | Done | 2026-07-27 | Ajay | `content/problems/two-sum/solutions/index.ts`, `components/player/LanguageSelector.tsx`; see full entry below |
 | F15 | Mobile layout | - | | | |
 | F16 | Performance and reduced motion | - | | | |
 | F17 | Content | - | | | |
@@ -182,3 +182,36 @@ already functionally complete in the working tree.
   flourish to the transition window needed no new state at all.
 - Verified with `tsc --noEmit`, `eslint`, `vitest run` (78 passing,
   unchanged), and `next build` (clean production build).
+
+### F14 — Languages
+
+**Status:** Done
+**Date:** 2026-07-27
+**Owner:** Ajay
+
+- `content/problems/two-sum/solutions/index.ts` now exports `solutions:
+  Record<Approach, Solution[]>` (previously only `.gitkeep` existed — this
+  is the file `lib/content.ts`'s `getProblem` has imported from since P3).
+  One `Solution` per language per approach, 8 total. JavaScript's is the
+  canonical listing itself (`OPTIMIZED_LISTING`/`BRUTE_LISTING` from
+  `../trace.ts`) with an identity `lineMap`; Python/Java/Go are hand-written
+  idiomatic listings with their own line numbers.
+- `lineMap` is deliberately not required to be 1:1: Python's
+  `for i, num in enumerate(nums):` and Go's `for i, num := range nums {`
+  both bind the loop variable on the header line, so canonical's separate
+  "read" step (trace line 5) maps onto the same target line as the loop
+  header — two canonical keys, one listing line.
+- `components/player/LanguageSelector.tsx`: four pills (S3's "JavaScript
+  (active), Python, Java, Go"), dispatch-only like `ApproachTabs` —
+  swapping the listing and re-deriving the active line from the new
+  language's `lineMap` both fall out of `state.language` downstream. Not
+  yet mounted anywhere; `app/problems/[slug]/page.tsx` is still the F17/F18
+  stub, same as F11–F13 landed ahead of page wiring.
+- `content/problems/two-sum/solutions/index.test.ts`: for both approaches,
+  asserts every language's `lineMap` has an entry for every distinct
+  `frame.line` the shipped trace produces, and that every mapped target
+  line exists and is non-blank in that language's own listing.
+- Verified with `tsc --noEmit`, `eslint` (clean except pre-existing
+  `design-reference/support.js` warnings, unrelated), `vitest run` (94
+  passing), and `next build` (clean production build, traces regenerate
+  unchanged: optimized 25 / brute 20 frames).
