@@ -1,26 +1,262 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================================
+   EXECUTION VISUALIZER — TOKEN SET
+   ----------------------------------------------------------------------------
+   Tailwind v4 is CSS-first. There is no tailwind.config.ts; this @theme block
+   IS the config. The `--namespace-*: initial` lines below DELETE Tailwind's
+   defaults, so `bg-blue-500`, `text-sm`, `rounded-lg`, `p-7` etc. do not exist
+   and will fail to compile. Only what is declared here is available.
+
+   This is a plain `@theme` (not `@theme inline`), so every token is also
+   emitted as a real CSS custom property on :root. R3F scene code can read
+   them imperatively via getComputedStyle without importing JS constants.
+
+   SPACING IS NAMED IN PIXELS. `p-20` means 20px, NOT 5rem. The whole design
+   export is px-based; mapping 1:1 avoids a translation layer.
+   ========================================================================= */
+
+@theme {
+  /* --- delete Tailwind's defaults ---------------------------------------- */
+  --color-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+  --font-weight-*: initial;
+  --tracking-*: initial;
+  --leading-*: initial;
+  --spacing-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-shadow-*: initial;
+  --blur-*: initial;
+  --ease-*: initial;
+  --animate-*: initial;
+
+  /* --- primitives Tailwind needs to function ------------------------------ */
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-inherit: inherit;
+
+  /* ==========================================================================
+     1. SURFACES
+     ====================================================================== */
+  --color-surface-canvas: #0a0b0f;
+  --color-surface-raised: #14161d;
+  --color-surface-glass: rgba(20, 22, 29, 0.72);
+  /* UNRESOLVED (§1): PI skeleton cards only — 0.5 alpha AND no backdrop-blur.
+     Kept as its own token; delete if skeletons should just use surface-glass. */
+  --color-surface-glass-dim: rgba(20, 22, 29, 0.5);
+  /* Undocumented in DSR but used identically in LVD/LVM/MS: the radial
+     gradient centre behind every visualization stage. */
+  --color-surface-spotlight: #12141c;
+  --color-surface-floor: rgba(255, 255, 255, 0.028); /* LVD 3D floor plane */
+  --color-surface-skeleton: rgba(255, 255, 255, 0.035); /* PI skeleton bar fill */
+
+  /* ==========================================================================
+     2. TEXT
+     ====================================================================== */
+  --color-text-primary: #e8eaf0;
+  --color-text-muted: #8b93a7;
+  /* The one reused alpha tier (inactive line numbers, idle index labels).
+     MS's 0.5 / 0.55 / 0.7 / 0.85 one-offs collapse onto this or text-muted. */
+  --color-text-muted-dim: rgba(139, 147, 167, 0.6);
+
+  /* ==========================================================================
+     3. BORDERS / HAIRLINES
+     ====================================================================== */
+  --color-border-hairline: rgba(255, 255, 255, 0.08); /* outer card edges */
+  --color-border-hairline-subtle: rgba(255, 255, 255, 0.06); /* inner dividers */
+  --color-border-idle: rgba(255, 255, 255, 0.1); /* untouched array tiles */
+  /* RESOLVED (§3): LVD's 0.09 -> 0.08. LVM + MS agree, and it matches
+     border-hairline. Same value as border-hairline, named for intent. */
+  --color-border-idle-slot: rgba(255, 255, 255, 0.08);
+
+  /* ==========================================================================
+     4. SIGNAL / ACCENT
+     Four hues, one RGB each. Alpha ramp is role-based, not per-hue-invented:
+     fill-weak .07 -> fill .10/.12/.14 -> fill-strong .20 ->
+     border .35 -> border-mid .45 -> border-strong .70
+     ====================================================================== */
+
+  /* cyan — "currently executing" */
+  --color-signal-cyan: #3ddcff;
+  --color-signal-cyan-on: #3ddcff; /* no lighter pairing exists; see §4 flag */
+  --color-signal-cyan-fill-weak: rgba(61, 220, 255, 0.07);
+  --color-signal-cyan-fill: rgba(61, 220, 255, 0.14);
+  --color-signal-cyan-fill-strong: rgba(61, 220, 255, 0.2);
+  --color-signal-cyan-border: rgba(61, 220, 255, 0.35);
+  --color-signal-cyan-border-mid: rgba(61, 220, 255, 0.45);
+  --color-signal-cyan-border-strong: rgba(61, 220, 255, 0.7);
+
+  /* amber — "comparison in progress" */
+  --color-signal-amber: #ffb454;
+  --color-signal-amber-on: #ffb454; /* no lighter pairing exists; see §4 flag */
+  --color-signal-amber-fill: rgba(255, 180, 84, 0.1);
+  --color-signal-amber-border: rgba(255, 180, 84, 0.35);
+  --color-signal-amber-border-mid: rgba(255, 180, 84, 0.45);
+
+  /* violet — "stored in memory" */
+  --color-signal-violet: #a78bfa;
+  --color-signal-violet-on: #c4b2fd;
+  --color-signal-violet-fill: rgba(167, 139, 250, 0.12);
+  --color-signal-violet-fill-strong: rgba(167, 139, 250, 0.16);
+  --color-signal-violet-border: rgba(167, 139, 250, 0.38);
+  --color-signal-violet-border-mid: rgba(167, 139, 250, 0.45);
+  --color-signal-violet-beam: rgba(167, 139, 250, 0.9); /* mobile beam gradient */
+
+  /* green — "match / return" */
+  --color-signal-green: #4ade80;
+  --color-signal-green-on: #86efac;
+  --color-signal-green-fill: rgba(74, 222, 128, 0.1);
+  --color-signal-green-fill-strong: rgba(74, 222, 128, 0.12);
+  --color-signal-green-border: rgba(74, 222, 128, 0.35);
+
+  /* declared in all 5 files, currently renders nowhere (§4) */
+  --color-link-cyan-hover: #8feaff;
+
+  /* ==========================================================================
+     5. TYPOGRAPHY
+     Font families resolve through next/font's generated variables, which are
+     applied to <html> in app/layout.tsx.
+     ====================================================================== */
+  --font-display: var(--font-display-family), ui-serif, Georgia, serif;
+  --font-sans: var(--font-sans-family), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono-family), ui-monospace, SFMono-Regular, monospace;
+
+  /* 600 is imported by the Figma export but used nowhere — not exposed. */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+
+  --text-display-48: 48px;
+  --text-display-48--line-height: 1.1;
+  --text-display-32: 32px;
+  --text-display-32--line-height: 1.2;
+  /* RESOLVED (§5): 1.2, matching LVM + MS. DSR's 1.3 and PI's 1.25 drop. */
+  --text-display-24: 24px;
+  --text-display-24--line-height: 1.2;
+
+  --text-body-16: 16px;
+  --text-body-16--line-height: 1.55;
+
+  /* Narration line in the compare bar. NOTE: desktop is 16px, not 14 — see
+     the §5 flag. Named by role, not by size, so the sizes can't be misread. */
+  --text-narration: 16px;
+  --text-narration--line-height: 1.5;
+  --text-narration-sm: 14px;
+  --text-narration-sm--line-height: 1.5;
+
+  /* Badges / pills / nav / meta. Single-line by definition — deliberately no
+     line-height, so it inherits rather than inventing a value. */
+  --text-mono-13: 13px;
+
+  --text-code-14: 14px; /* desktop code pane */
+  --text-code-14--line-height: 1.65;
+  --text-code-13: 13px; /* mobile code pane — real, just absent from DSR */
+  --text-code-13--line-height: 1.6;
+
+  /* ==========================================================================
+     6. SPACING — px-named. `gap-20` == 20px.
+     DSR's documented ladder (4/8/12/16/24/32/48/64) plus the five values the
+     product actually uses but never documented: 10, 14, 20, 22, 72.
+     ====================================================================== */
+  /* Structural, not a design decision: deleting the --spacing root also
+     removes bare-value resolution, so inset-0 / p-0 / gap-0 need this key. */
+  --spacing-0: 0px;
+
+  --spacing-4: 4px;
+  --spacing-8: 8px;
+  --spacing-10: 10px; /* icon-row / control-row gaps */
+  --spacing-12: 12px;
+  --spacing-14: 14px; /* component-internal group gaps */
+  --spacing-16: 16px;
+  --spacing-20: 20px; /* mobile screen-edge margin — in 4 of 5 files */
+  --spacing-22: 22px; /* top-bar vertical padding, LVD 3D tile row gap */
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-48: 48px;
+  --spacing-56: 56px; /* MS mockup gutter — documentation canvas only */
+  --spacing-64: 64px;
+  --spacing-72: 72px; /* page-level gutter */
+  /* Component dimensions, not gaps — the array-tile sizes (14 occurrences).
+     Exposed so tiles don't need arbitrary values; NOT part of the gap ladder. */
+  --spacing-50: 50px; /* mobile array tile */
+  --spacing-96: 96px; /* desktop array tile */
+
+  /* ==========================================================================
+     6b. TRACKING
+     NOT COVERED BY THE AUDIT. Letter-spacing is used on every mono caps label
+     (.08 / .1 / .12 / .14em) and on display type (-0.01em), across all 5 files.
+     Exposed as-is rather than invented; the four mono steps have no distinct
+     roles and probably want consolidating to one or two.
+     ====================================================================== */
+  --tracking-display: -0.01em;
+  --tracking-label: 0.08em;
+  --tracking-label-wide: 0.1em;
+  --tracking-label-wider: 0.12em;
+  --tracking-label-widest: 0.14em;
+
+  /* ==========================================================================
+     7. RADIUS
+     ====================================================================== */
+  --radius-pill: 999px;
+  --radius-card: 14px;
+  --radius-control: 10px; /* desktop icon buttons, array tiles */
+  --radius-chip: 8px;
+  --radius-bar: 7px; /* PI mini bar-chart only */
+  --radius-cell-sm: 5px; /* mobile slot-grid cells */
+  --radius-tag-sm: 4px; /* skeleton text lines */
+
+  /* ==========================================================================
+     8. EFFECTS
+     ====================================================================== */
+  --blur-panel: 18px;
+  --default-transition-duration: 0.16s;
+  --default-transition-timing-function: ease;
+  --ease-standard: ease;
+
+  /* Shared across every file: the cyan node dot. */
+  --shadow-node: 0 0 16px rgba(61, 220, 255, 0.75);
+
+  /* ------------------------------------------------------------------------
+     COMPONENT GLOWS — UNRESOLVED desktop/mobile fork (§9).
+     LVM and MS agree with each other; LVD differs on all four. Both sets are
+     kept so either platform renders exactly, and so the fork stays visible
+     instead of being silently averaged away.
+     --------------------------------------------------------------------- */
+  --shadow-tile-active: 0 0 40px rgba(61, 220, 255, 0.55);
+  --shadow-tile-active-mobile: 0 0 34px rgba(61, 220, 255, 0.6);
+  --shadow-tile-done: 0 0 26px rgba(167, 139, 250, 0.3);
+  --shadow-tile-done-mobile: 0 0 20px rgba(167, 139, 250, 0.25);
+  --shadow-slot-filled: 0 0 24px rgba(167, 139, 250, 0.22);
+  --shadow-slot-filled-mobile: 0 0 18px rgba(167, 139, 250, 0.3);
+  --shadow-beam: 0 0 26px rgba(61, 220, 255, 0.75);
+  --shadow-beam-mobile: 0 0 20px rgba(61, 220, 255, 0.7);
+
+  --animate-beam-pulse: beam-pulse 2.4s ease-in-out infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes beam-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
   }
 }
 
+/* The app is dark-only. No prefers-color-scheme branch by design. */
+html {
+  background-color: var(--color-surface-canvas);
+  color-scheme: dark;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-surface-canvas);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-normal);
+  -webkit-font-smoothing: antialiased;
 }
