@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #0A0B0F; }
+  a { color: #3DDCFF; text-decoration: none; }
+  a:hover { color: #8FEAFF; }
+  @keyframes beamPulse { 0%,100% { opacity: .6 } 50% { opacity: 1 } }
+</style>
+</helmet>
+<div style="width:1440px;height:900px;display:grid;grid-template-columns:45% 55%;background:#0A0B0F;color:#E8EAF0;font-family:Inter,system-ui,sans-serif;overflow:hidden">
+
+  <div style="border-right:1px solid rgba(255,255,255,0.08);display:flex;flex-direction:column;min-height:0">
+
+    <div style="padding:32px 32px 24px;display:flex;flex-direction:column;gap:16px;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <div style="display:flex;align-items:center;gap:14px">
+        <h1 style="font-family:'Instrument Serif',serif;font-size:32px;line-height:1.2;font-weight:400;margin:0">1. Two Sum</h1>
+        <div style="display:flex;gap:8px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;padding:5px 12px;border-radius:999px;color:#86EFAC;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.35)">EASY</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;padding:5px 12px;border-radius:999px;color:#C4B2FD;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.35)">HASH MAP</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:28px;margin-top:2px">
+        <button style="background:transparent;border:none;padding:0 0 10px;font-family:Inter,sans-serif;font-size:14px;font-weight:500;color:#E8EAF0;cursor:pointer;border-bottom:1px solid #3DDCFF">Optimized</button>
+        <button style="background:transparent;border:none;padding:0 0 10px;font-family:Inter,sans-serif;font-size:14px;font-weight:500;color:#8B93A7;cursor:pointer;border-bottom:1px solid transparent;transition:color .16s ease" style-hover="color:#E8EAF0">Brute Force</button>
+      </div>
+    </div>
+
+    <div style="padding:18px 32px;display:flex;gap:8px;border-bottom:1px solid rgba(255,255,255,0.08)">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:13px;padding:6px 14px;border-radius:999px;color:#3DDCFF;background:rgba(61,220,255,0.09);border:1px solid rgba(61,220,255,0.45)">JavaScript</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:13px;padding:6px 14px;border-radius:999px;color:#8B93A7;background:transparent;border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:color .16s ease" style-hover="color:#E8EAF0">Python</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:13px;padding:6px 14px;border-radius:999px;color:#8B93A7;background:transparent;border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:color .16s ease" style-hover="color:#E8EAF0">Java</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:13px;padding:6px 14px;border-radius:999px;color:#8B93A7;background:transparent;border:1px solid rgba(255,255,255,0.08);cursor:pointer;transition:color .16s ease" style-hover="color:#E8EAF0">Go</span>
+    </div>
+
+    <div style="flex:1;min-height:0;overflow:hidden;padding:20px 0 8px">
+      <sc-for list="{{ lines }}" as="ln" hint-placeholder-count="12">
+        <div style="display:grid;grid-template-columns:64px 1fr;align-items:center;height:{{ ln.h }};background:{{ ln.bg }};border-left:2px solid {{ ln.mark }}">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:{{ ln.numColor }};text-align:right;padding-right:18px">{{ ln.n }}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.65;white-space:pre;color:#8B93A7">{{ ln.code }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="border-top:1px solid rgba(255,255,255,0.08);padding:20px 32px 24px;display:flex;flex-direction:column;gap:16px">
+      <div style="position:relative;height:6px;border-radius:999px;background:rgba(255,255,255,0.08)">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:29.2%;border-radius:999px;background:#3DDCFF;box-shadow:0 0 18px rgba(61,220,255,0.55)"></div>
+        <div style="position:absolute;left:29.2%;top:50%;width:14px;height:14px;margin-left:-7px;margin-top:-7px;border-radius:999px;background:#0A0B0F;border:2px solid #3DDCFF;box-shadow:0 0 16px rgba(61,220,255,0.75)"></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;gap:10px;align-items:center">
+          <button style="width:44px;height:44px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .16s ease" style-hover="color:#E8EAF0;border-color:rgba(61,220,255,0.45);background:rgba(61,220,255,0.07)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M11 3.5L5 8l6 4.5z" fill="currentColor"></path><rect x="3.5" y="3.5" width="1.5" height="9" fill="currentColor"></rect></svg>
+          </button>
+          <button style="width:44px;height:44px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .16s ease" style-hover="color:#E8EAF0;border-color:rgba(61,220,255,0.45);background:rgba(61,220,255,0.07)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <button style="width:52px;height:44px;border-radius:10px;background:rgba(61,220,255,0.08);border:1px solid rgba(61,220,255,0.45);color:#3DDCFF;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .16s ease" style-hover="background:rgba(61,220,255,0.14)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 3.5l7 4.5-7 4.5z" fill="currentColor"></path></svg>
+          </button>
+          <button style="width:44px;height:44px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .16s ease" style-hover="color:#E8EAF0;border-color:rgba(61,220,255,0.45);background:rgba(61,220,255,0.07)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <button style="width:44px;height:44px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .16s ease" style-hover="color:#E8EAF0;border-color:rgba(61,220,255,0.45);background:rgba(61,220,255,0.07)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 3.5L11 8l-6 4.5z" fill="currentColor"></path><rect x="11" y="3.5" width="1.5" height="9" fill="currentColor"></rect></svg>
+          </button>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">1.0×</span>
+          <div style="display:inline-flex;align-items:center;gap:10px;padding:9px 18px;border-radius:999px;background:#14161D;border:1px solid rgba(255,255,255,0.08);font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em">
+            <span style="width:6px;height:6px;border-radius:999px;background:#3DDCFF;box-shadow:0 0 10px rgba(61,220,255,0.9)"></span>
+            <span style="color:#E8EAF0">STEP 7</span><span style="color:#8B93A7">/ 24</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;min-height:0;background:#0A0B0F">
+    <div style="padding:22px 36px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:14px;white-space:nowrap;overflow:hidden">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;color:#FFB454">COMPARE</span>
+      <span style="width:1px;height:14px;background:rgba(255,255,255,0.08)"></span>
+      <span style="font-size:16px;line-height:1.5;color:#E8EAF0;overflow:hidden;text-overflow:ellipsis">Looking for complement <span style="font-family:'JetBrains Mono',monospace;color:#FFB454">−2</span> in the map — not found, so store <span style="font-family:'JetBrains Mono',monospace;color:#A78BFA">11 → 2</span>.</span>
+    </div>
+
+    <div style="position:relative;flex:1;min-height:0;overflow:hidden;background:radial-gradient(120% 90% at 50% 20%, #12141C 0%, #0A0B0F 68%)">
+
+      <div style="position:absolute;inset:0;perspective:1100px;perspective-origin:50% 42%">
+        <div style="position:absolute;left:50%;top:52%;transform:translate(-50%,-50%) rotateX(58deg);transform-style:preserve-3d;width:760px;height:520px">
+          <div style="position:absolute;inset:0;background:linear-gradient(rgba(255,255,255,0.028),rgba(255,255,255,0)) ;border:1px solid rgba(255,255,255,0.06);border-radius:8px"></div>
+          <sc-for list="{{ gridLines }}" as="g" hint-placeholder-count="8">
+            <div style="position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,0.05);top:{{ g.top }}"></div>
+          </sc-for>
+          <div style="position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);display:flex;gap:22px;transform-style:preserve-3d">
+            <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="5">
+              <div style="width:96px;height:96px;border-radius:10px;background:{{ t.bg }};border:1px solid {{ t.border }};box-shadow:{{ t.glow }}"></div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="position:absolute;left:50%;top:26%;transform:translate(-50%,-50%) translateZ(-320px);transform-style:preserve-3d;display:flex;flex-direction:column;gap:14px">
+          <sc-for list="{{ slots }}" as="s" hint-placeholder-count="4">
+            <div style="width:210px;height:56px;border-radius:8px;background:{{ s.bg }};border:1px solid {{ s.border }};box-shadow:{{ s.glow }}"></div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="position:absolute;left:50%;top:34%;width:3px;height:210px;margin-left:-70px;background:linear-gradient(#3DDCFF,rgba(61,220,255,0));box-shadow:0 0 26px rgba(61,220,255,0.75);border-radius:999px;animation:beamPulse 2.4s ease-in-out infinite"></div>
+
+      <div style="position:absolute;left:32px;bottom:32px;border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(20,22,29,0.72);backdrop-filter:blur(18px);padding:20px 24px;display:flex;flex-direction:column;gap:14px;min-width:220px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;color:#8B93A7">VARIABLES</div>
+        <div style="height:1px;background:rgba(255,255,255,0.08)"></div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.4">
+          <div style="display:flex;justify-content:space-between;gap:28px"><span style="color:#8B93A7">i</span><span style="color:#3DDCFF">2</span></div>
+          <div style="display:flex;justify-content:space-between;gap:28px"><span style="color:#8B93A7">num</span><span style="color:#E8EAF0">11</span></div>
+          <div style="display:flex;justify-content:space-between;gap:28px"><span style="color:#8B93A7">complement</span><span style="color:#FFB454">−2</span></div>
+        </div>
+      </div>
+
+      <div style="position:absolute;right:32px;bottom:32px;display:flex;padding:3px;border-radius:999px;background:#14161D;border:1px solid rgba(255,255,255,0.08);font-family:'JetBrains Mono',monospace;font-size:13px">
+        <button style="padding:7px 16px;border-radius:999px;border:none;background:transparent;color:#8B93A7;cursor:pointer;transition:color .16s ease" style-hover="color:#E8EAF0">2D</button>
+        <button style="padding:7px 16px;border-radius:999px;border:1px solid rgba(61,220,255,0.45);background:rgba(61,220,255,0.1);color:#3DDCFF;cursor:pointer">3D</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  renderVals() {
+    const src = [
+      "function twoSum(nums, target) {",
+      "  const seen = new Map();",
+      "",
+      "  for (let i = 0; i < nums.length; i++) {",
+      "    const complement = target - nums[i];",
+      "",
+      "    if (seen.has(complement)) {",
+      "      return [seen.get(complement), i];",
+      "    }",
+      "",
+      "    seen.set(nums[i], i);",
+      "  }",
+      "",
+      "  return [];",
+      "}"
+    ];
+    const active = 5;
+    const lines = src.map((code, idx) => {
+      const n = idx + 1;
+      const on = n === active;
+      return {
+        n: String(n),
+        code: code === "" ? " " : code,
+        h: "26px",
+        bg: on ? "rgba(61,220,255,0.07)" : "transparent",
+        mark: on ? "#3DDCFF" : "transparent",
+        numColor: on ? "#3DDCFF" : "rgba(139,147,167,0.6)"
+      };
+    });
+
+    const tileStates = ["done", "done", "active", "idle", "idle"];
+    const paint = {
+      idle:   { bg: "rgba(255,255,255,0.04)", border: "rgba(255,255,255,0.10)", glow: "none" },
+      done:   { bg: "rgba(167,139,250,0.14)", border: "rgba(167,139,250,0.40)", glow: "0 0 26px rgba(167,139,250,0.30)" },
+      active: { bg: "rgba(61,220,255,0.18)",  border: "rgba(61,220,255,0.65)",  glow: "0 0 40px rgba(61,220,255,0.55)" }
+    };
+
+    return {
+      lines,
+      tiles: tileStates.map(s => paint[s]),
+      slots: [
+        { bg: "rgba(167,139,250,0.12)", border: "rgba(167,139,250,0.38)", glow: "0 0 24px rgba(167,139,250,0.22)" },
+        { bg: "rgba(167,139,250,0.12)", border: "rgba(167,139,250,0.38)", glow: "0 0 24px rgba(167,139,250,0.22)" },
+        { bg: "rgba(255,180,84,0.10)",  border: "rgba(255,180,84,0.45)",  glow: "0 0 30px rgba(255,180,84,0.30)" },
+        { bg: "rgba(255,255,255,0.03)", border: "rgba(255,255,255,0.09)", glow: "none" }
+      ],
+      gridLines: [1,2,3,4,5,6,7].map(i => ({ top: (i * 12.5) + "%" }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #0A0B0F; }
+  a { color: #3DDCFF; text-decoration: none; }
+  a:hover { color: #8FEAFF; }
+  @keyframes shimmerSweep { 0% { transform: translateX(-60%) } 100% { transform: translateX(160%) } }
+  @keyframes indeterminate { 0% { left: -34% } 100% { left: 100% } }
+  @keyframes beamPulse { 0%,100% { opacity: .6 } 50% { opacity: 1 } }
+</style>
+</helmet>
+<div style="background:#0A0B0F;color:#E8EAF0;font-family:Inter,system-ui,sans-serif;padding:64px;display:flex;gap:56px;align-items:flex-start">
+
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;color:#8B93A7">01 · LOADING</div>
+    <div style="width:390px;height:844px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);border-radius:16px;background:#0A0B0F;display:flex;flex-direction:column">
+      <div style="height:338px;flex:none;position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.08);background:radial-gradient(130% 100% at 50% 24%, #12141C 0%, #0A0B0F 70%)">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:rgba(255,255,255,0.06);overflow:hidden">
+          <div style="position:absolute;top:0;width:34%;height:2px;background:#3DDCFF;box-shadow:0 0 14px rgba(61,220,255,0.8);animation:indeterminate 1.4s cubic-bezier(.4,0,.2,1) infinite"></div>
+        </div>
+        <div style="position:absolute;top:22px;left:20px;font-family:'Instrument Serif',serif;font-size:24px;line-height:1.2">1. Two Sum</div>
+        <div style="position:absolute;left:50%;top:56%;transform:translate(-50%,-50%);display:flex;gap:12px">
+          <sc-for list="{{ six }}" as="s" hint-placeholder-count="6">
+            <div style="width:50px;height:50px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)"></div>
+          </sc-for>
+        </div>
+        <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
+          <div style="position:absolute;top:0;bottom:0;width:45%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,0.045),rgba(255,255,255,0));animation:shimmerSweep 2.2s ease-in-out infinite"></div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:28px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;color:#8B93A7">GENERATING FRAMES</div>
+      </div>
+
+      <div style="flex:none;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.08)">
+        <div style="height:10px;width:64%;border-radius:4px;background:rgba(255,255,255,0.06)"></div>
+      </div>
+
+      <div style="flex:1;min-height:0;overflow-y:auto;padding:8px 0 6px">
+        <sc-for list="{{ dimLines }}" as="ln" hint-placeholder-count="12">
+          <div style="display:grid;grid-template-columns:40px 1fr;align-items:center;height:24px;border-left:2px solid transparent">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(139,147,167,0.6);text-align:right;padding-right:12px">{{ ln.n }}</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;white-space:pre;color:#8B93A7">{{ ln.code }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="flex:none;border-top:1px solid rgba(255,255,255,0.08);background:#14161D;padding:20px;display:flex;flex-direction:column;gap:16px;opacity:.5">
+        <div style="height:6px;border-radius:999px;background:rgba(255,255,255,0.08)"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="width:46px;height:46px;border-radius:999px;border:1px solid rgba(255,255,255,0.08)"></div>
+          <div style="width:46px;height:46px;border-radius:999px;border:1px solid rgba(255,255,255,0.08)"></div>
+          <div style="width:60px;height:60px;border-radius:999px;border:1px solid rgba(255,255,255,0.10)"></div>
+          <div style="width:46px;height:46px;border-radius:999px;border:1px solid rgba(255,255,255,0.08)"></div>
+          <div style="width:66px;height:46px;border-radius:999px;border:1px solid rgba(255,255,255,0.08)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;color:#8B93A7">02 · WEBGL UNAVAILABLE</div>
+    <div style="width:390px;height:844px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);border-radius:16px;background:#0A0B0F;display:flex;flex-direction:column">
+      <div style="height:338px;box-sizing:border-box;flex:none;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.08);background:#0A0B0F;padding:14px 20px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;color:#8B93A7">ARRAY</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(139,147,167,0.7)">n = 6</div>
+        </div>
+        <div style="flex:none;border:1px solid rgba(255,255,255,0.08);border-radius:10px;overflow:hidden">
+          <sc-for list="{{ arrayRows }}" as="r" hint-placeholder-count="6">
+            <div style="display:grid;grid-template-columns:40px 1fr auto;align-items:center;gap:12px;padding:4px 14px;border-bottom:1px solid rgba(255,255,255,0.06);background:{{ r.bg }};font-family:'JetBrains Mono',monospace;font-size:13px">
+              <span style="color:rgba(139,147,167,0.7)">{{ r.i }}</span>
+              <span style="color:{{ r.valColor }}">{{ r.v }}</span>
+              <span style="color:{{ r.stateColor }};letter-spacing:.08em">{{ r.state }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:2px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;color:#8B93A7">MAP</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:rgba(139,147,167,0.7)">2 entries</div>
+        </div>
+        <div style="flex:none;border:1px solid rgba(255,255,255,0.08);border-radius:10px;overflow:hidden">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:5px 14px;border-bottom:1px solid rgba(255,255,255,0.06);font-family:'JetBrains Mono',monospace;font-size:13px;color:#C4B2FD"><span>2</span><span style="text-align:right">→ 0</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:5px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#C4B2FD"><span>7</span><span style="text-align:right">→ 1</span></div>
+        </div>
+        <div style="font-size:13px;line-height:1.5;color:rgba(139,147,167,0.85);margin-top:2px">3D unavailable — showing data view.</div>
+      </div>
+
+      <div style="flex:none;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.08);font-size:14px;line-height:1.5;color:#8B93A7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">11's complement is −2 — not in the map yet.</div>
+
+      <div style="flex:1;min-height:0;overflow-y:auto;padding:8px 0 6px">
+        <sc-for list="{{ lines }}" as="ln" hint-placeholder-count="12">
+          <div style="display:grid;grid-template-columns:40px 1fr;align-items:center;height:24px;background:{{ ln.bg }};border-left:2px solid {{ ln.mark }}">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:{{ ln.numColor }};text-align:right;padding-right:12px">{{ ln.n }}</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;white-space:pre;color:#8B93A7">{{ ln.code }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="flex:none;border-top:1px solid rgba(255,255,255,0.08);background:#14161D;padding:16px 20px 20px;display:flex;flex-direction:column;gap:16px">
+        <div style="position:relative;height:6px;border-radius:999px;background:rgba(255,255,255,0.08)">
+          <div style="position:absolute;left:0;top:0;bottom:0;width:29.2%;border-radius:999px;background:#3DDCFF;box-shadow:0 0 18px rgba(61,220,255,0.55)"></div>
+          <div style="position:absolute;left:29.2%;top:50%;width:14px;height:14px;margin-left:-7px;margin-top:-7px;border-radius:999px;background:#0A0B0F;border:2px solid #3DDCFF;box-shadow:0 0 16px rgba(61,220,255,0.75)"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <button style="width:46px;height:46px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8a5 5 0 105-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M3 4.5V8h3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <button style="width:46px;height:46px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <button style="width:60px;height:60px;border-radius:999px;background:rgba(61,220,255,0.14);border:1px solid rgba(61,220,255,0.55);color:#3DDCFF;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 28px rgba(61,220,255,0.35)">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><rect x="4" y="3.5" width="2.6" height="9" rx="1" fill="currentColor"></rect><rect x="9.4" y="3.5" width="2.6" height="9" rx="1" fill="currentColor"></rect></svg>
+          </button>
+          <button style="width:46px;height:46px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <button style="height:46px;padding:0 18px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;font-family:'JetBrains Mono',monospace;font-size:13px;cursor:pointer">1.5x</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;color:#8B93A7">03 · REDUCED MOTION</div>
+    <div style="width:390px;height:844px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);border-radius:16px;background:#0A0B0F;display:flex;flex-direction:column">
+      <div style="height:338px;flex:none;position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,0.08);background:radial-gradient(130% 100% at 50% 24%, #12141C 0%, #0A0B0F 70%)">
+        <div style="position:absolute;top:16px;left:20px;font-family:'Instrument Serif',serif;font-size:24px;line-height:1.2">1. Two Sum</div>
+        <div style="position:absolute;top:18px;right:20px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em;padding:5px 12px;border-radius:999px;color:#8B93A7;background:#14161D;border:1px solid rgba(255,255,255,0.08)">MOTION REDUCED</div>
+
+        <div style="position:absolute;inset:0;perspective:820px;perspective-origin:50% 46%">
+          <div style="position:absolute;left:50%;top:36%;transform:translate(-50%,-50%) translateZ(-260px);display:grid;grid-template-columns:repeat(6,44px);grid-auto-rows:22px;gap:8px">
+            <sc-for list="{{ slots }}" as="s" hint-placeholder-count="12">
+              <div style="border-radius:5px;background:{{ s.bg }};border:1px solid {{ s.border }};box-shadow:{{ s.glow }}"></div>
+            </sc-for>
+          </div>
+          <div style="position:absolute;left:50%;top:70%;transform:translate(-50%,-50%) rotateX(52deg);transform-style:preserve-3d">
+            <div style="display:flex;gap:12px">
+              <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="6">
+                <div style="width:50px;height:50px;border-radius:10px;background:{{ t.bg }};border:1px solid {{ t.border }};box-shadow:{{ t.glow }}"></div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div style="position:absolute;left:50%;top:39%;margin-left:-30px;width:2px;height:92px;background:linear-gradient(rgba(167,139,250,0.9),#3DDCFF);box-shadow:0 0 20px rgba(61,220,255,0.7);border-radius:999px"></div>
+
+        <div style="position:absolute;left:0;right:0;bottom:26px;display:flex;justify-content:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px">
+          <sc-for list="{{ labels }}" as="l" hint-placeholder-count="6">
+            <div style="width:50px;text-align:center;color:{{ l.color }}">{{ l.v }}</div>
+          </sc-for>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:8px;display:flex;justify-content:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px">
+          <sc-for list="{{ idxLabels }}" as="l" hint-placeholder-count="6">
+            <div style="width:50px;text-align:center;color:{{ l.color }}">{{ l.v }}</div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="flex:none;padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.08);font-size:14px;line-height:1.5;color:#8B93A7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">11's complement is −2 — not in the map yet.</div>
+
+      <div style="flex:1;min-height:0;overflow-y:auto;padding:8px 0 6px">
+        <sc-for list="{{ lines }}" as="ln" hint-placeholder-count="12">
+          <div style="display:grid;grid-template-columns:40px 1fr;align-items:center;height:24px;background:{{ ln.bg }};border-left:2px solid {{ ln.mark }}">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:{{ ln.numColor }};text-align:right;padding-right:12px">{{ ln.n }}</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;white-space:pre;color:#8B93A7">{{ ln.code }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="flex:none;border-top:1px solid rgba(255,255,255,0.08);background:#14161D;padding:16px 20px 20px;display:flex;flex-direction:column;gap:16px">
+        <div style="position:relative;height:6px;border-radius:999px;background:rgba(255,255,255,0.08)">
+          <div style="position:absolute;left:0;top:0;bottom:0;width:29.2%;border-radius:999px;background:#3DDCFF;box-shadow:0 0 18px rgba(61,220,255,0.55)"></div>
+          <div style="position:absolute;left:29.2%;top:50%;width:14px;height:14px;margin-left:-7px;margin-top:-7px;border-radius:999px;background:#0A0B0F;border:2px solid #3DDCFF;box-shadow:0 0 16px rgba(61,220,255,0.75)"></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <button style="width:46px;height:46px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8a5 5 0 105-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M3 4.5V8h3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <button style="width:46px;height:46px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <button style="width:60px;height:60px;border-radius:999px;background:rgba(61,220,255,0.14);border:1px solid rgba(61,220,255,0.55);color:#3DDCFF;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 28px rgba(61,220,255,0.35)">
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><rect x="4" y="3.5" width="2.6" height="9" rx="1" fill="currentColor"></rect><rect x="9.4" y="3.5" width="2.6" height="9" rx="1" fill="currentColor"></rect></svg>
+          </button>
+          <button style="width:46px;height:46px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <button style="height:46px;padding:0 18px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;font-family:'JetBrains Mono',monospace;font-size:13px;cursor:pointer">1.5x</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1470,&quot;height&quot;:1100}}">
+class Component extends DCLogic {
+  renderVals() {
+    const src = [
+      "function twoSum(nums, target) {",
+      "  const seen = new Map();",
+      "",
+      "  for (let i = 0; i < n; i++) {",
+      "    const c = target - nums[i];",
+      "",
+      "    if (seen.has(c)) {",
+      "      return [seen.get(c), i];",
+      "    }",
+      "",
+      "    seen.set(nums[i], i);",
+      "  }"
+    ];
+    const active = 5;
+    const mk = (on) => ({
+      bg: on ? "rgba(61,220,255,0.07)" : "transparent",
+      mark: on ? "#3DDCFF" : "transparent",
+      numColor: on ? "#3DDCFF" : "rgba(139,147,167,0.6)"
+    });
+    const lines = src.map((code, i) => Object.assign(
+      { n: String(i + 1), code: code === "" ? " " : code }, mk(i + 1 === active)
+    ));
+    const dimLines = src.map((code, i) => ({ n: String(i + 1), code: code === "" ? " " : code }));
+
+    const values = [2, 7, 11, 15, 3, 6];
+    const activeTile = 2;
+    const paint = {
+      idle:   { bg: "rgba(255,255,255,0.04)", border: "rgba(255,255,255,0.10)", glow: "none" },
+      done:   { bg: "rgba(167,139,250,0.14)", border: "rgba(167,139,250,0.40)", glow: "0 0 20px rgba(167,139,250,0.25)" },
+      active: { bg: "rgba(61,220,255,0.20)",  border: "rgba(61,220,255,0.70)",  glow: "0 0 34px rgba(61,220,255,0.60)" }
+    };
+    const state = (i) => i === activeTile ? "active" : (i < activeTile ? "done" : "idle");
+
+    const stateLabel = { active: "SCANNING", done: "STORED", idle: "—" };
+    const stateColor = { active: "#3DDCFF", done: "#C4B2FD", idle: "rgba(139,147,167,0.55)" };
+
+    return {
+      lines, dimLines,
+      six: [0,1,2,3,4,5],
+      tiles: values.map((v, i) => paint[state(i)]),
+      labels: values.map((v, i) => ({
+        v: String(v),
+        color: i === activeTile ? "#3DDCFF" : (i < activeTile ? "#C4B2FD" : "#8B93A7")
+      })),
+      idxLabels: values.map((v, i) => ({
+        v: String(i),
+        color: i === activeTile ? "rgba(61,220,255,0.7)" : "rgba(139,147,167,0.5)"
+      })),
+      slots: Array.from({ length: 12 }, (_, i) =>
+        (i === 1 || i === 6)
+          ? { bg: "rgba(167,139,250,0.16)", border: "rgba(167,139,250,0.45)", glow: "0 0 18px rgba(167,139,250,0.30)" }
+          : { bg: "rgba(255,255,255,0.03)", border: "rgba(255,255,255,0.08)", glow: "none" }
+      ),
+      arrayRows: values.map((v, i) => {
+        const st = state(i);
+        return {
+          i: String(i),
+          v: String(v),
+          state: stateLabel[st],
+          bg: st === "active" ? "rgba(61,220,255,0.06)" : "transparent",
+          valColor: st === "active" ? "#3DDCFF" : "#E8EAF0",
+          stateColor: stateColor[st]
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

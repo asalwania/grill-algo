@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #0A0B0F; }
+  a { color: #3DDCFF; text-decoration: none; }
+  a:hover { color: #8FEAFF; }
+  @keyframes scrubGlow { 0%,100% { opacity: .55 } 50% { opacity: 1 } }
+</style>
+</helmet>
+<div style="background:#0A0B0F;color:#E8EAF0;font-family:Inter,system-ui,sans-serif;padding:72px 80px 96px;min-width:1280px">
+
+  <header style="display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:64px">
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8B93A7">Design System — v1.0</div>
+      <h1 style="font-family:'Instrument Serif',serif;font-size:48px;line-height:1.1;font-weight:400;margin:0;letter-spacing:-0.01em">Algorithm Execution Visualizer</h1>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;color:#8B93A7;text-align:right">Dark only · Depth by glow and hairline<br>No drop shadows anywhere</div>
+  </header>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px 72px;align-items:start">
+
+    <section style="grid-column:1 / -1;display:flex;flex-direction:column;gap:24px">
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <h2 style="font-family:'Instrument Serif',serif;font-size:32px;font-weight:400;margin:0">Color</h2>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">surfaces · signals</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="height:96px;border-radius:10px;background:#0A0B0F;border:1px solid rgba(255,255,255,0.08)"></div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:14px;font-weight:500">Base background</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">#0A0B0F</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="height:96px;border-radius:10px;background:#14161D;border:1px solid rgba(255,255,255,0.08)"></div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:14px;font-weight:500">Elevated surface</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">#14161D</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="height:96px;border-radius:10px;background:#14161D;border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center">
+            <div style="width:70%;height:1px;background:rgba(255,255,255,0.08)"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:14px;font-weight:500">Hairline border</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">#FFFFFF / 8%</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="height:96px;border-radius:10px;background:#E8EAF0;border:1px solid rgba(255,255,255,0.08)"></div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:14px;font-weight:500">Primary text</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">#E8EAF0</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="height:96px;border-radius:10px;background:#8B93A7;border:1px solid rgba(255,255,255,0.08)"></div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:14px;font-weight:500">Muted text</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">#8B93A7</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:8px">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="height:112px;border-radius:10px;background:#14161D;border:1px solid rgba(61,220,255,0.35);display:flex;align-items:center;justify-content:center">
+            <div style="width:56px;height:56px;border-radius:8px;background:#3DDCFF;box-shadow:0 0 32px rgba(61,220,255,0.55)"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:14px;font-weight:500;color:#3DDCFF">Signal cyan</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">#3DDCFF · currently executing</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="height:112px;border-radius:10px;background:#14161D;border:1px solid rgba(255,180,84,0.35);display:flex;align-items:center;justify-content:center">
+            <div style="width:56px;height:56px;border-radius:8px;background:#FFB454;box-shadow:0 0 32px rgba(255,180,84,0.5)"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:14px;font-weight:500;color:#FFB454">Signal amber</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">#FFB454 · comparison in progress</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="height:112px;border-radius:10px;background:#14161D;border:1px solid rgba(167,139,250,0.35);display:flex;align-items:center;justify-content:center">
+            <div style="width:56px;height:56px;border-radius:8px;background:#A78BFA;box-shadow:0 0 32px rgba(167,139,250,0.5)"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:14px;font-weight:500;color:#A78BFA">Signal violet</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">#A78BFA · stored in memory</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="height:112px;border-radius:10px;background:#14161D;border:1px solid rgba(74,222,128,0.35);display:flex;align-items:center;justify-content:center">
+            <div style="width:56px;height:56px;border-radius:8px;background:#4ADE80;box-shadow:0 0 32px rgba(74,222,128,0.5)"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-size:14px;font-weight:500;color:#4ADE80">Signal green</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">#4ADE80 · match / return</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="display:flex;flex-direction:column;gap:24px">
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <h2 style="font-family:'Instrument Serif',serif;font-size:32px;font-weight:400;margin:0">Type</h2>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">Instrument Serif · Inter · JetBrains Mono</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;border:1px solid rgba(255,255,255,0.08);border-radius:12px;background:#14161D;overflow:hidden">
+        <div style="display:grid;grid-template-columns:1fr 168px;gap:24px;align-items:baseline;padding:24px 28px;border-bottom:1px solid rgba(255,255,255,0.08)">
+          <div style="font-family:'Instrument Serif',serif;font-size:48px;line-height:1.1;font-weight:400">Two Sum</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7;text-align:right">Display 48 / 1.1</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 168px;gap:24px;align-items:baseline;padding:24px 28px;border-bottom:1px solid rgba(255,255,255,0.08)">
+          <div style="font-family:'Instrument Serif',serif;font-size:32px;line-height:1.2;font-weight:400">Hash map pass</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7;text-align:right">Display 32 / 1.2</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 168px;gap:24px;align-items:baseline;padding:24px 28px;border-bottom:1px solid rgba(255,255,255,0.08)">
+          <div style="font-family:'Instrument Serif',serif;font-size:24px;line-height:1.3;font-weight:400">Complement lookup</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7;text-align:right">Display 24 / 1.3</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 168px;gap:24px;align-items:baseline;padding:24px 28px;border-bottom:1px solid rgba(255,255,255,0.08)">
+          <div style="font-size:16px;line-height:1.55">Each frame is a full state snapshot.</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7;text-align:right">Body 16 / 1.55</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 168px;gap:24px;align-items:baseline;padding:24px 28px;border-bottom:1px solid rgba(255,255,255,0.08)">
+          <div style="font-size:14px;line-height:1.6;color:#8B93A7">Secondary narration and captions.</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7;text-align:right">Body 14 / 1.6</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 168px;gap:24px;align-items:baseline;padding:24px 28px;border-bottom:1px solid rgba(255,255,255,0.08)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.65">seen.set(nums[i], i)</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7;text-align:right">Mono 14 / 1.65</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 168px;gap:24px;align-items:baseline;padding:24px 28px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.5;color:#8B93A7">i = 3 · target − nums[i] = 9</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7;text-align:right">Mono 13 / 1.5</div>
+        </div>
+      </div>
+    </section>
+
+    <section style="display:flex;flex-direction:column;gap:24px">
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <h2 style="font-family:'Instrument Serif',serif;font-size:32px;font-weight:400;margin:0">Spacing</h2>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">8px base · 4 → 64</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;border:1px solid rgba(255,255,255,0.08);border-radius:12px;background:#14161D;padding:28px">
+        <sc-for list="{{ spacing }}" as="s" hint-placeholder-count="7">
+          <div style="display:grid;grid-template-columns:64px 1fr;gap:20px;align-items:center">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">{{ s.label }}</div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="height:12px;border-radius:3px;background:rgba(61,220,255,0.28);border:1px solid rgba(61,220,255,0.45);width:{{ s.w }}"></div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">{{ s.token }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="grid-column:1 / -1;display:flex;flex-direction:column;gap:24px">
+      <div style="display:flex;align-items:baseline;gap:16px">
+        <h2 style="font-family:'Instrument Serif',serif;font-size:32px;font-weight:400;margin:0">Components</h2>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">glow and hairlines only</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1.35fr 1fr;gap:24px;align-items:start">
+
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#8B93A7">Glass panel</div>
+          <div style="border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:rgba(20,22,29,0.72);backdrop-filter:blur(18px);padding:28px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-family:'Instrument Serif',serif;font-size:24px">Memory</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">Map · 3 entries</div>
+            </div>
+            <div style="height:1px;background:rgba(255,255,255,0.08)"></div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:14px;padding:8px 14px;border-radius:8px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.35);color:#C4B2FD">2 → 0</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:14px;padding:8px 14px;border-radius:8px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.35);color:#C4B2FD">7 → 1</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:14px;padding:8px 14px;border-radius:8px;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.4);color:#86EFAC">11 → 2</div>
+            </div>
+            <div style="font-size:14px;line-height:1.6;color:#8B93A7">1px hairline border, translucent fill, no drop shadow.</div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:24px">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#8B93A7">Ghost icon button</div>
+            <div style="display:flex;gap:12px;align-items:center">
+              <button style="width:44px;height:44px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .16s ease" style-hover="color:#E8EAF0;border-color:rgba(61,220,255,0.45);background:rgba(61,220,255,0.07)">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              </button>
+              <button style="width:44px;height:44px;border-radius:10px;background:rgba(61,220,255,0.08);border:1px solid rgba(61,220,255,0.45);color:#3DDCFF;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .16s ease" style-hover="background:rgba(61,220,255,0.14)">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 3.5l7 4.5-7 4.5z" fill="currentColor"></path></svg>
+              </button>
+              <button style="width:44px;height:44px;border-radius:10px;background:transparent;border:1px solid rgba(255,255,255,0.08);color:#8B93A7;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .16s ease" style-hover="color:#E8EAF0;border-color:rgba(61,220,255,0.45);background:rgba(61,220,255,0.07)">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              </button>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7;margin-left:4px">44px hit target</div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#8B93A7">Step counter</div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="display:inline-flex;align-items:center;gap:10px;padding:9px 18px;border-radius:999px;background:#14161D;border:1px solid rgba(255,255,255,0.08);font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.1em">
+                <span style="width:6px;height:6px;border-radius:999px;background:#3DDCFF;box-shadow:0 0 10px rgba(61,220,255,0.9)"></span>
+                <span style="color:#E8EAF0">STEP 7</span><span style="color:#8B93A7">/ 24</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="grid-column:1 / -1;display:flex;flex-direction:column;gap:14px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#8B93A7">Scrubber</div>
+          <div style="border:1px solid rgba(255,255,255,0.08);border-radius:14px;background:#14161D;padding:28px 32px;display:flex;flex-direction:column;gap:20px">
+            <div style="position:relative;height:6px;border-radius:999px;background:rgba(255,255,255,0.08)">
+              <div style="position:absolute;left:0;top:0;bottom:0;width:29.2%;border-radius:999px;background:#3DDCFF;box-shadow:0 0 18px rgba(61,220,255,0.55)"></div>
+              <div style="position:absolute;left:29.2%;top:50%;width:14px;height:14px;margin-left:-7px;margin-top:-7px;border-radius:999px;background:#0A0B0F;border:2px solid #3DDCFF;box-shadow:0 0 16px rgba(61,220,255,0.75)"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:13px;color:#8B93A7">
+              <span>00 · init</span>
+              <span style="color:#3DDCFF">07 · compare</span>
+              <span>24 · return</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:2100}}">
+class Component extends DCLogic {
+  renderVals() {
+    const steps = [4, 8, 12, 16, 24, 32, 48, 64];
+    return {
+      spacing: steps.map(n => ({
+        label: n + "px",
+        token: "space-" + n,
+        w: Math.round(n * 3.2) + "px"
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
