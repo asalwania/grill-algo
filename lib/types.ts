@@ -18,6 +18,8 @@ export type Frame<TScene = unknown> = {
   kind: FrameKind
   /** Prose for the DOM narration bar. Never rendered in the canvas. */
   narration: string
+  /** The "why this step" disclosure text (F6). Never rendered in the canvas. */
+  why: string
   /** Variables panel. Values are pre-stringified where formatting matters. */
   vars: Record<string, string | number | boolean | null>
   /** Shape + motion state for the R3F scene. */
@@ -45,11 +47,24 @@ export type TwoSumScene = {
   tiles: TileState[]
   /** Index of the tile under the beam, or null. */
   cursor: number | null
-  /** Insertion-ordered hash map slots. */
+  /** Insertion-ordered hash map slots. Empty for approaches with no memory structure. */
   slots: { key: number; value: number; state: SlotState }[]
-  /** Index into `slots` currently being probed, or null. */
+  /**
+   * The key currently being looked up, or null.
+   *
+   * NOT a slot index. A lookup that MISSES has no slot to point at, and the
+   * miss is precisely what F11's beam has to render ("passes through the gap
+   * and dissipates"). Resolve it with `slots.findIndex((s) => s.key === probe)`;
+   * -1 means nothing was there.
+   */
   probe: number | null
-  /** Beam endpoints as [tileIndex, slotIndex] when a lookup connects them. */
+  /**
+   * Beam endpoints, or null. Read the second index against `slots`:
+   *   optimized -> [tileIndex, slotIndex] — a tile probing the wall.
+   *   brute     -> [tileIndex, tileIndex] — `slots` is empty, so there is no
+   *                wall to aim at and the beam runs tile to tile (F13's
+   *                "crisscross beams").
+   */
   link: [number, number] | null
   /** Tile indices of the answer once found. */
   result: [number, number] | null
@@ -77,4 +92,18 @@ export type Solution = {
   language: Language
   code: string
   lineMap: Record<number, number> // canonical trace line -> line in THIS listing
+}
+
+/**
+ * What every content/problems/<slug>/trace.ts must export as `traces`.
+ * scripts/build-traces.ts discovers problems by directory and knows nothing
+ * else about them.
+ */
+export type ProblemTraces<TScene = unknown> = {
+  /** Human-readable input the shipped frames were generated from. Printed by the build. */
+  example: string
+  /** Canonical listing per approach. Every frame's `line` is a 1-based index into it. */
+  listings: Record<Approach, string>
+  /** Runs the generator for the shipped example. */
+  build: Record<Approach, () => Frame<TScene>[]>
 }

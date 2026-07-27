@@ -1,0 +1,461 @@
+/**
+ * Two Sum — build-time trace generators.
+ *
+ * Promoted from app/(SP3)/two-sum-frames/trace.ts. Nothing here runs in the
+ * browser: scripts/build-traces.ts executes these generators at build time and
+ * writes frames.optimized.json / frames.brute.json next to this file.
+ *
+ * Two things changed on the way over from SP3, both resolved by the spike's own
+ * findings (docs/spikes/SP3-generator-frames.md):
+ *
+ *   1. The Frame shape is now lib/types.ts's — `vars` (which admits booleans,
+ *      so SP3's `found: 'yes' | 'no'` is a real boolean), `tiles`/`cursor`,
+ *      `slots`/`probe`/`link` — plus SP3's `why`, which lib/types.ts had
+ *      dropped and F6 requires. That is Finding 4's prescribed resolution.
+ *
+ *   2. Every frame now earns a scene change. SP3's trace did not: its
+ *      `complement` frame moved only `vars.complement`, and its `exhausted`
+ *      frame was scene-identical to the last `store`. Staging is now
+ *      tile lights (L5) -> beam forms (L6) -> beam fires (L8), and `store`
+ *      holds cursor/probe so the next `read` has something to clear. Frame
+ *      counts are unchanged from SP3: 9 at target 9, 25 at target 21.
+ */
+
+import type {
+  FrameKind,
+  ProblemTraces,
+  SlotState,
+  TileState,
+  TwoSumFrame,
+  TwoSumScene,
+} from '../../../lib/types.ts'
+
+/** The input the shipped frames are generated from — SP3 Finding 1. */
+export const EXAMPLE_NUMS = [2, 7, 11, 15, 3, 6]
+export const EXAMPLE_TARGET = 21
+
+// ---------------------------------------------------------------------------
+// Canonical listings
+// ---------------------------------------------------------------------------
+
+/**
+ * Every optimized frame's `line` is a 1-based index into this listing, and
+ * nothing else. Per-language listings map onto it via Solution.lineMap (F14).
+ *
+ * Active lines are 2, 5, 6, 8, 9, 12 and 15. The rest are structural — they
+ * have no state change to narrate, so they are never an active line. That is
+ * deliberate, not an omission.
+ */
+export const OPTIMIZED_LISTING = [
+  'function twoSum(nums, target) {', //             1
+  '  const seen = new Map()', //                    2
+  '', //                                            3
+  '  for (let i = 0; i < nums.length; i++) {', //   4
+  '    const num = nums[i]', //                     5
+  '    const complement = target - num', //         6
+  '', //                                            7
+  '    if (seen.has(complement)) {', //             8
+  '      return [seen.get(complement), i]', //      9
+  '    }', //                                      10
+  '', //                                           11
+  '    seen.set(num, i)', //                       12
+  '  }', //                                        13
+  '', //                                           14
+  '  return []', //                                15
+  '}', //                                          16
+].join('\n')
+
+/**
+ * Active lines are 2, 4, 5 and 10. Line 3 (the inner loop header) is
+ * deliberately never active: picking `j` and comparing the pair are one beat,
+ * and splitting them would produce two frames with an identical scene.
+ */
+export const BRUTE_LISTING = [
+  'function twoSum(nums, target) {', //                 1
+  '  for (let i = 0; i < nums.length; i++) {', //       2
+  '    for (let j = i + 1; j < nums.length; j++) {', // 3
+  '      if (nums[i] + nums[j] === target) {', //       4
+  '        return [i, j]', //                          5
+  '      }', //                                        6
+  '    }', //                                          7
+  '  }', //                                            8
+  '', //                                               9
+  '  return []', //                                   10
+  '}', //                                             11
+].join('\n')
+
+const OPTIMIZED_LINE = {
+  init: 2,
+  read: 5,
+  complement: 6,
+  probe: 8,
+  found: 9,
+  store: 12,
+  exhausted: 15,
+} as const
+
+const BRUTE_LINE = {
+  outer: 2,
+  compare: 4,
+  found: 5,
+  exhausted: 10,
+} as const
+
+// ---------------------------------------------------------------------------
+// changed[] — derived by diffing, never hand-listed (SP3 Finding 2)
+// ---------------------------------------------------------------------------
+
+/**
+ * Flattens to leaf paths. Arrays are compared whole rather than per index:
+ * `scene.tiles` is one hint, not six, because the scene retargets every tile on
+ * any change anyway. Same for `scene.slots`, `scene.link` and `scene.result`.
+ */
+function collect(value: unknown, path: string, out: Map<string, string>): void {
+  if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+    for (const [key, child] of Object.entries(value)) {
+      collect(child, path ? `${path}.${key}` : key, out)
+    }
+    return
+  }
+  out.set(path, JSON.stringify(value ?? null))
+}
+
+/**
+ * Only `line`, `vars` and `scene` are diffed. `narration`, `why` and `kind`
+ * change on nearly every frame, so flagging them carries no signal.
+ *
+ * Disappearances count: a var that existed on the previous frame and is gone on
+ * this one is reported as changed, which is exactly what F6's AnimatePresence
+ * fade-out needs. Frame 0's `changed` is always `[]` — there is nothing to
+ * flash against.
+ */
+function changedPaths(prev: TwoSumFrame | null, next: TwoSumFrame): string[] {
+  if (prev === null) return []
+
+  const before = new Map<string, string>()
+  const after = new Map<string, string>()
+  for (const root of ['line', 'vars', 'scene'] as const) {
+    collect(prev[root], root, before)
+    collect(next[root], root, after)
+  }
+
+  return [...new Set([...before.keys(), ...after.keys()])]
+    .filter((path) => before.get(path) !== after.get(path))
+    .sort()
+}
+
+/**
+ * Numbers the frames and fills in `changed` by diffing against the frame it
+ * just handed out. `snapshot` must return a fresh deep copy every call — a
+ * frame that shares mutable state with the generator is not a snapshot.
+ */
+function emitter(snapshot: () => TwoSumScene) {
+  let step = 0
+  let previous: TwoSumFrame | null = null
+
+  return (
+    line: number,
+    kind: FrameKind,
+    narration: string,
+    why: string,
+    vars: TwoSumFrame['vars'],
+  ): TwoSumFrame => {
+    const frame: TwoSumFrame = {
+      step: step++,
+      line,
+      kind,
+      narration,
+      why,
+      vars,
+      scene: snapshot(),
+      changed: [],
+    }
+    frame.changed = changedPaths(previous, frame)
+    previous = frame
+    return frame
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Optimized — one pass, one hash map
+// ---------------------------------------------------------------------------
+
+const formatSlots = (slots: TwoSumScene['slots']): string =>
+  slots.length === 0
+    ? '{}'
+    : `{ ${slots.map((slot) => `${slot.key}: ${slot.value}`).join(', ')} }`
+
+/**
+ * Solves Two Sum with the hash-map approach, yielding a FULL state snapshot at
+ * each meaningful point. This actually computes the answer — the frames are a
+ * by-product of a real run, not a hand-authored script.
+ */
+export function* twoSumOptimized(
+  nums: number[],
+  target: number,
+): Generator<TwoSumFrame, void, undefined> {
+  const tiles: TileState[] = nums.map(() => 'idle')
+  const slots: { key: number; value: number; state: SlotState }[] = []
+  let cursor: number | null = null
+  let probe: number | null = null
+  let link: [number, number] | null = null
+  let result: [number, number] | null = null
+  let lookups = 0
+
+  const emit = emitter(() => ({
+    nums: [...nums],
+    target,
+    tiles: [...tiles],
+    cursor,
+    slots: slots.map((slot) => ({ ...slot })),
+    probe,
+    link: link === null ? null : [link[0], link[1]],
+    result: result === null ? null : [result[0], result[1]],
+  }))
+
+  const base = () => ({
+    target,
+    n: nums.length,
+    seen: formatSlots(slots),
+    lookups,
+  })
+
+  yield emit(
+    OPTIMIZED_LINE.init,
+    'init',
+    'An empty map, and one pass to fill it.',
+    'Brute force re-scans the rest of the array for every element. If we instead remember every number we have already walked past, "is its partner out there?" collapses into a single lookup.',
+    base(),
+  )
+
+  for (let i = 0; i < nums.length; i++) {
+    const num = nums[i]
+
+    // A new element takes the stage: drop last iteration's beam and question.
+    cursor = null
+    probe = null
+    link = null
+    tiles[i] = 'active'
+    yield emit(
+      OPTIMIZED_LINE.read,
+      'compare',
+      `i = ${i}. Pick up ${num}.`,
+      'Each element is touched exactly once. Everything else we need is already behind us, in the map.',
+      { ...base(), i, num },
+    )
+
+    const complement = target - num
+    cursor = i
+    yield emit(
+      OPTIMIZED_LINE.complement,
+      'compare',
+      `${num} needs ${complement} to reach ${target}.`,
+      'This is the pivot. Instead of hunting for a pair, we turn each number into a question with exactly one right answer — and single answers are what a hash map is for.',
+      { ...base(), i, num, complement },
+    )
+
+    const hit = slots.findIndex((slot) => slot.key === complement)
+    lookups++
+    probe = complement
+
+    if (hit === -1) {
+      link = null
+      yield emit(
+        OPTIMIZED_LINE.probe,
+        'compare',
+        slots.length === 0
+          ? `Have we seen ${complement}? The map is empty, so no.`
+          : `Have we seen ${complement}? Not in the map.`,
+        'One hash lookup, O(1). This single step stands in for the whole of brute force’s inner loop.',
+        { ...base(), i, num, complement, found: false },
+      )
+
+      slots.push({ key: num, value: i, state: 'filled' })
+      tiles[i] = 'done'
+      yield emit(
+        OPTIMIZED_LINE.store,
+        'store',
+        `Remember ${num} at index ${i}.`,
+        'The number is the key and the index is the value — the array turned inside out. We look up by value, but we have to return indices.',
+        { ...base(), i, num, complement, found: false },
+      )
+      continue
+    }
+
+    const j = slots[hit].value
+    slots[hit].state = 'probed'
+    link = [i, hit]
+    yield emit(
+      OPTIMIZED_LINE.probe,
+      'match',
+      `Have we seen ${complement}? Yes — index ${j}.`,
+      'Found by remembering, not by searching. That lookup would have cost the same if the array held six million numbers.',
+      { ...base(), i, num, complement, found: true },
+    )
+
+    slots[hit].state = 'hit'
+    tiles[j] = 'match'
+    tiles[i] = 'match'
+    result = [j, i]
+    yield emit(
+      OPTIMIZED_LINE.found,
+      'return',
+      `${complement} + ${num} = ${target}. Return [${j}, ${i}].`,
+      `The map bought an O(n) walk in place of O(n²) comparisons — ${lookups} lookups to get here. The payoff scales with the length of the array, not with where the answer happens to sit.`,
+      { ...base(), i, num, complement, found: true, result: `[${j}, ${i}]` },
+    )
+    return
+  }
+
+  cursor = null
+  probe = null
+  link = null
+  yield emit(
+    OPTIMIZED_LINE.exhausted,
+    'return',
+    `The walk is over. Nothing pairs to ${target}.`,
+    'Every number got one chance to find a partner already behind it. If a pair existed, the later of the two would have found the earlier one — so a single pass really is enough to be sure.',
+    { ...base(), result: '[]' },
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Brute force — every pair, no memory
+// ---------------------------------------------------------------------------
+
+/**
+ * The same problem with nothing remembered. `scene.slots` is `[]` on every
+ * single frame and `scene.probe` is always null: there is no wall to raise and
+ * no key to look up, and that absence is the entire point of the comparison.
+ *
+ * One frame per comparison, at BRUTE_LINE.compare. The cost is not summarised
+ * anywhere — you watch it accumulate.
+ */
+export function* twoSumBrute(
+  nums: number[],
+  target: number,
+): Generator<TwoSumFrame, void, undefined> {
+  const tiles: TileState[] = nums.map(() => 'idle')
+  let cursor: number | null = null
+  let link: [number, number] | null = null
+  let result: [number, number] | null = null
+  let comparisons = 0
+
+  const emit = emitter(() => ({
+    nums: [...nums],
+    target,
+    tiles: [...tiles],
+    cursor,
+    slots: [], // never fills — brute force has no memory structure
+    probe: null, // nothing is ever looked up
+    link: link === null ? null : [link[0], link[1]],
+    result: result === null ? null : [result[0], result[1]],
+  }))
+
+  const base = () => ({ target, n: nums.length, comparisons })
+
+  yield emit(
+    BRUTE_LINE.outer,
+    'init',
+    'Nothing remembered. Every pair, checked by hand.',
+    'The only tool here is comparison, so the only way forward is to try each pair and see. Watch the work accumulate: the first number is checked against every number after it, the second against every number after that, and so on down.',
+    base(),
+  )
+
+  for (let i = 0; i < nums.length - 1; i++) {
+    const a = nums[i]
+
+    // Everything left of the anchor is finished; everything right of it is
+    // fair game again, because brute force never carries anything forward.
+    for (let k = 0; k < tiles.length; k++) {
+      if (k < i) tiles[k] = 'done'
+      else if (k === i) tiles[k] = 'active'
+      else tiles[k] = 'idle'
+    }
+    cursor = i
+    link = null
+    yield emit(
+      BRUTE_LINE.outer,
+      'compare',
+      `i = ${i}. Anchor on ${a}.`,
+      'The inner loop starts one step past the anchor and never looks back — every pair to the left has already been tried. That is why the second pass is shorter than the first, and the last is a single comparison.',
+      { ...base(), i, a },
+    )
+
+    let previousJ: number | null = null
+
+    for (let j = i + 1; j < nums.length; j++) {
+      const b = nums[j]
+      const sum = a + b
+
+      if (previousJ !== null) tiles[previousJ] = 'idle'
+      tiles[j] = 'active'
+      link = [i, j]
+      comparisons++
+
+      if (sum !== target) {
+        yield emit(
+          BRUTE_LINE.compare,
+          'compare',
+          `${a} + ${b} = ${sum}. Not ${target}.`,
+          'One comparison, one step. There is no lookup to hide the cost in — the optimized trace spends a single frame where this one spends an entire inner loop.',
+          { ...base(), i, j, a, b, sum, found: false },
+        )
+        previousJ = j
+        continue
+      }
+
+      yield emit(
+        BRUTE_LINE.compare,
+        'match',
+        `${a} + ${b} = ${target}.`,
+        `Found by exhaustion rather than by memory — ${comparisons} comparisons, against one lookup per element on the other side. On six numbers that is barely a difference. On six million it is the difference between an answer and a hung tab.`,
+        { ...base(), i, j, a, b, sum, found: true },
+      )
+
+      tiles[i] = 'match'
+      tiles[j] = 'match'
+      result = [i, j]
+      yield emit(
+        BRUTE_LINE.found,
+        'return',
+        `Return [${i}, ${j}].`,
+        'The same pair and the same indices the map approach returns — the answer was never in doubt. What differs is how much work it took to become certain of it.',
+        { ...base(), i, j, a, b, sum, found: true, result: `[${i}, ${j}]` },
+      )
+      return
+    }
+  }
+
+  for (let k = 0; k < tiles.length; k++) tiles[k] = 'done'
+  cursor = null
+  link = null
+  yield emit(
+    BRUTE_LINE.exhausted,
+    'return',
+    `Every pair checked. Nothing sums to ${target}.`,
+    `Proving a negative costs the full n(n-1)/2 — ${comparisons} comparisons, with nothing learned along the way that would let us stop early.`,
+    { ...base(), result: '[]' },
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Exports
+// ---------------------------------------------------------------------------
+
+export const traceOptimized = (nums: number[], target: number): TwoSumFrame[] => [
+  ...twoSumOptimized(nums, target),
+]
+
+export const traceBrute = (nums: number[], target: number): TwoSumFrame[] => [
+  ...twoSumBrute(nums, target),
+]
+
+export const traces: ProblemTraces<TwoSumScene> = {
+  example: `nums = [${EXAMPLE_NUMS.join(', ')}], target = ${EXAMPLE_TARGET}`,
+  listings: { optimized: OPTIMIZED_LISTING, brute: BRUTE_LISTING },
+  build: {
+    optimized: () => traceOptimized(EXAMPLE_NUMS, EXAMPLE_TARGET),
+    brute: () => traceBrute(EXAMPLE_NUMS, EXAMPLE_TARGET),
+  },
+}

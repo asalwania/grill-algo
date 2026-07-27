@@ -62,14 +62,24 @@ add no URL segment. Findings are written up in `docs/spikes/`.
   `CodePane`. Runtime verification is still outstanding.
 
 - **SP3 — [Generator produces usable frames](docs/spikes/SP3-generator-frames.md).**
-  The yield-based generator model works; the canonical example does not.
-  `target = 9` on `[2,7,11,15,3,6]` is solved at `i = 1` — 9 frames, one map
-  entry, four tiles never leave `idle`, so F10's wall is one slot tall and
-  F11's beam has nothing to miss. `target = 21` gives 25 frames and fills every
-  slot, which is what S2's "STEP 7 / 24" mock was drawn against. Decide this
-  before building the 3D scene. Also: `changed[]` is DERIVED by diffing
-  adjacent frames, never hand-written — arrays compare whole, `narration`/`why`
-  are excluded, and frame 0's is `[]`. The SP3 `Frame` and the one in
-  `lib/types.ts` have diverged (`variables`/`vars`, `why` missing, `array.states`
-  vs `tiles`+`cursor`); reconcile at F1, not by editing the spike. SP3 has no
-  route — `app/(SP3)/` deliberately contains no `page.tsx`.
+  The yield-based generator model works. Resolved at F1, do not re-open:
+  the canonical example is **`target = 21`** on `[2,7,11,15,3,6]` (25 optimized
+  frames, every tile touched, five map entries — what S2's "STEP 7 / 24" mock
+  was drawn against); `target = 9` is kept only as a test fixture. The `Frame`
+  shape is `lib/types.ts`'s plus SP3's `why`. `changed[]` is DERIVED by diffing
+  adjacent frames, never hand-written — arrays compare whole, `line`/`vars`/
+  `scene` only, and frame 0's is `[]`. SP3 has no route — `app/(SP3)/`
+  deliberately contains no `page.tsx`, and the spike files are the record of
+  where the shape came from: read them, don't edit them. The live generators
+  are `content/problems/two-sum/trace.ts`.
+
+- **F1 — trace pipeline.** Every frame must change the scene. `pnpm test`
+  enforces it, and it is why the staging is tile-lights (L5) → beam-forms (L6)
+  → beam-fires (L8) rather than SP3's, whose complement frame moved only a
+  variable. Two consequences: `TwoSumScene.probe` is the **probed key**, not a
+  slot index (a miss has no slot to point at, and F11 has to render the miss),
+  and `link`'s second index is a slot index only when `slots` is non-empty —
+  in the brute trace it is a second tile index. Frame counts: optimized 25,
+  brute 20. Note the counts invert the complexity story at n = 6 (n²/2 only
+  overtakes 4n around n ≈ 9), so F13's O(n²)/O(n) readout has to carry that
+  message, not the step counter.
