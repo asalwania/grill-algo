@@ -1,5 +1,5 @@
 import { CodePane } from "@/components/panels/CodePane";
-import { highlightJavaScript } from "@/lib/highlight";
+import { Harness } from "./Harness";
 
 /* Fixed and read-only, per the code-pane rule — nothing here ever executes in
    the browser. Exactly 12 lines. */
@@ -16,18 +16,21 @@ const SNIPPET = `function twoSum(nums, target) {
     seen.set(nums[i], i);
   }
 }`;
+const LINE_COUNT = 12;
 
 /**
  * Server component: Shiki runs here, at build time. The page has no dynamic
  * inputs, so it prerenders and the highlighted HTML is baked into the payload.
+ * CodePane is passed as children into the client Harness so the highlighted
+ * markup stays server-rendered — only the active-line index lives client-side.
  */
-export default async function CodeHighlightPage() {
-  const { html, lineCount } = await highlightJavaScript(SNIPPET);
-
+export default function CodeHighlightPage() {
   return (
     <main className="p-32">
       <div className="max-w-[640px]">
-        <CodePane html={html} lineCount={lineCount} />
+        <Harness lineCount={LINE_COUNT}>
+          <CodePane code={SNIPPET} language="javascript" />
+        </Harness>
       </div>
     </main>
   );

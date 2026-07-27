@@ -87,6 +87,8 @@ export type ProblemMeta = {
 
 export type Language = 'javascript' | 'python' | 'java' | 'go'
 export type Approach = 'brute' | 'optimized'
+/** Whether the learning view renders the R3F scene or the DOM-only fallback. */
+export type RenderMode = '3d' | '2d'
 
 export type Solution = {
   language: Language

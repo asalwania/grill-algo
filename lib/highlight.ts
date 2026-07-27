@@ -2,6 +2,8 @@ import 'server-only'
 
 import { createHighlighter, type Highlighter, type ShikiTransformer } from 'shiki'
 
+import type { Language } from './types'
+
 /**
  * Build-time syntax highlighting.
  *
@@ -12,6 +14,10 @@ import { createHighlighter, type Highlighter, type ShikiTransformer } from 'shik
  */
 
 const THEME = 'github-dark-default'
+
+/** Every language the content model can declare on a `Solution` (`lib/types.ts`).
+ *  Shiki's bundled grammar ids match these values exactly. */
+const LANGS: Language[] = ['javascript', 'python', 'java', 'go']
 
 /** Blank lines collapse to zero height as block boxes; this props them open. */
 const ZERO_WIDTH_SPACE = '​'
@@ -26,7 +32,7 @@ let highlighterPromise: Promise<Highlighter> | null = null
 function getHighlighter(): Promise<Highlighter> {
   highlighterPromise ??= createHighlighter({
     themes: [THEME],
-    langs: ['javascript'],
+    langs: LANGS,
   })
   return highlighterPromise
 }
@@ -84,13 +90,16 @@ export type HighlightedCode = {
   lineCount: number
 }
 
-export async function highlightJavaScript(code: string): Promise<HighlightedCode> {
+export async function highlightCode(
+  code: string,
+  language: Language,
+): Promise<HighlightedCode> {
   const source = code.replace(/\n+$/, '')
   const highlighter = await getHighlighter()
 
   return {
     html: highlighter.codeToHtml(source, {
-      lang: 'javascript',
+      lang: language,
       theme: THEME,
       transformers: [lineAnchors],
     }),
