@@ -1,0 +1,769 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "An empty map. Its keys will be letter counts, its values the groups.",
+    "why": "Anagrams are exactly the words with the same letters in the same quantities — so the counts themselves are a name every member of a group shares, and nothing else does. Names are what a map is for.",
+    "vars": {
+      "n": 3,
+      "groups": "[]"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"cat\".",
+    "why": "Every word is handled once, on its own, and never compared against another word directly.",
+    "vars": {
+      "n": 3,
+      "groups": "[]",
+      "i": 0,
+      "word": "cat"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 7,
+    "kind": "compare",
+    "narration": "Tally its letters: a1 c1 t1. Nothing under that key yet.",
+    "why": "One pass over the word builds the key — no sorting. Every anagram of this word tallies to the same 26 counts, and no other word does, so one lookup decides membership for a group of any size.",
+    "vars": {
+      "n": 3,
+      "groups": "[]",
+      "i": 0,
+      "word": "cat",
+      "counts": "a1 c1 t1",
+      "key": "1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": 830,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.counts",
+      "vars.found",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 13,
+    "kind": "store",
+    "narration": "First word counting a1 c1 t1 — open a group for it.",
+    "why": "A new tally means a group nobody has needed yet. It costs one entry, and every later anagram of this word finds it in one step.",
+    "vars": {
+      "n": 3,
+      "groups": "[[]]",
+      "i": 0,
+      "word": "cat",
+      "counts": "a1 c1 t1"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 830,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "a1 c1 t1"
+        }
+      ],
+      "probe": 830,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "vars.found",
+      "vars.groups",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 16,
+    "kind": "store",
+    "narration": "\"cat\" joins a1 c1 t1 — 1 in that group now.",
+    "why": "No comparison happened, and no word was sorted. The word was filed under its counts, and everything sharing those counts is already sitting there.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat]]",
+      "i": 0,
+      "word": "cat",
+      "counts": "a1 c1 t1",
+      "size": 1
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 830,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 c1 t1"
+        }
+      ],
+      "probe": 830,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.groups",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"dog\".",
+    "why": "Every word is handled once, on its own, and never compared against another word directly.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat]]",
+      "i": 1,
+      "word": "dog"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 830,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 c1 t1"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.counts",
+      "vars.i",
+      "vars.size",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 7,
+    "kind": "compare",
+    "narration": "Tally its letters: d1 g1 o1. Nothing under that key yet.",
+    "why": "One pass over the word builds the key — no sorting. Every anagram of this word tallies to the same 26 counts, and no other word does, so one lookup decides membership for a group of any size.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat]]",
+      "i": 1,
+      "word": "dog",
+      "counts": "d1 g1 o1",
+      "key": "0,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 830,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 c1 t1"
+        }
+      ],
+      "probe": 3120,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.counts",
+      "vars.found",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 13,
+    "kind": "store",
+    "narration": "First word counting d1 g1 o1 — open a group for it.",
+    "why": "A new tally means a group nobody has needed yet. It costs one entry, and every later anagram of this word finds it in one step.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], []]",
+      "i": 1,
+      "word": "dog",
+      "counts": "d1 g1 o1"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 830,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 c1 t1"
+        },
+        {
+          "key": 3120,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "d1 g1 o1"
+        }
+      ],
+      "probe": 3120,
+      "link": [
+        1,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "vars.found",
+      "vars.groups",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 16,
+    "kind": "store",
+    "narration": "\"dog\" joins d1 g1 o1 — 1 in that group now.",
+    "why": "No comparison happened, and no word was sorted. The word was filed under its counts, and everything sharing those counts is already sitting there.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [dog]]",
+      "i": 1,
+      "word": "dog",
+      "counts": "d1 g1 o1",
+      "size": 1
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 830,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 c1 t1"
+        },
+        {
+          "key": 3120,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "d1 g1 o1"
+        }
+      ],
+      "probe": 3120,
+      "link": [
+        1,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.groups",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"bird\".",
+    "why": "Every word is handled once, on its own, and never compared against another word directly.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [dog]]",
+      "i": 2,
+      "word": "bird"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 830,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 c1 t1"
+        },
+        {
+          "key": 3120,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "d1 g1 o1"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.counts",
+      "vars.i",
+      "vars.size",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 7,
+    "kind": "compare",
+    "narration": "Tally its letters: b1 d1 i1 r1. Nothing under that key yet.",
+    "why": "One pass over the word builds the key — no sorting. Every anagram of this word tallies to the same 26 counts, and no other word does, so one lookup decides membership for a group of any size.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [dog]]",
+      "i": 2,
+      "word": "bird",
+      "counts": "b1 d1 i1 r1",
+      "key": "0,1,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 830,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 c1 t1"
+        },
+        {
+          "key": 3120,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "d1 g1 o1"
+        }
+      ],
+      "probe": 42543,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.counts",
+      "vars.found",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 13,
+    "kind": "store",
+    "narration": "First word counting b1 d1 i1 r1 — open a group for it.",
+    "why": "A new tally means a group nobody has needed yet. It costs one entry, and every later anagram of this word finds it in one step.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [dog], []]",
+      "i": 2,
+      "word": "bird",
+      "counts": "b1 d1 i1 r1"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 830,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 c1 t1"
+        },
+        {
+          "key": 3120,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "d1 g1 o1"
+        },
+        {
+          "key": 42543,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "b1 d1 i1 r1"
+        }
+      ],
+      "probe": 42543,
+      "link": [
+        2,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "vars.found",
+      "vars.groups",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 16,
+    "kind": "store",
+    "narration": "\"bird\" joins b1 d1 i1 r1 — 1 in that group now.",
+    "why": "No comparison happened, and no word was sorted. The word was filed under its counts, and everything sharing those counts is already sitting there.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [dog], [bird]]",
+      "i": 2,
+      "word": "bird",
+      "counts": "b1 d1 i1 r1",
+      "size": 1
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 830,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 c1 t1"
+        },
+        {
+          "key": 3120,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "d1 g1 o1"
+        },
+        {
+          "key": 42543,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "b1 d1 i1 r1"
+        }
+      ],
+      "probe": 42543,
+      "link": [
+        2,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.groups",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 19,
+    "kind": "return",
+    "narration": "3 words, 3 groups.",
+    "why": "Every word was read once, tallied once and filed once — 3 lookups, no word sorted and no two words ever compared. The map's values, in insertion order, ARE the answer.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [dog], [bird]]",
+      "result": "3 groups"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 830,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 c1 t1"
+        },
+        {
+          "key": 3120,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "d1 g1 o1"
+        },
+        {
+          "key": 42543,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "b1 d1 i1 r1"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "vars.counts",
+      "vars.i",
+      "vars.result",
+      "vars.size",
+      "vars.word"
+    ]
+  }
+]

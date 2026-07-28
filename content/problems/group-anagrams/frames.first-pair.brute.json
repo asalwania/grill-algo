@@ -1,0 +1,676 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "No map, no sorting. Groups get built by trying each word against the ones already placed.",
+    "why": "With nothing remembered under a key, the only way to know where a word belongs is to ask every group that exists — one representative at a time.",
+    "vars": {
+      "n": 4,
+      "groups": "[]"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"eat\". 0 groups to try.",
+    "why": "Every group already formed is a candidate, and there is no way to rule any of them out in advance.",
+    "vars": {
+      "n": 4,
+      "groups": "[]",
+      "i": 0,
+      "word": "eat",
+      "candidates": 0
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.candidates",
+      "vars.i",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 16,
+    "kind": "store",
+    "narration": "Nothing matched — \"eat\" starts group 0.",
+    "why": "Exhausting every group is what proves a new one is needed, and it is also what makes the next word more expensive than this one.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat]]",
+      "i": 0,
+      "word": "eat"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.candidates",
+      "vars.groups"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"ate\". 1 group to try.",
+    "why": "Every group already formed is a candidate, and there is no way to rule any of them out in advance.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat]]",
+      "i": 1,
+      "word": "ate",
+      "candidates": 1
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.candidates",
+      "vars.i",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 8,
+    "kind": "match",
+    "narration": "\"ate\" against \"eat\" — anagrams.",
+    "why": "Each of these is a full letter-count comparison, not a lookup. The map approach pays none of them.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat]]",
+      "i": 1,
+      "g": 0,
+      "against": "eat",
+      "found": true
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.against",
+      "vars.candidates",
+      "vars.found",
+      "vars.g",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 9,
+    "kind": "store",
+    "narration": "\"ate\" joins group 0 — 2 in it now.",
+    "why": "The same conclusion the map reached in one lookup, bought here with one comparison per group tried.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate]]",
+      "i": 1,
+      "word": "ate",
+      "g": 0,
+      "size": 2
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.against",
+      "vars.found",
+      "vars.groups",
+      "vars.size",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"bat\". 1 group to try.",
+    "why": "Every group already formed is a candidate, and there is no way to rule any of them out in advance.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate]]",
+      "i": 2,
+      "word": "bat",
+      "candidates": 1
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.candidates",
+      "vars.g",
+      "vars.i",
+      "vars.size",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 8,
+    "kind": "compare",
+    "narration": "\"bat\" against \"eat\" — no.",
+    "why": "Each of these is a full letter-count comparison, not a lookup. The map approach pays none of them.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate]]",
+      "i": 2,
+      "g": 0,
+      "against": "eat",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "active",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.against",
+      "vars.candidates",
+      "vars.found",
+      "vars.g",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 16,
+    "kind": "store",
+    "narration": "Nothing matched — \"bat\" starts group 1.",
+    "why": "Exhausting every group is what proves a new one is needed, and it is also what makes the next word more expensive than this one.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], [bat]]",
+      "i": 2,
+      "word": "bat"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.against",
+      "vars.found",
+      "vars.g",
+      "vars.groups",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"cab\". 2 groups to try.",
+    "why": "Every group already formed is a candidate, and there is no way to rule any of them out in advance.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], [bat]]",
+      "i": 3,
+      "word": "cab",
+      "candidates": 2
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.candidates",
+      "vars.i",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 8,
+    "kind": "compare",
+    "narration": "\"cab\" against \"eat\" — no.",
+    "why": "Each of these is a full letter-count comparison, not a lookup. The map approach pays none of them.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], [bat]]",
+      "i": 3,
+      "g": 0,
+      "against": "eat",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "active",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": [
+        3,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.against",
+      "vars.candidates",
+      "vars.found",
+      "vars.g",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 8,
+    "kind": "compare",
+    "narration": "\"cab\" against \"bat\" — no.",
+    "why": "Each of these is a full letter-count comparison, not a lookup. The map approach pays none of them.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], [bat]]",
+      "i": 3,
+      "g": 1,
+      "against": "bat",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": [
+        3,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.against",
+      "vars.g"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 16,
+    "kind": "store",
+    "narration": "Nothing matched — \"cab\" starts group 2.",
+    "why": "Exhausting every group is what proves a new one is needed, and it is also what makes the next word more expensive than this one.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], [bat], [cab]]",
+      "i": 3,
+      "word": "cab"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.against",
+      "vars.found",
+      "vars.g",
+      "vars.groups",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 20,
+    "kind": "return",
+    "narration": "4 words, 3 groups.",
+    "why": "The same partition as the other two, reached by comparing words against groups instead of naming them — up to 4² comparisons where the map does 4 lookups.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], [bat], [cab]]",
+      "result": "3 groups"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        1
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.result",
+      "scene.tiles",
+      "vars.i",
+      "vars.result",
+      "vars.word"
+    ]
+  }
+]

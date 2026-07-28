@@ -1,0 +1,383 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "Label every word with its signature — its own letters, sorted.",
+    "why": "Same observation as the map approach, reached the expensive way: sorting a word is O(k log k) where tallying it is O(k). What this buys back is that it needs no map at all.",
+    "vars": {
+      "n": 3,
+      "groups": "[]"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 4,
+    "kind": "store",
+    "narration": "Sorted by signature: \"cat\", \"bird\", \"dog\".",
+    "why": "Once the row is ordered by signature, every group is a RUN of neighbours. Membership stops being a lookup and becomes \"same as the one before me?\".",
+    "vars": {
+      "n": 3,
+      "groups": "[]",
+      "order": "\"cat\", \"bird\", \"dog\""
+    },
+    "scene": {
+      "nums": [
+        2234,
+        46417,
+        3328
+      ],
+      "labels": [
+        "cat",
+        "bird",
+        "dog"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.labels",
+      "scene.nums",
+      "vars.order"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Take \"cat\" — signature \"act\".",
+    "why": "One pass, left to right. Nothing behind position i - 1 is ever consulted again.",
+    "vars": {
+      "n": 3,
+      "groups": "[]",
+      "i": 0,
+      "word": "cat",
+      "key": "act"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        46417,
+        3328
+      ],
+      "labels": [
+        "cat",
+        "bird",
+        "dog"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.i",
+      "vars.key",
+      "vars.order",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 12,
+    "kind": "store",
+    "narration": "\"cat\" starts the first group.",
+    "why": "A change of signature in a sorted row is a group boundary, and there can never be another word of the previous group further along.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat]]",
+      "i": 0,
+      "word": "cat"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        46417,
+        3328
+      ],
+      "labels": [
+        "cat",
+        "bird",
+        "dog"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.groups",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Take \"bird\" — signature \"bdir\".",
+    "why": "One pass, left to right. Nothing behind position i - 1 is ever consulted again.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat]]",
+      "i": 1,
+      "word": "bird",
+      "key": "bdir"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        46417,
+        3328
+      ],
+      "labels": [
+        "cat",
+        "bird",
+        "dog"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.key",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 12,
+    "kind": "store",
+    "narration": "Different signature from \"cat\" — start a new group.",
+    "why": "A change of signature in a sorted row is a group boundary, and there can never be another word of the previous group further along.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [bird]]",
+      "i": 1,
+      "word": "bird"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        46417,
+        3328
+      ],
+      "labels": [
+        "cat",
+        "bird",
+        "dog"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.groups",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Take \"dog\" — signature \"dgo\".",
+    "why": "One pass, left to right. Nothing behind position i - 1 is ever consulted again.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [bird]]",
+      "i": 2,
+      "word": "dog",
+      "key": "dgo"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        46417,
+        3328
+      ],
+      "labels": [
+        "cat",
+        "bird",
+        "dog"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.key",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 12,
+    "kind": "store",
+    "narration": "Different signature from \"bird\" — start a new group.",
+    "why": "A change of signature in a sorted row is a group boundary, and there can never be another word of the previous group further along.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [bird], [dog]]",
+      "i": 2,
+      "word": "dog"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        46417,
+        3328
+      ],
+      "labels": [
+        "cat",
+        "bird",
+        "dog"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.groups",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 16,
+    "kind": "return",
+    "narration": "3 words, 3 groups.",
+    "why": "No map, and the shortest trace of the three — because the work that makes it short happened inside one sort frame, off screen. The comparisons are still there; they are just not steps you were shown.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [bird], [dog]]",
+      "result": "3 groups"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        46417,
+        3328
+      ],
+      "labels": [
+        "cat",
+        "bird",
+        "dog"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "vars.i",
+      "vars.result",
+      "vars.word"
+    ]
+  }
+]

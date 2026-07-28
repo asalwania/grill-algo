@@ -127,6 +127,8 @@ single-problem machinery into a reusable family is recorded here.
 | G1 | Promote shared machinery | Done | 2026-07-28 | Ajay | `ArrayMemoryScene` type + component, `components/problem/`, per-problem `ProblemChrome`, per-problem approach sets — see full entry below |
 | G2 | Contains Duplicate | Done | 2026-07-28 | Ajay | `content/problems/contains-duplicate/`, three approaches incl. the first sort-based trace — see full entry below |
 | - | Add-a-problem recipe | Done | 2026-07-28 | Ajay | `specs/add-a-problem.md` — self-contained spec so a new problem needs no reading of G1/G2 code; docs only, no code changed |
+| G3 | Valid Anagram | Done | 2026-07-28 | Ajay | `content/problems/valid-anagram/`, three approaches, first string problem (char codes in `nums`, `labels`/`keyLabel`, `target` as boundary index). Shipped in `8bed439` without a row; logged here retroactively |
+| G4 | Group Anagrams | Done | 2026-07-28 | Ajay | `content/problems/group-anagrams/`, three approaches, first problem whose answer is a partition — see full entry below |
 
 ---
 
@@ -916,3 +918,78 @@ DOM value labels swap on the reorder — correct, but it wants a look to confirm
 it reads as the array reordering rather than as a glitch; (2) the three-tab
 header row at 390×844, where `ApproachTabs` now has to fit one more pill beside
 `ComplexityReadout`.
+
+### G4 — Group Anagrams
+
+**Status:** Done
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+Built to `specs/add-a-problem.md` with no changes outside
+`content/problems/group-anagrams/` and the two lines in
+`app/problems/[slug]/page.tsx`. Nothing in `components/`, `lib/` or
+`content/catalog.ts` was touched. Three decisions a future session should not
+re-open:
+
+- **One tile per WORD, not per letter.** Every step this problem takes is at
+  word granularity (take a word, sign it, file it), so a per-letter row would
+  animate nothing the algorithm does. `nums[i]` is the word packed base-27
+  (a=1…z=26, 0 unused so `'a'` and `'aa'` cannot collide), `labels[i]` is the
+  word itself. The packing exists only because `TestCase.nums` is `number[]`;
+  `chrome.ts` duplicates the five-line `decodeWord` rather than importing
+  `../trace`, which would drag three generators and three listings into the
+  client bundle. `target` is unused — the words ARE the input.
+- **The final frame relays the row so groups sit contiguously.** This problem's
+  answer is a PARTITION and `scene.result` is a tile pair, so there was no
+  honest way to report it otherwise. The relayout is literally what
+  `return [...groups.values()]` produces, it is legal because `scene.nums` is
+  per frame (only its length is invariant, G1 rule 4), and it makes `result`
+  the real tile span of the biggest group — or `null` when nothing grouped,
+  which is what gives the `no-answer` case a negative pill and suppresses the
+  flat view's return chip. The partition itself is prose in `vars.groups`, per
+  AGENTS.md's hard rule, so `chrome.formatAnswer` reads
+  `biggest group: N words` rather than a list it cannot reconstruct.
+- **`optimized` keys on LETTER COUNTS, not a sorted signature.** Corrected
+  mid-session after review: the first cut used `[...word].sort().join('')` as
+  the map key, which is O(k log k) per word. Tallying into a 26-slot count and
+  keying on that is O(k), reaches the same equivalence classes, and is the
+  actual optimum — so `sorted` is now a genuinely different (worse) algorithm
+  rather than the same one with extra steps, and the three tabs read
+  O(n·k) → O(n·k log k + n log n) → O(n²·k). The active line for the key frame
+  is the TALLY (line 7), not the `count.join(',')` that formats it. Consequence
+  for the scene: `slot.key`/`scene.probe` are numeric and the real key is a
+  26-field string, so the scene carries a numeric ID — `keyIdOf` packs the
+  sorted form, which is in bijection with the counts, and `chrome.ts` unpacks
+  it to render `a1 e1 t1`. Nothing in the trace sorts a word to get it;
+  `trace.test.ts` pins the two notions of "same group" against each other.
+- **The sorted approach's sort frame sets the CURSOR but lights no tile.**
+  `add-a-problem.md` §4c says it should do both; doing both makes that frame
+  scene-identical to the first word's own read frame whenever the list has one
+  element or the sort is a no-op, which the every-frame-changes rule then
+  fails. Cursor only. The "no shipped case is already sorted by signature"
+  assertion is still there and still necessary — it is what stops the frame
+  reordering nothing.
+
+Approaches ship as `['optimized', 'sorted', 'brute']`. `sorted` is legitimate
+here where Two Sum could not have it: grouping never reports a position in the
+original list, so reordering the words destroys nothing.
+
+Headline frame counts (`strs = ["eat","tea","tan","ate","nat","bat"]`):
+**optimized 23, sorted 15, brute 21** — the same inversion Contains Duplicate
+records. `sorted` is the shortest of the three because its comparisons happen
+inside one off-screen sort frame, so the complexity readout carries that story,
+not the step counter.
+
+Verified: `pnpm traces` (12 new frame files + two manifests), `tsc --noEmit`
+clean, `vitest run` **824 passing** (up from 605), `eslint` clean apart from the
+pre-existing `design-reference/support.js` errors.
+
+**Not verified: anything visual, and `next build` did not get a run in this
+session** (the sandbox blocked it after `pnpm traces`, `tsc`, `vitest` and
+`eslint` had all passed). Two things specifically want a real pass: (1) the
+final relayout frame, where the tiles are fixed positional boxes and only the
+DOM labels swap, so "the words settle into their groups" has to read as a
+regroup rather than a glitch — the same risk Contains Duplicate's sort frame
+flagged, but over six tiles at once; (2) whether `biggest group: 3 words`,
+`O(n·k log k + n log n)` and the wider `a1 e1 t1 has a group` probe pill fit
+their rows at 390×844.

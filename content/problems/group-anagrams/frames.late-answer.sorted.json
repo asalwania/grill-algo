@@ -1,0 +1,514 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "Label every word with its signature — its own letters, sorted.",
+    "why": "Same observation as the map approach, reached the expensive way: sorting a word is O(k log k) where tallying it is O(k). What this buys back is that it needs no map at all.",
+    "vars": {
+      "n": 4,
+      "groups": "[]"
+    },
+    "scene": {
+      "nums": [
+        14621,
+        1505,
+        3692,
+        10253
+      ],
+      "labels": [
+        "tan",
+        "bat",
+        "eat",
+        "nat"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 4,
+    "kind": "store",
+    "narration": "Sorted by signature: \"bat\", \"eat\", \"tan\", \"nat\".",
+    "why": "Once the row is ordered by signature, every group is a RUN of neighbours. Membership stops being a lookup and becomes \"same as the one before me?\".",
+    "vars": {
+      "n": 4,
+      "groups": "[]",
+      "order": "\"bat\", \"eat\", \"tan\", \"nat\""
+    },
+    "scene": {
+      "nums": [
+        1505,
+        3692,
+        14621,
+        10253
+      ],
+      "labels": [
+        "bat",
+        "eat",
+        "tan",
+        "nat"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.labels",
+      "scene.nums",
+      "vars.order"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Take \"bat\" — signature \"abt\".",
+    "why": "One pass, left to right. Nothing behind position i - 1 is ever consulted again.",
+    "vars": {
+      "n": 4,
+      "groups": "[]",
+      "i": 0,
+      "word": "bat",
+      "key": "abt"
+    },
+    "scene": {
+      "nums": [
+        1505,
+        3692,
+        14621,
+        10253
+      ],
+      "labels": [
+        "bat",
+        "eat",
+        "tan",
+        "nat"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.i",
+      "vars.key",
+      "vars.order",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 12,
+    "kind": "store",
+    "narration": "\"bat\" starts the first group.",
+    "why": "A change of signature in a sorted row is a group boundary, and there can never be another word of the previous group further along.",
+    "vars": {
+      "n": 4,
+      "groups": "[[bat]]",
+      "i": 0,
+      "word": "bat"
+    },
+    "scene": {
+      "nums": [
+        1505,
+        3692,
+        14621,
+        10253
+      ],
+      "labels": [
+        "bat",
+        "eat",
+        "tan",
+        "nat"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.groups",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Take \"eat\" — signature \"aet\".",
+    "why": "One pass, left to right. Nothing behind position i - 1 is ever consulted again.",
+    "vars": {
+      "n": 4,
+      "groups": "[[bat]]",
+      "i": 1,
+      "word": "eat",
+      "key": "aet"
+    },
+    "scene": {
+      "nums": [
+        1505,
+        3692,
+        14621,
+        10253
+      ],
+      "labels": [
+        "bat",
+        "eat",
+        "tan",
+        "nat"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.key",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 12,
+    "kind": "store",
+    "narration": "Different signature from \"bat\" — start a new group.",
+    "why": "A change of signature in a sorted row is a group boundary, and there can never be another word of the previous group further along.",
+    "vars": {
+      "n": 4,
+      "groups": "[[bat], [eat]]",
+      "i": 1,
+      "word": "eat"
+    },
+    "scene": {
+      "nums": [
+        1505,
+        3692,
+        14621,
+        10253
+      ],
+      "labels": [
+        "bat",
+        "eat",
+        "tan",
+        "nat"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.groups",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Take \"tan\" — signature \"ant\".",
+    "why": "One pass, left to right. Nothing behind position i - 1 is ever consulted again.",
+    "vars": {
+      "n": 4,
+      "groups": "[[bat], [eat]]",
+      "i": 2,
+      "word": "tan",
+      "key": "ant"
+    },
+    "scene": {
+      "nums": [
+        1505,
+        3692,
+        14621,
+        10253
+      ],
+      "labels": [
+        "bat",
+        "eat",
+        "tan",
+        "nat"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.key",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 12,
+    "kind": "store",
+    "narration": "Different signature from \"eat\" — start a new group.",
+    "why": "A change of signature in a sorted row is a group boundary, and there can never be another word of the previous group further along.",
+    "vars": {
+      "n": 4,
+      "groups": "[[bat], [eat], [tan]]",
+      "i": 2,
+      "word": "tan"
+    },
+    "scene": {
+      "nums": [
+        1505,
+        3692,
+        14621,
+        10253
+      ],
+      "labels": [
+        "bat",
+        "eat",
+        "tan",
+        "nat"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.groups",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Take \"nat\" — signature \"ant\".",
+    "why": "One pass, left to right. Nothing behind position i - 1 is ever consulted again.",
+    "vars": {
+      "n": 4,
+      "groups": "[[bat], [eat], [tan]]",
+      "i": 3,
+      "word": "nat",
+      "key": "ant"
+    },
+    "scene": {
+      "nums": [
+        1505,
+        3692,
+        14621,
+        10253
+      ],
+      "labels": [
+        "bat",
+        "eat",
+        "tan",
+        "nat"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.key",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 10,
+    "kind": "match",
+    "narration": "Same signature as \"tan\" — same group.",
+    "why": "The sort already proved these two belong together; the walk only has to notice it.",
+    "vars": {
+      "n": 4,
+      "groups": "[[bat], [eat], [tan, nat]]",
+      "i": 3,
+      "word": "nat",
+      "size": 2
+    },
+    "scene": {
+      "nums": [
+        1505,
+        3692,
+        14621,
+        10253
+      ],
+      "labels": [
+        "bat",
+        "eat",
+        "tan",
+        "nat"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": [
+        3,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.groups",
+      "vars.key",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 16,
+    "kind": "return",
+    "narration": "4 words, 3 groups.",
+    "why": "No map, and the shortest trace of the three — because the work that makes it short happened inside one sort frame, off screen. The comparisons are still there; they are just not steps you were shown.",
+    "vars": {
+      "n": 4,
+      "groups": "[[bat], [eat], [tan, nat]]",
+      "result": "3 groups"
+    },
+    "scene": {
+      "nums": [
+        1505,
+        3692,
+        14621,
+        10253
+      ],
+      "labels": [
+        "bat",
+        "eat",
+        "tan",
+        "nat"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "match",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        2,
+        3
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.result",
+      "scene.tiles",
+      "vars.i",
+      "vars.result",
+      "vars.size",
+      "vars.word"
+    ]
+  }
+]

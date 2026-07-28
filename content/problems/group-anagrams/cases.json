@@ -1,0 +1,47 @@
+[
+  {
+    "id": "sample",
+    "label": "The walkthrough",
+    "nums": [
+      3692,
+      14716,
+      14621,
+      1274,
+      10253,
+      1505
+    ],
+    "note": "Three groups of three different sizes — six words, three signatures."
+  },
+  {
+    "id": "first-pair",
+    "label": "Groups straight away",
+    "nums": [
+      3692,
+      1274,
+      1505,
+      2216
+    ],
+    "note": "The second word already joins the first; the last two never find anyone."
+  },
+  {
+    "id": "late-answer",
+    "label": "Groups on the last word",
+    "nums": [
+      14621,
+      1505,
+      3692,
+      10253
+    ],
+    "note": "Nothing groups until the very last word finds the very first one."
+  },
+  {
+    "id": "no-answer",
+    "label": "Nothing groups at all",
+    "nums": [
+      2234,
+      3328,
+      46417
+    ],
+    "note": "Three signatures, three groups of one — the map never gets a second hit."
+  }
+]

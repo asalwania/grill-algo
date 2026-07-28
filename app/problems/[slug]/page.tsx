@@ -8,6 +8,7 @@ import type { Approach, ArrayMemoryScene, Language } from "@/lib/types";
 import { ProblemView as TwoSumView } from "@/content/problems/two-sum/ProblemView";
 import { ProblemView as ContainsDuplicateView } from "@/content/problems/contains-duplicate/ProblemView";
 import { ProblemView as ValidAnagramView } from "@/content/problems/valid-anagram/ProblemView";
+import { ProblemView as GroupAnagramsView } from "@/content/problems/group-anagrams/ProblemView";
 
 const LANGUAGES: Language[] = ["javascript", "python", "java", "go"];
 
@@ -32,6 +33,7 @@ const VIEWS: Record<
   "two-sum": TwoSumView,
   "contains-duplicate": ContainsDuplicateView,
   "valid-anagram": ValidAnagramView,
+  "group-anagrams": GroupAnagramsView,
 };
 
 export async function generateStaticParams() {

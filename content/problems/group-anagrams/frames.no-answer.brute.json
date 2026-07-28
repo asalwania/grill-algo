@@ -1,0 +1,486 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "No map, no sorting. Groups get built by trying each word against the ones already placed.",
+    "why": "With nothing remembered under a key, the only way to know where a word belongs is to ask every group that exists — one representative at a time.",
+    "vars": {
+      "n": 3,
+      "groups": "[]"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"cat\". 0 groups to try.",
+    "why": "Every group already formed is a candidate, and there is no way to rule any of them out in advance.",
+    "vars": {
+      "n": 3,
+      "groups": "[]",
+      "i": 0,
+      "word": "cat",
+      "candidates": 0
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.candidates",
+      "vars.i",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 16,
+    "kind": "store",
+    "narration": "Nothing matched — \"cat\" starts group 0.",
+    "why": "Exhausting every group is what proves a new one is needed, and it is also what makes the next word more expensive than this one.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat]]",
+      "i": 0,
+      "word": "cat"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.candidates",
+      "vars.groups"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"dog\". 1 group to try.",
+    "why": "Every group already formed is a candidate, and there is no way to rule any of them out in advance.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat]]",
+      "i": 1,
+      "word": "dog",
+      "candidates": 1
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.candidates",
+      "vars.i",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 8,
+    "kind": "compare",
+    "narration": "\"dog\" against \"cat\" — no.",
+    "why": "Each of these is a full letter-count comparison, not a lookup. The map approach pays none of them.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat]]",
+      "i": 1,
+      "g": 0,
+      "against": "cat",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.against",
+      "vars.candidates",
+      "vars.found",
+      "vars.g",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 16,
+    "kind": "store",
+    "narration": "Nothing matched — \"dog\" starts group 1.",
+    "why": "Exhausting every group is what proves a new one is needed, and it is also what makes the next word more expensive than this one.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [dog]]",
+      "i": 1,
+      "word": "dog"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.against",
+      "vars.found",
+      "vars.g",
+      "vars.groups",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"bird\". 2 groups to try.",
+    "why": "Every group already formed is a candidate, and there is no way to rule any of them out in advance.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [dog]]",
+      "i": 2,
+      "word": "bird",
+      "candidates": 2
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.candidates",
+      "vars.i",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 8,
+    "kind": "compare",
+    "narration": "\"bird\" against \"cat\" — no.",
+    "why": "Each of these is a full letter-count comparison, not a lookup. The map approach pays none of them.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [dog]]",
+      "i": 2,
+      "g": 0,
+      "against": "cat",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "active",
+        "done",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.against",
+      "vars.candidates",
+      "vars.found",
+      "vars.g",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 8,
+    "kind": "compare",
+    "narration": "\"bird\" against \"dog\" — no.",
+    "why": "Each of these is a full letter-count comparison, not a lookup. The map approach pays none of them.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [dog]]",
+      "i": 2,
+      "g": 1,
+      "against": "dog",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.against",
+      "vars.g"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 16,
+    "kind": "store",
+    "narration": "Nothing matched — \"bird\" starts group 2.",
+    "why": "Exhausting every group is what proves a new one is needed, and it is also what makes the next word more expensive than this one.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [dog], [bird]]",
+      "i": 2,
+      "word": "bird"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.against",
+      "vars.found",
+      "vars.g",
+      "vars.groups",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 20,
+    "kind": "return",
+    "narration": "3 words, 3 groups.",
+    "why": "The same partition as the other two, reached by comparing words against groups instead of naming them — up to 3² comparisons where the map does 3 lookups.",
+    "vars": {
+      "n": 3,
+      "groups": "[[cat], [dog], [bird]]",
+      "result": "3 groups"
+    },
+    "scene": {
+      "nums": [
+        2234,
+        3328,
+        46417
+      ],
+      "labels": [
+        "cat",
+        "dog",
+        "bird"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "vars.i",
+      "vars.result",
+      "vars.word"
+    ]
+  }
+]

@@ -1,0 +1,987 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "An empty map. Its keys will be letter counts, its values the groups.",
+    "why": "Anagrams are exactly the words with the same letters in the same quantities — so the counts themselves are a name every member of a group shares, and nothing else does. Names are what a map is for.",
+    "vars": {
+      "n": 4,
+      "groups": "[]"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"eat\".",
+    "why": "Every word is handled once, on its own, and never compared against another word directly.",
+    "vars": {
+      "n": 4,
+      "groups": "[]",
+      "i": 0,
+      "word": "eat"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 7,
+    "kind": "compare",
+    "narration": "Tally its letters: a1 e1 t1. Nothing under that key yet.",
+    "why": "One pass over the word builds the key — no sorting. Every anagram of this word tallies to the same 26 counts, and no other word does, so one lookup decides membership for a group of any size.",
+    "vars": {
+      "n": 4,
+      "groups": "[]",
+      "i": 0,
+      "word": "eat",
+      "counts": "a1 e1 t1",
+      "key": "1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": 884,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.counts",
+      "vars.found",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 13,
+    "kind": "store",
+    "narration": "First word counting a1 e1 t1 — open a group for it.",
+    "why": "A new tally means a group nobody has needed yet. It costs one entry, and every later anagram of this word finds it in one step.",
+    "vars": {
+      "n": 4,
+      "groups": "[[]]",
+      "i": 0,
+      "word": "eat",
+      "counts": "a1 e1 t1"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 884,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        }
+      ],
+      "probe": 884,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "vars.found",
+      "vars.groups",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 16,
+    "kind": "store",
+    "narration": "\"eat\" joins a1 e1 t1 — 1 in that group now.",
+    "why": "No comparison happened, and no word was sorted. The word was filed under its counts, and everything sharing those counts is already sitting there.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat]]",
+      "i": 0,
+      "word": "eat",
+      "counts": "a1 e1 t1",
+      "size": 1
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 884,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        }
+      ],
+      "probe": 884,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.groups",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"ate\".",
+    "why": "Every word is handled once, on its own, and never compared against another word directly.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat]]",
+      "i": 1,
+      "word": "ate"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 884,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.counts",
+      "vars.i",
+      "vars.size",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 7,
+    "kind": "compare",
+    "narration": "Tally its letters: a1 e1 t1. That group already exists.",
+    "why": "One pass over the word builds the key — no sorting. Every anagram of this word tallies to the same 26 counts, and no other word does, so one lookup decides membership for a group of any size.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat]]",
+      "i": 1,
+      "word": "ate",
+      "counts": "a1 e1 t1",
+      "key": "1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0",
+      "found": true
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 884,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        }
+      ],
+      "probe": 884,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.counts",
+      "vars.found",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 16,
+    "kind": "match",
+    "narration": "\"ate\" joins a1 e1 t1 — 2 in that group now.",
+    "why": "No comparison happened, and no word was sorted. The word was filed under its counts, and everything sharing those counts is already sitting there.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate]]",
+      "i": 1,
+      "word": "ate",
+      "counts": "a1 e1 t1",
+      "size": 2
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 884,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        }
+      ],
+      "probe": 884,
+      "link": [
+        1,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.found",
+      "vars.groups",
+      "vars.key",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"bat\".",
+    "why": "Every word is handled once, on its own, and never compared against another word directly.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate]]",
+      "i": 2,
+      "word": "bat"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 884,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.counts",
+      "vars.i",
+      "vars.size",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 7,
+    "kind": "compare",
+    "narration": "Tally its letters: a1 b1 t1. Nothing under that key yet.",
+    "why": "One pass over the word builds the key — no sorting. Every anagram of this word tallies to the same 26 counts, and no other word does, so one lookup decides membership for a group of any size.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate]]",
+      "i": 2,
+      "word": "bat",
+      "counts": "a1 b1 t1",
+      "key": "1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 884,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        }
+      ],
+      "probe": 803,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.counts",
+      "vars.found",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 13,
+    "kind": "store",
+    "narration": "First word counting a1 b1 t1 — open a group for it.",
+    "why": "A new tally means a group nobody has needed yet. It costs one entry, and every later anagram of this word finds it in one step.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], []]",
+      "i": 2,
+      "word": "bat",
+      "counts": "a1 b1 t1"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 884,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        },
+        {
+          "key": 803,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "a1 b1 t1"
+        }
+      ],
+      "probe": 803,
+      "link": [
+        2,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "vars.found",
+      "vars.groups",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 16,
+    "kind": "store",
+    "narration": "\"bat\" joins a1 b1 t1 — 1 in that group now.",
+    "why": "No comparison happened, and no word was sorted. The word was filed under its counts, and everything sharing those counts is already sitting there.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], [bat]]",
+      "i": 2,
+      "word": "bat",
+      "counts": "a1 b1 t1",
+      "size": 1
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 884,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        },
+        {
+          "key": 803,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 b1 t1"
+        }
+      ],
+      "probe": 803,
+      "link": [
+        2,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.groups",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take \"cab\".",
+    "why": "Every word is handled once, on its own, and never compared against another word directly.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], [bat]]",
+      "i": 3,
+      "word": "cab"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 884,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        },
+        {
+          "key": 803,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 b1 t1"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.counts",
+      "vars.i",
+      "vars.size",
+      "vars.word"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 7,
+    "kind": "compare",
+    "narration": "Tally its letters: a1 b1 c1. Nothing under that key yet.",
+    "why": "One pass over the word builds the key — no sorting. Every anagram of this word tallies to the same 26 counts, and no other word does, so one lookup decides membership for a group of any size.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], [bat]]",
+      "i": 3,
+      "word": "cab",
+      "counts": "a1 b1 c1",
+      "key": "1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 884,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        },
+        {
+          "key": 803,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 b1 t1"
+        }
+      ],
+      "probe": 786,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.counts",
+      "vars.found",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 13,
+    "kind": "store",
+    "narration": "First word counting a1 b1 c1 — open a group for it.",
+    "why": "A new tally means a group nobody has needed yet. It costs one entry, and every later anagram of this word finds it in one step.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], [bat], []]",
+      "i": 3,
+      "word": "cab",
+      "counts": "a1 b1 c1"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 884,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        },
+        {
+          "key": 803,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 b1 t1"
+        },
+        {
+          "key": 786,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "a1 b1 c1"
+        }
+      ],
+      "probe": 786,
+      "link": [
+        3,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "vars.found",
+      "vars.groups",
+      "vars.key"
+    ]
+  },
+  {
+    "step": 15,
+    "line": 16,
+    "kind": "store",
+    "narration": "\"cab\" joins a1 b1 c1 — 1 in that group now.",
+    "why": "No comparison happened, and no word was sorted. The word was filed under its counts, and everything sharing those counts is already sitting there.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], [bat], [cab]]",
+      "i": 3,
+      "word": "cab",
+      "counts": "a1 b1 c1",
+      "size": 1
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 884,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        },
+        {
+          "key": 803,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 b1 t1"
+        },
+        {
+          "key": 786,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 b1 c1"
+        }
+      ],
+      "probe": 786,
+      "link": [
+        3,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.groups",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 16,
+    "line": 19,
+    "kind": "return",
+    "narration": "4 words, 3 groups.",
+    "why": "Every word was read once, tallied once and filed once — 4 lookups, no word sorted and no two words ever compared. The map's values, in insertion order, ARE the answer.",
+    "vars": {
+      "n": 4,
+      "groups": "[[eat, ate], [bat], [cab]]",
+      "result": "3 groups"
+    },
+    "scene": {
+      "nums": [
+        3692,
+        1274,
+        1505,
+        2216
+      ],
+      "labels": [
+        "eat",
+        "ate",
+        "bat",
+        "cab"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 884,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a1 e1 t1"
+        },
+        {
+          "key": 803,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 b1 t1"
+        },
+        {
+          "key": 786,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a1 b1 c1"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        1
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.result",
+      "scene.tiles",
+      "vars.counts",
+      "vars.i",
+      "vars.result",
+      "vars.size",
+      "vars.word"
+    ]
+  }
+]
