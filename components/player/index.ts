@@ -8,3 +8,4 @@ export {
 export { Controls } from "./Controls";
 export { ApproachTabs } from "./ApproachTabs";
 export { LanguageSelector } from "./LanguageSelector";
+export { RenderModeToggle } from "./RenderModeToggle";

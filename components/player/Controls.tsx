@@ -8,6 +8,7 @@ type ControlsProps = {
   /** Frame count for the player's current approach — the reducer owns the
    *  clamp, but the scrubber and step counter still need the total to render. */
   frameCount: number;
+  className?: string;
 };
 
 const SPEEDS = [0.5, 1, 1.5, 2] as const;
@@ -285,7 +286,7 @@ function Scrubber({ step, frameCount, isPlaying, dispatch }: ScrubberProps) {
  * DevTools profiler by holding NEXT and watching only Scrubber/StepCounter
  * flash.
  */
-export function Controls({ frameCount }: ControlsProps) {
+export function Controls({ frameCount, className = "" }: ControlsProps) {
   const { step, isPlaying, speed } = usePlayerState();
   const dispatch = usePlayerDispatch();
 
@@ -327,7 +328,7 @@ export function Controls({ frameCount }: ControlsProps) {
   }, [dispatch]);
 
   return (
-    <div className="flex flex-col gap-16">
+    <div className={`flex flex-col gap-16 ${className}`}>
       <Scrubber
         step={step}
         frameCount={frameCount}

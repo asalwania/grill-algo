@@ -82,7 +82,7 @@ const SETTLE_EPSILON = 0.002;
 // Camera distance at which a tile's label renders at its natural (scale 1)
 // size — roughly SceneShell's default initialCameraPosition magnitude, i.e.
 // the distance the whole scene is composed to be read at.
-const REFERENCE_DISTANCE = 7;
+const REFERENCE_DISTANCE = 9;
 
 const SLOT_WIDTH = 0.85;
 const SLOT_HEIGHT = 0.5;
@@ -197,11 +197,18 @@ function FrameCursor({
 // never invents a second angle model — it only ever moves the focus point
 // SceneShell's rig looks from that same angle. MATCH_OFFSET is that same
 // vector pulled back and tilted (more Y than X/Z) for the final frame.
-const CRUISE_OFFSET: [number, number, number] = [4, 3, 5];
-const MATCH_OFFSET: [number, number, number] = [5.6, 4.8, 7];
+const CRUISE_OFFSET: [number, number, number] = [2.5, 3.5, 8];
+const MATCH_OFFSET: [number, number, number] = [3.4, 4.8, 9.5];
 // Fraction of the way from the active tile toward the next one the focus
 // leads by — shows where the scan is heading, not just where it sits.
 const CAMERA_LEAD = 0.4;
+
+// Focus points sit BELOW the tile row (which lives at y≈0), so the whole
+// composition renders in the upper portion of the canvas — the lower-left,
+// where the floating VariablesPanel sits, stays clear of the tiles instead of
+// the panel overlapping the array on taller frames. A pure vertical pan: the
+// camera offset is unchanged, so the viewing angle is identical.
+const FOCUS_Y = -0.6;
 
 function tileWorldX(index: number, count: number): number {
   const startX = -((count - 1) * TILE_GAP) / 2;
@@ -211,7 +218,7 @@ function tileWorldX(index: number, count: number): number {
 function computeCruiseFocus(activeIndex: number, count: number): [number, number, number] {
   const current = tileWorldX(activeIndex, count);
   const lead = tileWorldX(Math.min(activeIndex + 1, count - 1), count);
-  return [THREE.MathUtils.lerp(current, lead, CAMERA_LEAD), 0, 0];
+  return [THREE.MathUtils.lerp(current, lead, CAMERA_LEAD), FOCUS_Y, 0];
 }
 
 /** Frames both matched tiles; also brings the wall into the shot when one
@@ -223,7 +230,7 @@ function computeMatchFocus(
   hasWall: boolean,
 ): [number, number, number] {
   const midX = (tileWorldX(result[0], count) + tileWorldX(result[1], count)) / 2;
-  return hasWall ? [midX, 0.3, WALL_Z / 2] : [midX, 0, 0];
+  return hasWall ? [midX, FOCUS_Y + 0.3, WALL_Z / 2] : [midX, FOCUS_Y, 0];
 }
 
 /**
@@ -283,7 +290,7 @@ function CameraChoreography({
       if (step === 0) {
         // Nothing has been touched yet: the whole-array establishing shot,
         // not a dolly toward a tile that isn't active.
-        rig.moveTo(0, 0, 0, CRUISE_OFFSET);
+        rig.moveTo(0, FOCUS_Y, 0, CRUISE_OFFSET);
         lastActiveIndex.current = 0;
       } else {
         const [x, y, z] = computeCruiseFocus(lastActiveIndex.current, count);

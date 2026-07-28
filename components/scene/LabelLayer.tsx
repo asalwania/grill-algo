@@ -53,6 +53,16 @@ const wrapperStyle: CSSProperties = {
   willChange: "transform",
 };
 
+// A tile at `active`/`match` renders as a near-white emissive block (scene.tsx
+// pushes emissiveIntensity to 1.4), and a filled wall slot glows violet — so
+// bare text painted over either is unreadable exactly when it matters most.
+// Every label therefore carries its own dark chip rather than relying on the
+// canvas behind it: this layer can't know what colour that is, and the tile
+// states it would have to track are precisely the bright ones.
+//
+// Padding and radius are in `em` so they track the font-size scaledStyle()
+// writes each frame — the chip shrinks with the label as a tile recedes
+// instead of ballooning around 11px text at the MIN_FONT_SIZE floor.
 const labelBaseStyle: CSSProperties = {
   position: "absolute",
   left: 0,
@@ -61,6 +71,11 @@ const labelBaseStyle: CSSProperties = {
   pointerEvents: "auto",
   userSelect: "text",
   lineHeight: 1,
+  color: "white",
+  padding: "0.22em 0.45em",
+  borderRadius: "0.35em",
+  backgroundColor: "rgba(10, 11, 15, 0.86)", // --color-surface-canvas @ 86%
+  border: "1px solid rgba(255, 255, 255, 0.1)", // --color-border-idle
 };
 
 /**
@@ -158,7 +173,10 @@ export const LabelLayer = forwardRef<LabelLayerHandle, LabelLayerProps>(function
             ref={(node) => {
               indexRefs.current[index] = node;
             }}
-            className="font-mono tracking-label text-text-muted-dim"
+            // text-muted, not text-muted-dim: the dim tier's 0.6 alpha was
+            // readable against the canvas backdrop but falls below usable
+            // contrast once it sits on this label's own chip.
+            className="font-mono tracking-label text-white"
             style={{ ...labelBaseStyle, transform: "translate(-50%, 6px)" }}
           >
             {index}

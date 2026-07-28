@@ -94,7 +94,7 @@ export function ActiveLineBar({ activeLine, children }: ActiveLineBarProps) {
           aria-hidden
           layout
           layoutDependency={activeLine}
-          className="pointer-events-none absolute left-0 right-0 border-l-2 border-signal-cyan bg-signal-cyan/8 shadow-[0_0_20px_var(--color-signal-cyan-fill-strong)]"
+          className="pointer-events-none absolute left-0 right-0 z-10 border-y border-signal-cyan-border border-l-[3px] border-l-signal-cyan bg-signal-cyan/12 shadow-[0_0_24px_var(--color-signal-cyan-fill-strong)]"
           style={{
             top: box.top,
             height: box.height,
@@ -111,9 +111,12 @@ export function ActiveLineBar({ activeLine, children }: ActiveLineBarProps) {
         />
       )}
 
-      {/* relative only so it paints above the bar (document order, not
-          z-index) — the bar must sit behind the text, never over it, so
-          selection is never visually interrupted. */}
+      {/* CodePane's card paints an opaque `bg-surface-raised`, so a bar in
+          normal document flow behind it is fully occluded (the reason the
+          highlight never showed). The bar is lifted above the card with
+          `z-10` instead and kept translucent + pointer-events-none, so the
+          highlighted text still reads through the tint and text selection is
+          never blocked. */}
       <div className="relative">{children}</div>
     </div>
   );

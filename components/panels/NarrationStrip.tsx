@@ -6,6 +6,7 @@ import type { Frame } from "@/lib/types";
 
 type NarrationStripProps = {
   frame: Frame;
+  className?: string;
 };
 
 function ChevronIcon() {
@@ -28,12 +29,15 @@ function ChevronIcon() {
  * gets aria-live — announcing the variables panel too on every step would be
  * unbearable for screen reader users.
  */
-export function NarrationStrip({ frame }: NarrationStripProps) {
+export function NarrationStrip({ frame, className = "" }: NarrationStripProps) {
   const [isWhyOpen, setIsWhyOpen] = useState(false);
   const whyPanelId = useId();
 
   return (
-    <div className="rounded-card border border-border-hairline bg-surface-raised px-16 py-14">
+    <div
+      className={`rounded-card border border-border-hairline bg-surface-raised px-16 py-14 ${className}`}
+    >
+
       <div
         aria-live="polite"
         className="relative h-24 overflow-hidden"

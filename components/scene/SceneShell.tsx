@@ -38,7 +38,12 @@ export type SceneShellHandle = {
    * No-ops while the user is mid-orbit — see `resumeAutoCamera`. Safe to
    * call in "demand" frameloop — it nudges the render loop itself.
    */
-  moveTo: (x: number, y: number, z: number, offset?: [number, number, number]) => void;
+  moveTo: (
+    x: number,
+    y: number,
+    z: number,
+    offset?: [number, number, number],
+  ) => void;
   /**
    * Clears the manual-orbit suspension: nothing is more irritating than a
    * camera that fights the user, so once they've grabbed OrbitControls
@@ -93,66 +98,126 @@ const CameraRig = forwardRef<
     userOrbitingRef: RefObject<boolean>;
   }
 >(function CameraRig({ orbitControlsRef, userOrbitingRef }, ref) {
-    const { invalidate } = useThree();
-    // Lazily seeded from the controls' own current target/offset (not
-    // useThree()'s render-time snapshot) on the first tick, so there's
-    // nothing to keep in sync with SceneShell's initial-position props.
-    const focusTarget = useRef<THREE.Vector3 | null>(null);
-    const cameraOffset = useRef<THREE.Vector3 | null>(null);
+  const { invalidate } = useThree();
+  // Lazily seeded from the controls' own current target/offset (not
+  // useThree()'s render-time snapshot) on the first tick, so there's
+  // nothing to keep in sync with SceneShell's initial-position props.
+  const focusTarget = useRef<THREE.Vector3 | null>(null);
+  const cameraOffset = useRef<THREE.Vector3 | null>(null);
 
-    useImperativeHandle(
-      ref,
-      () => ({
-        moveTo: (x, y, z, offset) => {
-          if (userOrbitingRef.current) return;
-          (focusTarget.current ??= new THREE.Vector3()).set(x, y, z);
-          if (offset) (cameraOffset.current ??= new THREE.Vector3()).set(offset[0], offset[1], offset[2]);
-          invalidate();
-        },
-        resumeAutoCamera: () => {
-          userOrbitingRef.current = false;
-          invalidate();
-        },
-      }),
-      [invalidate, userOrbitingRef],
+  useImperativeHandle(
+    ref,
+    () => ({
+      moveTo: (x, y, z, offset) => {
+        if (userOrbitingRef.current) return;
+        (focusTarget.current ??= new THREE.Vector3()).set(x, y, z);
+        if (offset)
+          (cameraOffset.current ??= new THREE.Vector3()).set(
+            offset[0],
+            offset[1],
+            offset[2],
+          );
+        invalidate();
+      },
+      resumeAutoCamera: () => {
+        userOrbitingRef.current = false;
+        invalidate();
+      },
+    }),
+    [invalidate, userOrbitingRef],
+  );
+
+  // Reads `camera` off the frame-loop state rather than destructuring it from
+  // useThree() at render time: react-hooks/immutability flags mutating a
+  // value returned from a hook, but mutating Object3D transforms imperatively
+  // inside useFrame — outside React's render/commit cycle entirely — is the
+  // documented R3F pattern, not a purity violation.
+  useFrame(({ camera }, delta) => {
+    if (userOrbitingRef.current) return;
+    const controls = orbitControlsRef.current;
+    if (!controls) return;
+
+    focusTarget.current ??= controls.target.clone();
+    cameraOffset.current ??= camera.position.clone().sub(controls.target);
+
+    const desiredCameraPosition = focusTarget.current
+      .clone()
+      .add(cameraOffset.current);
+
+    if (
+      controls.target.distanceTo(focusTarget.current) < SETTLE_EPSILON &&
+      camera.position.distanceTo(desiredCameraPosition) < SETTLE_EPSILON
+    ) {
+      return;
+    }
+
+    controls.target.x = THREE.MathUtils.damp(
+      controls.target.x,
+      focusTarget.current.x,
+      DAMPING,
+      delta,
+    );
+    controls.target.y = THREE.MathUtils.damp(
+      controls.target.y,
+      focusTarget.current.y,
+      DAMPING,
+      delta,
+    );
+    controls.target.z = THREE.MathUtils.damp(
+      controls.target.z,
+      focusTarget.current.z,
+      DAMPING,
+      delta,
     );
 
-    // Reads `camera` off the frame-loop state rather than destructuring it from
-    // useThree() at render time: react-hooks/immutability flags mutating a
-    // value returned from a hook, but mutating Object3D transforms imperatively
-    // inside useFrame — outside React's render/commit cycle entirely — is the
-    // documented R3F pattern, not a purity violation.
-    useFrame(({ camera }, delta) => {
-      if (userOrbitingRef.current) return;
-      const controls = orbitControlsRef.current;
-      if (!controls) return;
+    camera.position.x = THREE.MathUtils.damp(
+      camera.position.x,
+      desiredCameraPosition.x,
+      DAMPING,
+      delta,
+    );
+    camera.position.y = THREE.MathUtils.damp(
+      camera.position.y,
+      desiredCameraPosition.y,
+      DAMPING,
+      delta,
+    );
+    camera.position.z = THREE.MathUtils.damp(
+      camera.position.z,
+      desiredCameraPosition.z,
+      DAMPING,
+      delta,
+    );
 
-      focusTarget.current ??= controls.target.clone();
-      cameraOffset.current ??= camera.position.clone().sub(controls.target);
+    invalidate();
+  });
 
-      const desiredCameraPosition = focusTarget.current.clone().add(cameraOffset.current);
+  return null;
+});
 
-      if (
-        controls.target.distanceTo(focusTarget.current) < SETTLE_EPSILON &&
-        camera.position.distanceTo(desiredCameraPosition) < SETTLE_EPSILON
-      ) {
-        return;
-      }
-
-      controls.target.x = THREE.MathUtils.damp(controls.target.x, focusTarget.current.x, DAMPING, delta);
-      controls.target.y = THREE.MathUtils.damp(controls.target.y, focusTarget.current.y, DAMPING, delta);
-      controls.target.z = THREE.MathUtils.damp(controls.target.z, focusTarget.current.z, DAMPING, delta);
-
-      camera.position.x = THREE.MathUtils.damp(camera.position.x, desiredCameraPosition.x, DAMPING, delta);
-      camera.position.y = THREE.MathUtils.damp(camera.position.y, desiredCameraPosition.y, DAMPING, delta);
-      camera.position.z = THREE.MathUtils.damp(camera.position.z, desiredCameraPosition.z, DAMPING, delta);
-
-      invalidate();
-    });
-
-    return null;
-  },
-);
+/**
+ * F15 — three.js's OrbitControls.connect() unconditionally sets the canvas's
+ * own `touch-action` to "none" (see three-stdlib's OrbitControls.js), which
+ * blocks native one-finger page scroll over the canvas regardless of the
+ * `touches` config below. Overwriting it to "pan-y" restores native vertical
+ * scroll; two-finger gestures still reach OrbitControls since "pan-y" only
+ * reserves the vertical-pan gesture for the browser, not pinch/rotate.
+ *
+ * Reads `gl` off the frame-loop callback rather than destructuring it from
+ * useThree() at render time, same rationale as CameraRig's `camera` above —
+ * mutating a hook-returned value trips react-hooks/immutability, but a plain
+ * useFrame callback argument isn't one. A one-shot ref guards the actual
+ * mutation so it runs exactly once, not on every frame.
+ */
+function TouchActionFix() {
+  const applied = useRef(false);
+  useFrame((state) => {
+    if (applied.current) return;
+    state.gl.domElement.style.touchAction = "pan-y";
+    applied.current = true;
+  });
+  return null;
+}
 
 function LightingRig() {
   return (
@@ -161,12 +226,22 @@ function LightingRig() {
       {/* key */}
       <directionalLight position={[4, 6, 5]} intensity={2.2} color="#e8eaf0" />
       {/* fill — dim, cool-tinted so it reads as bounce rather than a second key */}
-      <directionalLight position={[-5, 2, -4]} intensity={0.4} color="#3ddcff" />
+      <directionalLight
+        position={[-5, 2, -4]}
+        intensity={0.4}
+        color="#3ddcff"
+      />
     </>
   );
 }
 
-function detectWebGLSupport(): boolean {
+/**
+ * Exported for F16: ScenePanel decides between the Canvas and the flat view,
+ * so it needs the same answer this shell does. Safe to call from both — it
+ * creates and discards a throwaway canvas rather than reading shared state, and
+ * both callers run it once in a lazy `useState` initializer.
+ */
+export function detectWebGLSupport(): boolean {
   if (typeof window === "undefined") return true;
   try {
     const canvas = document.createElement("canvas");
@@ -230,20 +305,28 @@ export const SceneShell = forwardRef<SceneShellHandle, SceneShellProps>(
         >
           <Suspense fallback={null}>
             <LightingRig />
-            <CameraRig ref={rigRef} orbitControlsRef={orbitControlsRef} userOrbitingRef={userOrbitingRef} />
+            <CameraRig
+              ref={rigRef}
+              orbitControlsRef={orbitControlsRef}
+              userOrbitingRef={userOrbitingRef}
+            />
             <OrbitControls
               ref={orbitControlsRef}
               target={orbitTarget}
               enablePan={false}
               minPolarAngle={Math.PI / 6}
               maxPolarAngle={Math.PI / 2.1}
-              minDistance={3}
-              maxDistance={12}
+              // minDistance={3}
+              // maxDistance={12}
               enableDamping
+              // F15: one finger scrolls the page (touches.ONE omitted -> falls
+              // to OrbitControls' internal STATE.NONE default), two fingers orbit.
+              touches={{ TWO: THREE.TOUCH.ROTATE }}
               onStart={() => {
                 userOrbitingRef.current = true;
               }}
             />
+            <TouchActionFix />
             {children}
           </Suspense>
         </Canvas>
