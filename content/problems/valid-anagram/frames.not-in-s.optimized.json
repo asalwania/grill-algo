@@ -1,0 +1,547 @@
+[
+  {
+    "step": 0,
+    "line": 6,
+    "kind": "init",
+    "narration": "An empty count map, and one pass over s to fill it.",
+    "why": "Two strings are anagrams exactly when every letter appears the same number of times in both. A map turns \"same multiset\" into \"every count nets back to zero.\"",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "counts": "{}"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 'r' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "counts": "{}",
+      "i": 0,
+      "ch": "r"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 'r': 1 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "counts": "{ r: 1 }",
+      "i": 0,
+      "ch": "r"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 'a' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "counts": "{ r: 1 }",
+      "i": 1,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 'a': 1 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "counts": "{ r: 1, a: 1 }",
+      "i": 1,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 97,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 't' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "counts": "{ r: 1, a: 1 }",
+      "i": 2,
+      "ch": "t"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 97,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 't': 1 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "counts": "{ r: 1, a: 1, t: 1 }",
+      "i": 2,
+      "ch": "t"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 97,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 116,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "t"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 13,
+    "kind": "compare",
+    "narration": "Take 'c' from t.",
+    "why": "Now spend what the map remembers, one letter of t at a time.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "counts": "{ r: 1, a: 1, t: 1 }",
+      "j": 0,
+      "ch": "c"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 97,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 116,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "t"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 15,
+    "kind": "return",
+    "narration": "'c' never showed up in s. Return false.",
+    "why": "t has a letter s cannot supply — that alone is enough to know they are not anagrams, with everything else left unchecked.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "counts": "{ r: 1, a: 1, t: 1 }",
+      "j": 0,
+      "ch": "c",
+      "result": "false"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 97,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 116,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "t"
+        }
+      ],
+      "probe": 99,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.result"
+    ]
+  }
+]

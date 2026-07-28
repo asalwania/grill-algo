@@ -153,7 +153,7 @@ function CompareConnector({
 }
 
 function ArrayRow({ frame }: { frame: ArrayMemoryFrame }) {
-  const { nums, tiles, cursor, link, slots } = frame.scene;
+  const { nums, labels, tiles, cursor, link, slots } = frame.scene;
   const count = nums.length;
   const trackStyle: CSSProperties = {
     display: "grid",
@@ -180,7 +180,7 @@ function ArrayRow({ frame }: { frame: ArrayMemoryFrame }) {
               <div
                 className={`flex h-48 w-full items-center justify-center rounded-control border font-mono text-body-16 font-medium transition-colors ${TILE_STYLES[state]}`}
               >
-                {value}
+                {labels?.[index] ?? value}
               </div>
               <span
                 className={`font-mono text-mono-13 tracking-label transition-colors ${INDEX_STYLES[state]}`}
@@ -272,7 +272,7 @@ function MemorySection({
                 transition={{ duration: 0.18 }}
                 className={`flex items-center justify-between rounded-chip border px-12 py-10 font-mono text-mono-13 transition-colors ${SLOT_STYLES[state]}`}
               >
-                <span>{slot.key}</span>
+                <span>{slot.keyLabel ?? slot.key}</span>
                 <span aria-hidden className="text-text-muted">
                   →
                 </span>

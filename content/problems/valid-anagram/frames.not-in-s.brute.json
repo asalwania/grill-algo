@@ -1,0 +1,708 @@
+[
+  {
+    "step": 0,
+    "line": 6,
+    "kind": "init",
+    "narration": "No memory, no order. For every letter in s, hunt through t for an unused match.",
+    "why": "With nothing remembered, the only way to know a letter is accounted for is to physically find it — and cross it off so it cannot be reused.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\""
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Take 'r' from s.",
+    "why": "Each letter of s needs exactly one partner in t — matched letters are crossed off so they cannot be reused by a later one.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "i": 0,
+      "ch": "r"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 12,
+    "kind": "compare",
+    "narration": "'r' vs 'c'.",
+    "why": "Every candidate has to be tried by hand — there is no lookup standing in for this search.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "i": 0,
+      "j": 0,
+      "sCh": "r",
+      "tCh": "c",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.ch",
+      "vars.found",
+      "vars.j",
+      "vars.sCh",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 12,
+    "kind": "compare",
+    "narration": "'r' vs 'a'.",
+    "why": "Every candidate has to be tried by hand — there is no lookup standing in for this search.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "i": 0,
+      "j": 1,
+      "sCh": "r",
+      "tCh": "a",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "active",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        4
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 12,
+    "kind": "match",
+    "narration": "'r' vs 'r'. A match.",
+    "why": "Every candidate has to be tried by hand — there is no lookup standing in for this search.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "i": 0,
+      "j": 2,
+      "sCh": "r",
+      "tCh": "r",
+      "found": true
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "active"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        5
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.found",
+      "vars.j",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 13,
+    "kind": "store",
+    "narration": "Matched. Cross 'r' off in t.",
+    "why": "Crossing a letter off is what stops it from being reused by a later letter of s — without it, one letter of t could satisfy two of s.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "i": 0,
+      "j": 2
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "done"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.found",
+      "vars.sCh",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Take 'a' from s.",
+    "why": "Each letter of s needs exactly one partner in t — matched letters are crossed off so they cannot be reused by a later one.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "i": 1,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 12,
+    "kind": "compare",
+    "narration": "'a' vs 'c'.",
+    "why": "Every candidate has to be tried by hand — there is no lookup standing in for this search.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "i": 1,
+      "j": 0,
+      "sCh": "a",
+      "tCh": "c",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "active",
+        "idle",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.ch",
+      "vars.found",
+      "vars.j",
+      "vars.sCh",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 12,
+    "kind": "match",
+    "narration": "'a' vs 'a'. A match.",
+    "why": "Every candidate has to be tried by hand — there is no lookup standing in for this search.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "i": 1,
+      "j": 1,
+      "sCh": "a",
+      "tCh": "a",
+      "found": true
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "active",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        4
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.found",
+      "vars.j",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 13,
+    "kind": "store",
+    "narration": "Matched. Cross 'a' off in t.",
+    "why": "Crossing a letter off is what stops it from being reused by a later letter of s — without it, one letter of t could satisfy two of s.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "i": 1,
+      "j": 1
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "done",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.found",
+      "vars.sCh",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Take 't' from s.",
+    "why": "Each letter of s needs exactly one partner in t — matched letters are crossed off so they cannot be reused by a later one.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "i": 2,
+      "ch": "t"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 12,
+    "kind": "compare",
+    "narration": "'t' vs 'c'.",
+    "why": "Every candidate has to be tried by hand — there is no lookup standing in for this search.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "i": 2,
+      "j": 0,
+      "sCh": "t",
+      "tCh": "c",
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "active",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.ch",
+      "vars.found",
+      "vars.j",
+      "vars.sCh",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 20,
+    "kind": "return",
+    "narration": "No unused 't' left in t. Return false.",
+    "why": "Exhausting every candidate and finding none proves the negative — the same conclusion the map reaches in one lookup.",
+    "vars": {
+      "s": "\"rat\"",
+      "t": "\"car\"",
+      "i": 2,
+      "result": "false"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        116,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "t",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.found",
+      "vars.j",
+      "vars.result",
+      "vars.sCh",
+      "vars.tCh"
+    ]
+  }
+]

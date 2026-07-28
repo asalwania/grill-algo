@@ -1,0 +1,789 @@
+[
+  {
+    "step": 0,
+    "line": 6,
+    "kind": "init",
+    "narration": "An empty count map, and one pass over s to fill it.",
+    "why": "Two strings are anagrams exactly when every letter appears the same number of times in both. A map turns \"same multiset\" into \"every count nets back to zero.\"",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{}"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 'a' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{}",
+      "i": 0,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 'a': 1 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{ a: 1 }",
+      "i": 0,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 'a' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{ a: 1 }",
+      "i": 1,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.tiles",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 'a': 2 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{ a: 2 }",
+      "i": 1,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 'b' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{ a: 2 }",
+      "i": 2,
+      "ch": "b"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 'b': 1 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{ a: 2, b: 1 }",
+      "i": 2,
+      "ch": "b"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 98,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "b"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 13,
+    "kind": "compare",
+    "narration": "Take 'a' from t.",
+    "why": "Now spend what the map remembers, one letter of t at a time.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{ a: 2, b: 1 }",
+      "j": 0,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 98,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "b"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 18,
+    "kind": "match",
+    "narration": "'a' spent. 1 left.",
+    "why": "Every successful spend is one letter of t explained by a letter of s — the map is doing the pairing for us.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{ a: 1, b: 1 }",
+      "j": 0,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 98,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "b"
+        }
+      ],
+      "probe": 97,
+      "link": [
+        3,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 13,
+    "kind": "compare",
+    "narration": "Take 'b' from t.",
+    "why": "Now spend what the map remembers, one letter of t at a time.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{ a: 1, b: 1 }",
+      "j": 1,
+      "ch": "b"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "match",
+        "active",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 98,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "b"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.ch",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 18,
+    "kind": "match",
+    "narration": "'b' spent. 0 left.",
+    "why": "Every successful spend is one letter of t explained by a letter of s — the map is doing the pairing for us.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{ a: 1, b: 0 }",
+      "j": 1,
+      "ch": "b"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 98,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "b"
+        }
+      ],
+      "probe": 98,
+      "link": [
+        4,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 13,
+    "kind": "compare",
+    "narration": "Take 'b' from t.",
+    "why": "Now spend what the map remembers, one letter of t at a time.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{ a: 1, b: 0 }",
+      "j": 2,
+      "ch": "b"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "active"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 98,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "b"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 15,
+    "kind": "return",
+    "narration": "No 'b' left to spend. Return false.",
+    "why": "t has a letter s cannot supply — that alone is enough to know they are not anagrams, with everything else left unchecked.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "counts": "{ a: 1, b: 0 }",
+      "j": 2,
+      "ch": "b",
+      "result": "false"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "active"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 98,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "b"
+        }
+      ],
+      "probe": 98,
+      "link": [
+        5,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "vars.result"
+    ]
+  }
+]

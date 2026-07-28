@@ -1,0 +1,37 @@
+[
+  {
+    "step": 0,
+    "line": 3,
+    "kind": "return",
+    "narration": "s is 2 letters, t is 1. Different lengths can never be anagrams.",
+    "why": "An anagram is a rearrangement — it can never add or remove a letter. Unequal lengths settle the question before a single character is compared.",
+    "vars": {
+      "s": "\"ab\"",
+      "t": "\"a\"",
+      "counts": "{}"
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        97
+      ],
+      "labels": [
+        "a",
+        "b",
+        "a"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  }
+]

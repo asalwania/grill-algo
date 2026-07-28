@@ -61,8 +61,21 @@ export type ArrayMemoryScene = {
    * The problem's scalar input, when it has one — Two Sum's target. Absent for
    * problems that take only an array (Contains Duplicate). Rendered by the DOM
    * chrome; the canvas never reads it.
+   *
+   * Valid Anagram repurposes this as the boundary index between its two
+   * concatenated strings within `nums`/`labels` (`s` occupies `[0, target)`,
+   * `t` occupies `[target, nums.length)`) — still "the problem's scalar input
+   * besides the array," just not literally a number the algorithm searches for.
    */
   target?: number
+  /**
+   * Display text for `nums`, one per element, when the underlying value is not
+   * itself the thing to show — Valid Anagram's tiles hold char codes so `nums`
+   * stays numeric, but the tile/label text should read as the letter. Absent
+   * for every purely-numeric problem (Two Sum, Contains Duplicate), which fall
+   * back to `String(nums[index])`.
+   */
+  labels?: string[]
   /** One entry per element of `nums`. */
   tiles: TileState[]
   /** Index of the tile under the beam, or null. */
@@ -73,7 +86,15 @@ export type ArrayMemoryScene = {
    * with no memory structure (brute force, sort-and-scan), which is exactly
    * what the wall's rise/sink animates against.
    */
-  slots: { key: number; value: number; state: SlotState }[]
+  slots: {
+    key: number
+    value: number
+    state: SlotState
+    /** Display text for `key`, when the key is not itself the thing to show —
+     *  Valid Anagram's slot keys are char codes; this carries the letter.
+     *  Absent for every purely-numeric problem, which falls back to `key`. */
+    keyLabel?: string
+  }[]
   /**
    * The key currently being looked up, or null.
    *

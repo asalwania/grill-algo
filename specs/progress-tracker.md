@@ -126,6 +126,7 @@ single-problem machinery into a reusable family is recorded here.
 | --- | --- | --- | --- | --- | --- |
 | G1 | Promote shared machinery | Done | 2026-07-28 | Ajay | `ArrayMemoryScene` type + component, `components/problem/`, per-problem `ProblemChrome`, per-problem approach sets — see full entry below |
 | G2 | Contains Duplicate | Done | 2026-07-28 | Ajay | `content/problems/contains-duplicate/`, three approaches incl. the first sort-based trace — see full entry below |
+| - | Add-a-problem recipe | Done | 2026-07-28 | Ajay | `specs/add-a-problem.md` — self-contained spec so a new problem needs no reading of G1/G2 code; docs only, no code changed |
 
 ---
 

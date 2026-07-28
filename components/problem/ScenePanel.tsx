@@ -161,6 +161,7 @@ export function ScenePanel({
   // every label pinned to the pre-sort value. Only the length is invariant,
   // which is what keeps LabelLayer's ref arrays stable across the change.
   const values = frame.scene.nums;
+  const labels = frame.scene.labels;
   const slotCapacity = frames.some((f) => f.scene.slots.length > 0) ? values.length : 0;
 
   return (
@@ -191,6 +192,7 @@ export function ScenePanel({
             key={resetKey}
             ref={labelLayerRef}
             values={values}
+            labels={labels}
             slotCapacity={slotCapacity}
           />
           <div className="pointer-events-none absolute bottom-16 left-16 hidden lg:block">

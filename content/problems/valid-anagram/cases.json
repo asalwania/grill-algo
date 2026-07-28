@@ -1,0 +1,63 @@
+[
+  {
+    "id": "sample",
+    "label": "The walkthrough",
+    "nums": [
+      97,
+      110,
+      97,
+      103,
+      114,
+      97,
+      109,
+      110,
+      97,
+      103,
+      97,
+      114,
+      97,
+      109
+    ],
+    "target": 7,
+    "note": "Same seven letters, different order — including three a's, counted and spent correctly."
+  },
+  {
+    "id": "not-in-s",
+    "label": "A letter that never showed up",
+    "nums": [
+      114,
+      97,
+      116,
+      99,
+      97,
+      114
+    ],
+    "target": 3,
+    "note": "'c' is not in \"rat\" at all, so the very first letter of t already settles it."
+  },
+  {
+    "id": "runs-out",
+    "label": "Runs out mid-check",
+    "nums": [
+      97,
+      97,
+      98,
+      97,
+      98,
+      98
+    ],
+    "target": 3,
+    "note": "'b' appears once in \"aab\" but twice in \"abb\" — the second 'b' has nothing left to spend."
+  },
+  {
+    "id": "different-lengths",
+    "label": "Different lengths",
+    "nums": [
+      97,
+      98,
+      97
+    ],
+    "target": 2,
+    "note": "t is missing a letter entirely — settled before comparing a single character."
+  }
+]

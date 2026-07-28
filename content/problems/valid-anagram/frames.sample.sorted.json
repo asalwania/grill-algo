@@ -1,0 +1,860 @@
+[
+  {
+    "step": 0,
+    "line": 6,
+    "kind": "init",
+    "narration": "The two strings, side by side, in the order they arrived.",
+    "why": "An anagram is a rearrangement, so the order never mattered — which means we are free to pick a more convenient one.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 6,
+    "kind": "store",
+    "narration": "Sorted s: \"aaagmnr\".",
+    "why": "Once every occurrence of a letter sits together, \"does s hold the same letters as t\" turns into \"do the two rows read the same, position by position.\"",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "sortedS": "\"aaagmnr\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.labels",
+      "scene.nums",
+      "scene.tiles",
+      "vars.sortedS"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 7,
+    "kind": "store",
+    "narration": "Sorted t: \"aaagmnr\".",
+    "why": "Same trade for t. Two anagrams sort to the identical string — that identity is exactly what the walk below checks.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "sortedT": "\"aaagmnr\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114,
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114
+      ],
+      "labels": [
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r",
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 7,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.labels",
+      "scene.nums",
+      "scene.tiles",
+      "vars.sortedS",
+      "vars.sortedT"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 10,
+    "kind": "match",
+    "narration": "Position 0: 'a' (s) vs 'a' (t).",
+    "why": "Sorted, a mismatch anywhere means the multisets differ — and agreement all the way through means they cannot.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "i": 0,
+      "sCh": "a",
+      "tCh": "a",
+      "match": true
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114,
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114
+      ],
+      "labels": [
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r",
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        7
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.match",
+      "vars.sCh",
+      "vars.sortedT",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 10,
+    "kind": "match",
+    "narration": "Position 1: 'a' (s) vs 'a' (t).",
+    "why": "Sorted, a mismatch anywhere means the multisets differ — and agreement all the way through means they cannot.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "i": 1,
+      "sCh": "a",
+      "tCh": "a",
+      "match": true
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114,
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114
+      ],
+      "labels": [
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r",
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        8
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 10,
+    "kind": "match",
+    "narration": "Position 2: 'a' (s) vs 'a' (t).",
+    "why": "Sorted, a mismatch anywhere means the multisets differ — and agreement all the way through means they cannot.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "i": 2,
+      "sCh": "a",
+      "tCh": "a",
+      "match": true
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114,
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114
+      ],
+      "labels": [
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r",
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        9
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 10,
+    "kind": "match",
+    "narration": "Position 3: 'g' (s) vs 'g' (t).",
+    "why": "Sorted, a mismatch anywhere means the multisets differ — and agreement all the way through means they cannot.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "i": 3,
+      "sCh": "g",
+      "tCh": "g",
+      "match": true
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114,
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114
+      ],
+      "labels": [
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r",
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        3,
+        10
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.sCh",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 10,
+    "kind": "match",
+    "narration": "Position 4: 'm' (s) vs 'm' (t).",
+    "why": "Sorted, a mismatch anywhere means the multisets differ — and agreement all the way through means they cannot.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "i": 4,
+      "sCh": "m",
+      "tCh": "m",
+      "match": true
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114,
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114
+      ],
+      "labels": [
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r",
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        4,
+        11
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.sCh",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 10,
+    "kind": "match",
+    "narration": "Position 5: 'n' (s) vs 'n' (t).",
+    "why": "Sorted, a mismatch anywhere means the multisets differ — and agreement all the way through means they cannot.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "i": 5,
+      "sCh": "n",
+      "tCh": "n",
+      "match": true
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114,
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114
+      ],
+      "labels": [
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r",
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        5,
+        12
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.sCh",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 10,
+    "kind": "match",
+    "narration": "Position 6: 'r' (s) vs 'r' (t).",
+    "why": "Sorted, a mismatch anywhere means the multisets differ — and agreement all the way through means they cannot.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "i": 6,
+      "sCh": "r",
+      "tCh": "r",
+      "match": true
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114,
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114
+      ],
+      "labels": [
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r",
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        6,
+        13
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.sCh",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 15,
+    "kind": "return",
+    "narration": "Every position agreed. Return true.",
+    "why": "The sort cost O(n log n) up front so the comparison itself could be a single straight-line walk — 7 positions, no lookups, no extra memory.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "result": "true"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114,
+        97,
+        97,
+        97,
+        103,
+        109,
+        110,
+        114
+      ],
+      "labels": [
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r",
+        "a",
+        "a",
+        "a",
+        "g",
+        "m",
+        "n",
+        "r"
+      ],
+      "tiles": [
+        "match",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        13
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.result",
+      "scene.tiles",
+      "vars.i",
+      "vars.match",
+      "vars.result",
+      "vars.sCh",
+      "vars.tCh"
+    ]
+  }
+]

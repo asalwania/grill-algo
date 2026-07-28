@@ -1,0 +1,36 @@
+[
+  {
+    "step": 0,
+    "line": 3,
+    "kind": "return",
+    "narration": "s is 2 letters, t is 1. Different lengths can never be anagrams.",
+    "why": "Sorting cannot line up two strings of different lengths — settle this first.",
+    "vars": {
+      "s": "\"ab\"",
+      "t": "\"a\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        97
+      ],
+      "labels": [
+        "a",
+        "b",
+        "a"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  }
+]

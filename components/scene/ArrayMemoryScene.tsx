@@ -583,7 +583,7 @@ function MemoryWall({
         point.x = (projectionVector.current.x * 0.5 + 0.5) * state.size.width;
         point.y = (-projectionVector.current.y * 0.5 + 0.5) * state.size.height;
         point.scale = REFERENCE_DISTANCE / Math.max(distance, 0.001);
-        point.text = entry ? `${entry.key}: ${entry.value}` : null;
+        point.text = entry ? `${entry.keyLabel ?? entry.key}: ${entry.value}` : null;
       }
     }
 

@@ -1,0 +1,2986 @@
+[
+  {
+    "step": 0,
+    "line": 6,
+    "kind": "init",
+    "narration": "An empty count map, and one pass over s to fill it.",
+    "why": "Two strings are anagrams exactly when every letter appears the same number of times in both. A map turns \"same multiset\" into \"every count nets back to zero.\"",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{}"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 'a' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{}",
+      "i": 0,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 'a': 1 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 1 }",
+      "i": 0,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 'n' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 1 }",
+      "i": 1,
+      "ch": "n"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 'n': 1 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 1, n: 1 }",
+      "i": 1,
+      "ch": "n"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "n"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 'a' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 1, n: 1 }",
+      "i": 2,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "n"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 'a': 2 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 2, n: 1 }",
+      "i": 2,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "n"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 'g' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 2, n: 1 }",
+      "i": 3,
+      "ch": "g"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "n"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 'g': 1 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 2, n: 1, g: 1 }",
+      "i": 3,
+      "ch": "g"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "g"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 'r' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 2, n: 1, g: 1 }",
+      "i": 4,
+      "ch": "r"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "g"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 'r': 1 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 2, n: 1, g: 1, r: 1 }",
+      "i": 4,
+      "ch": "r"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 'a' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 2, n: 1, g: 1, r: 1 }",
+      "i": 5,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 'a': 3 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 3, n: 1, g: 1, r: 1 }",
+      "i": 5,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 9,
+    "kind": "compare",
+    "narration": "Take 'm' from s.",
+    "why": "Every letter of s is counted exactly once, in one pass.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 3, n: 1, g: 1, r: 1 }",
+      "i": 6,
+      "ch": "m"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.tiles",
+      "vars.ch",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 9,
+    "kind": "store",
+    "narration": "Count 'm': 1 so far.",
+    "why": "The map is keyed by letter — the only thing that ever matters here is how many of each letter is left to account for.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 3, n: 1, g: 1, r: 1, m: 1 }",
+      "i": 6,
+      "ch": "m"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 15,
+    "line": 13,
+    "kind": "compare",
+    "narration": "Take 'n' from t.",
+    "why": "Now spend what the map remembers, one letter of t at a time.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 3, n: 1, g: 1, r: 1, m: 1 }",
+      "j": 0,
+      "ch": "n"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 16,
+    "line": 18,
+    "kind": "match",
+    "narration": "'n' spent. 0 left.",
+    "why": "Every successful spend is one letter of t explained by a letter of s — the map is doing the pairing for us.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 3, n: 0, g: 1, r: 1, m: 1 }",
+      "j": 0,
+      "ch": "n"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": 110,
+      "link": [
+        7,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 17,
+    "line": 13,
+    "kind": "compare",
+    "narration": "Take 'a' from t.",
+    "why": "Now spend what the map remembers, one letter of t at a time.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 3, n: 0, g: 1, r: 1, m: 1 }",
+      "j": 1,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.ch",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 18,
+    "line": 18,
+    "kind": "match",
+    "narration": "'a' spent. 2 left.",
+    "why": "Every successful spend is one letter of t explained by a letter of s — the map is doing the pairing for us.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 2, n: 0, g: 1, r: 1, m: 1 }",
+      "j": 1,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": 97,
+      "link": [
+        8,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 19,
+    "line": 13,
+    "kind": "compare",
+    "narration": "Take 'g' from t.",
+    "why": "Now spend what the map remembers, one letter of t at a time.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 2, n: 0, g: 1, r: 1, m: 1 }",
+      "j": 2,
+      "ch": "g"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.ch",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 20,
+    "line": 18,
+    "kind": "match",
+    "narration": "'g' spent. 0 left.",
+    "why": "Every successful spend is one letter of t explained by a letter of s — the map is doing the pairing for us.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 2, n: 0, g: 0, r: 1, m: 1 }",
+      "j": 2,
+      "ch": "g"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": 103,
+      "link": [
+        9,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 21,
+    "line": 13,
+    "kind": "compare",
+    "narration": "Take 'a' from t.",
+    "why": "Now spend what the map remembers, one letter of t at a time.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 2, n: 0, g: 0, r: 1, m: 1 }",
+      "j": 3,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "match",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.ch",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 22,
+    "line": 18,
+    "kind": "match",
+    "narration": "'a' spent. 1 left.",
+    "why": "Every successful spend is one letter of t explained by a letter of s — the map is doing the pairing for us.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 1, n: 0, g: 0, r: 1, m: 1 }",
+      "j": 3,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": 97,
+      "link": [
+        10,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 23,
+    "line": 13,
+    "kind": "compare",
+    "narration": "Take 'r' from t.",
+    "why": "Now spend what the map remembers, one letter of t at a time.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 1, n: 0, g: 0, r: 1, m: 1 }",
+      "j": 4,
+      "ch": "r"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "match",
+        "match",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.ch",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 24,
+    "line": 18,
+    "kind": "match",
+    "narration": "'r' spent. 0 left.",
+    "why": "Every successful spend is one letter of t explained by a letter of s — the map is doing the pairing for us.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 1, n: 0, g: 0, r: 0, m: 1 }",
+      "j": 4,
+      "ch": "r"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": 114,
+      "link": [
+        11,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 25,
+    "line": 13,
+    "kind": "compare",
+    "narration": "Take 'a' from t.",
+    "why": "Now spend what the map remembers, one letter of t at a time.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 1, n: 0, g: 0, r: 0, m: 1 }",
+      "j": 5,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "active",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.ch",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 26,
+    "line": 18,
+    "kind": "match",
+    "narration": "'a' spent. 0 left.",
+    "why": "Every successful spend is one letter of t explained by a letter of s — the map is doing the pairing for us.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 0, n: 0, g: 0, r: 0, m: 1 }",
+      "j": 5,
+      "ch": "a"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": 97,
+      "link": [
+        12,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 27,
+    "line": 13,
+    "kind": "compare",
+    "narration": "Take 'm' from t.",
+    "why": "Now spend what the map remembers, one letter of t at a time.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 0, n: 0, g: 0, r: 0, m: 1 }",
+      "j": 6,
+      "ch": "m"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "active"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.ch",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 28,
+    "line": 18,
+    "kind": "match",
+    "narration": "'m' spent. 0 left.",
+    "why": "Every successful spend is one letter of t explained by a letter of s — the map is doing the pairing for us.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 0, n: 0, g: 0, r: 0, m: 0 }",
+      "j": 6,
+      "ch": "m"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": 109,
+      "link": [
+        13,
+        4
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.counts"
+    ]
+  },
+  {
+    "step": 29,
+    "line": 21,
+    "kind": "return",
+    "narration": "Every letter of t found one in s, and none are left over. Return true.",
+    "why": "7 letters counted, 7 spent, nothing left in the map — that is exactly what \"same multiset\" means.",
+    "vars": {
+      "s": "\"anagram\"",
+      "t": "\"nagaram\"",
+      "counts": "{ a: 0, n: 0, g: 0, r: 0, m: 0 }",
+      "result": "true"
+    },
+    "scene": {
+      "nums": [
+        97,
+        110,
+        97,
+        103,
+        114,
+        97,
+        109,
+        110,
+        97,
+        103,
+        97,
+        114,
+        97,
+        109
+      ],
+      "labels": [
+        "a",
+        "n",
+        "a",
+        "g",
+        "r",
+        "a",
+        "m",
+        "n",
+        "a",
+        "g",
+        "a",
+        "r",
+        "a",
+        "m"
+      ],
+      "tiles": [
+        "match",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 97,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "a"
+        },
+        {
+          "key": 110,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "n"
+        },
+        {
+          "key": 103,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "g"
+        },
+        {
+          "key": 114,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "r"
+        },
+        {
+          "key": 109,
+          "value": 0,
+          "state": "empty",
+          "keyLabel": "m"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        13
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "scene.result",
+      "scene.tiles",
+      "vars.ch",
+      "vars.j",
+      "vars.result"
+    ]
+  }
+]

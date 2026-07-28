@@ -26,6 +26,10 @@ type LabelLayerProps = {
    * re-renders this layer's parent.
    */
   values: number[];
+  /** Display text per value, when the value itself is not what should be
+   *  shown — Valid Anagram's tiles hold char codes, this carries the letter.
+   *  Absent for purely-numeric problems, which fall back to `String(value)`. */
+  labels?: string[];
   /** Memory-wall capacity (F10) — 0 for approaches with no wall, matching
    *  MemoryWall's own capacity check. Defaults to 0. */
   slotCapacity?: number;
@@ -99,7 +103,7 @@ const labelBaseStyle: CSSProperties = {
  * picture of text.
  */
 export const LabelLayer = forwardRef<LabelLayerHandle, LabelLayerProps>(function LabelLayer(
-  { values, slotCapacity = 0 },
+  { values, labels, slotCapacity = 0 },
   ref,
 ) {
   const wrapperRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -175,7 +179,7 @@ export const LabelLayer = forwardRef<LabelLayerHandle, LabelLayerProps>(function
             className="font-mono font-medium text-text-primary"
             style={{ ...labelBaseStyle, transform: "translate(-50%, calc(-100% - 6px))" }}
           >
-            {value}
+            {labels?.[index] ?? value}
           </span>
           <span
             ref={(node) => {

@@ -1,0 +1,314 @@
+[
+  {
+    "step": 0,
+    "line": 6,
+    "kind": "init",
+    "narration": "The two strings, side by side, in the order they arrived.",
+    "why": "An anagram is a rearrangement, so the order never mattered — which means we are free to pick a more convenient one.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 6,
+    "kind": "store",
+    "narration": "Sorted s: \"aab\".",
+    "why": "Once every occurrence of a letter sits together, \"does s hold the same letters as t\" turns into \"do the two rows read the same, position by position.\"",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "sortedS": "\"aab\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.tiles",
+      "vars.sortedS"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 7,
+    "kind": "store",
+    "narration": "Sorted t: \"abb\".",
+    "why": "Same trade for t. Two anagrams sort to the identical string — that identity is exactly what the walk below checks.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "sortedT": "\"abb\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.sortedS",
+      "vars.sortedT"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 10,
+    "kind": "match",
+    "narration": "Position 0: 'a' (s) vs 'a' (t).",
+    "why": "Sorted, a mismatch anywhere means the multisets differ — and agreement all the way through means they cannot.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "i": 0,
+      "sCh": "a",
+      "tCh": "a",
+      "match": true
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.match",
+      "vars.sCh",
+      "vars.sortedT",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 10,
+    "kind": "compare",
+    "narration": "Position 1: 'a' (s) vs 'b' (t).",
+    "why": "Sorted, a mismatch anywhere means the multisets differ — and agreement all the way through means they cannot.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "i": 1,
+      "sCh": "a",
+      "tCh": "b",
+      "match": false
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        4
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.match",
+      "vars.tCh"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 11,
+    "kind": "return",
+    "narration": "'a' vs 'b' — different letters at the same position. Return false.",
+    "why": "One disagreement anywhere in the sorted rows is enough: the two strings cannot hold the same letters the same number of times.",
+    "vars": {
+      "s": "\"aab\"",
+      "t": "\"abb\"",
+      "i": 1,
+      "result": "false"
+    },
+    "scene": {
+      "nums": [
+        97,
+        97,
+        98,
+        97,
+        98,
+        98
+      ],
+      "labels": [
+        "a",
+        "a",
+        "b",
+        "a",
+        "b",
+        "b"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle",
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        4
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.match",
+      "vars.result",
+      "vars.sCh",
+      "vars.tCh"
+    ]
+  }
+]
