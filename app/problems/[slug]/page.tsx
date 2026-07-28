@@ -35,7 +35,10 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
     Approach,
     Record<Language, Record<number, number>>
   >;
-  const lines: Record<Approach, number[]> = {} as Record<Approach, number[]>;
+  // Panes and lineMaps are per approach x language only — a code listing never
+  // depends on which input is playing. `lines` does, since it is the trace's
+  // own per-step line sequence.
+  const lines: Record<string, Record<Approach, number[]>> = {};
 
   for (const approach of APPROACHES) {
     const paneByLanguage = {} as Record<Language, ReactNode>;
@@ -52,13 +55,20 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
 
     panes[approach] = paneByLanguage;
     lineMaps[approach] = lineMapByLanguage;
-    lines[approach] = problem.frames[approach].map((frame) => frame.line);
+  }
+
+  for (const testCase of problem.cases) {
+    lines[testCase.id] = {
+      optimized: problem.frames[testCase.id].optimized.map((frame) => frame.line),
+      brute: problem.frames[testCase.id].brute.map((frame) => frame.line),
+    };
   }
 
   return (
     <ProblemView
       meta={problem.meta}
-      framesByApproach={problem.frames}
+      cases={problem.cases}
+      framesByCase={problem.frames}
       panes={panes}
       lineMaps={lineMaps}
       lines={lines}

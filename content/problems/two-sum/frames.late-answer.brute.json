@@ -1,0 +1,309 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "Nothing remembered. Every pair, checked by hand.",
+    "why": "The only tool here is comparison, so the only way forward is to try each pair and see. Watch the work accumulate: the first number is checked against every number after it, the second against every number after that, and so on down.",
+    "vars": {
+      "target": 6,
+      "n": 3,
+      "comparisons": 0
+    },
+    "scene": {
+      "nums": [
+        3,
+        2,
+        4
+      ],
+      "target": 6,
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 2,
+    "kind": "compare",
+    "narration": "i = 0. Anchor on 3.",
+    "why": "The inner loop starts one step past the anchor and never looks back — every pair to the left has already been tried. That is why the second pass is shorter than the first, and the last is a single comparison.",
+    "vars": {
+      "target": 6,
+      "n": 3,
+      "comparisons": 0,
+      "i": 0,
+      "a": 3
+    },
+    "scene": {
+      "nums": [
+        3,
+        2,
+        4
+      ],
+      "target": 6,
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.tiles",
+      "vars.a",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 4,
+    "kind": "compare",
+    "narration": "3 + 2 = 5. Not 6.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the optimized trace spends a single frame where this one spends an entire inner loop.",
+    "vars": {
+      "target": 6,
+      "n": 3,
+      "comparisons": 1,
+      "i": 0,
+      "j": 1,
+      "a": 3,
+      "b": 2,
+      "sum": 5,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        3,
+        2,
+        4
+      ],
+      "target": 6,
+      "tiles": [
+        "active",
+        "active",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.found",
+      "vars.j",
+      "vars.sum"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 4,
+    "kind": "compare",
+    "narration": "3 + 4 = 7. Not 6.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the optimized trace spends a single frame where this one spends an entire inner loop.",
+    "vars": {
+      "target": 6,
+      "n": 3,
+      "comparisons": 2,
+      "i": 0,
+      "j": 2,
+      "a": 3,
+      "b": 4,
+      "sum": 7,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        3,
+        2,
+        4
+      ],
+      "target": 6,
+      "tiles": [
+        "active",
+        "idle",
+        "active"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.j",
+      "vars.sum"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 2,
+    "kind": "compare",
+    "narration": "i = 1. Anchor on 2.",
+    "why": "The inner loop starts one step past the anchor and never looks back — every pair to the left has already been tried. That is why the second pass is shorter than the first, and the last is a single comparison.",
+    "vars": {
+      "target": 6,
+      "n": 3,
+      "comparisons": 2,
+      "i": 1,
+      "a": 2
+    },
+    "scene": {
+      "nums": [
+        3,
+        2,
+        4
+      ],
+      "target": 6,
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.a",
+      "vars.b",
+      "vars.found",
+      "vars.i",
+      "vars.j",
+      "vars.sum"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 4,
+    "kind": "match",
+    "narration": "2 + 4 = 6.",
+    "why": "Found by exhaustion rather than by memory — 3 comparisons, against one lookup per element on the other side. On six numbers that is barely a difference. On six million it is the difference between an answer and a hung tab.",
+    "vars": {
+      "target": 6,
+      "n": 3,
+      "comparisons": 3,
+      "i": 1,
+      "j": 2,
+      "a": 2,
+      "b": 4,
+      "sum": 6,
+      "found": true
+    },
+    "scene": {
+      "nums": [
+        3,
+        2,
+        4
+      ],
+      "target": 6,
+      "tiles": [
+        "done",
+        "active",
+        "active"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.found",
+      "vars.j",
+      "vars.sum"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 5,
+    "kind": "return",
+    "narration": "Return [1, 2].",
+    "why": "The same pair and the same indices the map approach returns — the answer was never in doubt. What differs is how much work it took to become certain of it.",
+    "vars": {
+      "target": 6,
+      "n": 3,
+      "comparisons": 3,
+      "i": 1,
+      "j": 2,
+      "a": 2,
+      "b": 4,
+      "sum": 6,
+      "found": true,
+      "result": "[1, 2]"
+    },
+    "scene": {
+      "nums": [
+        3,
+        2,
+        4
+      ],
+      "target": 6,
+      "tiles": [
+        "done",
+        "match",
+        "match"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        2
+      ],
+      "result": [
+        1,
+        2
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.result",
+      "scene.tiles",
+      "vars.result"
+    ]
+  }
+]

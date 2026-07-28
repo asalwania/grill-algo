@@ -1,0 +1,664 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "An empty map, and one pass to fill it.",
+    "why": "Brute force re-scans the rest of the array for every element. If we instead remember every number we have already walked past, \"is its partner out there?\" collapses into a single lookup.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{}",
+      "lookups": 0
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 5,
+    "kind": "compare",
+    "narration": "i = 0. Pick up 2.",
+    "why": "Each element is touched exactly once. Everything else we need is already behind us, in the map.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{}",
+      "lookups": 0,
+      "i": 0,
+      "num": 2
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 6,
+    "kind": "compare",
+    "narration": "2 needs 98 to reach 100.",
+    "why": "This is the pivot. Instead of hunting for a pair, we turn each number into a question with exactly one right answer — and single answers are what a hash map is for.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{}",
+      "lookups": 0,
+      "i": 0,
+      "num": 2,
+      "complement": 98
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "vars.complement"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Have we seen 98? The map is empty, so no.",
+    "why": "One hash lookup, O(1). This single step stands in for the whole of brute force’s inner loop.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{}",
+      "lookups": 1,
+      "i": 0,
+      "num": 2,
+      "complement": 98,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": 98,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.found",
+      "vars.lookups"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 12,
+    "kind": "store",
+    "narration": "Remember 2 at index 0.",
+    "why": "The number is the key and the index is the value — the array turned inside out. We look up by value, but we have to return indices.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{ 2: 0 }",
+      "lookups": 1,
+      "i": 0,
+      "num": 2,
+      "complement": 98,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": 98,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 5,
+    "kind": "compare",
+    "narration": "i = 1. Pick up 7.",
+    "why": "Each element is touched exactly once. Everything else we need is already behind us, in the map.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{ 2: 0 }",
+      "lookups": 1,
+      "i": 1,
+      "num": 7
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.complement",
+      "vars.found",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 6,
+    "kind": "compare",
+    "narration": "7 needs 93 to reach 100.",
+    "why": "This is the pivot. Instead of hunting for a pair, we turn each number into a question with exactly one right answer — and single answers are what a hash map is for.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{ 2: 0 }",
+      "lookups": 1,
+      "i": 1,
+      "num": 7,
+      "complement": 93
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "vars.complement"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Have we seen 93? Not in the map.",
+    "why": "One hash lookup, O(1). This single step stands in for the whole of brute force’s inner loop.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{ 2: 0 }",
+      "lookups": 2,
+      "i": 1,
+      "num": 7,
+      "complement": 93,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": 93,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.found",
+      "vars.lookups"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 12,
+    "kind": "store",
+    "narration": "Remember 7 at index 1.",
+    "why": "The number is the key and the index is the value — the array turned inside out. We look up by value, but we have to return indices.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{ 2: 0, 7: 1 }",
+      "lookups": 2,
+      "i": 1,
+      "num": 7,
+      "complement": 93,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 7,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": 93,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 5,
+    "kind": "compare",
+    "narration": "i = 2. Pick up 11.",
+    "why": "Each element is touched exactly once. Everything else we need is already behind us, in the map.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{ 2: 0, 7: 1 }",
+      "lookups": 2,
+      "i": 2,
+      "num": 11
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 7,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.complement",
+      "vars.found",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 6,
+    "kind": "compare",
+    "narration": "11 needs 89 to reach 100.",
+    "why": "This is the pivot. Instead of hunting for a pair, we turn each number into a question with exactly one right answer — and single answers are what a hash map is for.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{ 2: 0, 7: 1 }",
+      "lookups": 2,
+      "i": 2,
+      "num": 11,
+      "complement": 89
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 7,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "vars.complement"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Have we seen 89? Not in the map.",
+    "why": "One hash lookup, O(1). This single step stands in for the whole of brute force’s inner loop.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{ 2: 0, 7: 1 }",
+      "lookups": 3,
+      "i": 2,
+      "num": 11,
+      "complement": 89,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 7,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": 89,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.found",
+      "vars.lookups"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 12,
+    "kind": "store",
+    "narration": "Remember 11 at index 2.",
+    "why": "The number is the key and the index is the value — the array turned inside out. We look up by value, but we have to return indices.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{ 2: 0, 7: 1, 11: 2 }",
+      "lookups": 3,
+      "i": 2,
+      "num": 11,
+      "complement": 89,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 7,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 11,
+          "value": 2,
+          "state": "filled"
+        }
+      ],
+      "probe": 89,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 15,
+    "kind": "return",
+    "narration": "The walk is over. Nothing pairs to 100.",
+    "why": "Every number got one chance to find a partner already behind it. If a pair existed, the later of the two would have found the earlier one — so a single pass really is enough to be sure.",
+    "vars": {
+      "target": 100,
+      "n": 3,
+      "seen": "{ 2: 0, 7: 1, 11: 2 }",
+      "lookups": 3,
+      "result": "[]"
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11
+      ],
+      "target": 100,
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 7,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 11,
+          "value": 2,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "vars.complement",
+      "vars.found",
+      "vars.i",
+      "vars.num",
+      "vars.result"
+    ]
+  }
+]

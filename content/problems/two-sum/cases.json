@@ -1,0 +1,50 @@
+[
+  {
+    "id": "sample",
+    "label": "The walkthrough",
+    "nums": [
+      2,
+      7,
+      11,
+      15,
+      3,
+      6
+    ],
+    "target": 21,
+    "note": "Every tile gets touched and the map fills up before the answer lands."
+  },
+  {
+    "id": "first-pair",
+    "label": "Found immediately",
+    "nums": [
+      2,
+      7,
+      11,
+      15
+    ],
+    "target": 9,
+    "note": "The first two numbers are the answer — one lookup and it is over."
+  },
+  {
+    "id": "late-answer",
+    "label": "Answer at the end",
+    "nums": [
+      3,
+      2,
+      4
+    ],
+    "target": 6,
+    "note": "3 + 3 would hit the target, but you cannot use one number twice."
+  },
+  {
+    "id": "no-answer",
+    "label": "No pair at all",
+    "nums": [
+      2,
+      7,
+      11
+    ],
+    "target": 100,
+    "note": "Nothing adds up, so both approaches run to the end and return nothing."
+  }
+]

@@ -2,8 +2,9 @@
  * Two Sum — build-time trace generators.
  *
  * Promoted from app/(SP3)/two-sum-frames/trace.ts. Nothing here runs in the
- * browser: scripts/build-traces.ts executes these generators at build time and
- * writes frames.optimized.json / frames.brute.json next to this file.
+ * browser: scripts/build-traces.ts executes these generators at build time,
+ * once per entry in TEST_CASES, and writes one
+ * frames.<case>.<approach>.json per combination next to this file.
  *
  * Two things changed on the way over from SP3, both resolved by the spike's own
  * findings (docs/spikes/SP3-generator-frames.md):
@@ -25,6 +26,7 @@ import type {
   FrameKind,
   ProblemTraces,
   SlotState,
+  TestCase,
   TileState,
   TwoSumFrame,
   TwoSumScene,
@@ -33,6 +35,64 @@ import type {
 /** The input the shipped frames are generated from — SP3 Finding 1. */
 export const EXAMPLE_NUMS = [2, 7, 11, 15, 3, 6]
 export const EXAMPLE_TARGET = 21
+
+// ---------------------------------------------------------------------------
+// Playable inputs
+// ---------------------------------------------------------------------------
+
+/**
+ * Every input the player can switch between. All four are generated at build
+ * time by the same generators below — nothing here is ever run in the browser.
+ *
+ * The first entry is the default and MUST stay SP3 Finding 1's canonical
+ * example: it is the one the S2 mock's "STEP 7 / 24" was drawn against, and
+ * the one AGENTS.md's frame counts (optimized 25 / brute 20) refer to.
+ *
+ * The other three are chosen for the branches the headline example never
+ * reaches, one branch each:
+ *   - `first-pair` matches on the very first lookup (nothing accumulates),
+ *   - `late-answer` proves the answer is not simply "the first two numbers",
+ *   - `no-answer` is the only case that reaches either listing's final
+ *     `return []` — canonical line 15 (optimized) / 10 (brute). Those lines
+ *     were mapped for every language in solutions/index.ts but, until this
+ *     case existed, no shipped frame ever pointed at them.
+ *
+ * Constraint on any case added here: the optimized trace pushes one slot per
+ * non-matching element, and both the flat view and the label layer key slots
+ * by their map key — so no input may store the same value twice. In practice
+ * that means no repeated value that misses (a repeated value that HITS is
+ * fine; it returns before the second push).
+ */
+export const TEST_CASES: TestCase[] = [
+  {
+    id: 'sample',
+    label: 'The walkthrough',
+    nums: EXAMPLE_NUMS,
+    target: EXAMPLE_TARGET,
+    note: 'Every tile gets touched and the map fills up before the answer lands.',
+  },
+  {
+    id: 'first-pair',
+    label: 'Found immediately',
+    nums: [2, 7, 11, 15],
+    target: 9,
+    note: 'The first two numbers are the answer — one lookup and it is over.',
+  },
+  {
+    id: 'late-answer',
+    label: 'Answer at the end',
+    nums: [3, 2, 4],
+    target: 6,
+    note: '3 + 3 would hit the target, but you cannot use one number twice.',
+  },
+  {
+    id: 'no-answer',
+    label: 'No pair at all',
+    nums: [2, 7, 11],
+    target: 100,
+    note: 'Nothing adds up, so both approaches run to the end and return nothing.',
+  },
+]
 
 // ---------------------------------------------------------------------------
 // Canonical listings
@@ -454,8 +514,9 @@ export const traceBrute = (nums: number[], target: number): TwoSumFrame[] => [
 export const traces: ProblemTraces<TwoSumScene> = {
   example: `nums = [${EXAMPLE_NUMS.join(', ')}], target = ${EXAMPLE_TARGET}`,
   listings: { optimized: OPTIMIZED_LISTING, brute: BRUTE_LISTING },
+  cases: TEST_CASES,
   build: {
-    optimized: () => traceOptimized(EXAMPLE_NUMS, EXAMPLE_TARGET),
-    brute: () => traceBrute(EXAMPLE_NUMS, EXAMPLE_TARGET),
+    optimized: (input) => traceOptimized(input.nums, input.target),
+    brute: (input) => traceBrute(input.nums, input.target),
   },
 }

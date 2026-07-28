@@ -103,6 +103,7 @@ with `path:line` where it helps a reader jump straight to the code.>
 | F16 | Performance and reduced motion | In progress | 2026-07-28 | Ajay | 2D/3D render-mode toggle + flat view shipped (`components/player/RenderModeToggle.tsx`, `content/problems/two-sum/FlatView.tsx`); reduced-motion tier, IntersectionObserver and localStorage override still open — see full entry below |
 | F17 | Content | - | | | |
 | F18 | SEO and shipping | - | | | |
+| - | Plain-words brief + playable test cases | Done | 2026-07-28 | Ajay | `content/problems/two-sum/ProblemBrief.tsx`, `components/player/TestCasePicker.tsx`; traces now generated per case — see full entry below |
 
 ---
 
@@ -417,3 +418,61 @@ Verified: `tsc --noEmit`, `eslint`, `vitest run` (94 passing). **Not verified in
 a browser this session** — the 2D layout, the connector geometry at narrow
 widths and the toggle's placement against the fullscreen button all still want a
 real visual check at 1440px and at 390×844.
+
+---
+
+### — Plain-words brief + playable test cases
+
+**Status:** Done
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+Ad-hoc, user-requested: a plain-language statement of the problem under the
+code pane, and at least three inputs the player can actually run.
+
+- **A case is a fourth axis of the same pre-generated trace set, not runtime
+  input.** `lib/types.ts` gains `TestCase`; `ProblemTraces` gains `cases` and
+  its `build` entries now take one. `scripts/build-traces.ts` runs the
+  generators once per case and writes `frames.<case>.<approach>.json` plus a
+  `cases.json` manifest — the manifest, not a `readdir`, is what the loader
+  discovers cases from, because author order is meaningful (first = default)
+  and a directory scan would lose it. `frames.optimized.json` /
+  `frames.brute.json` are gone, superseded by the per-case files.
+- **Four cases ship** (`TEST_CASES` in `trace.ts`): the SP3 canonical example
+  stays first and unchanged (25/20 frames, so AGENTS.md's counts still hold),
+  plus a first-lookup hit, `[3, 2, 4]`/6 (where `3 + 3` is the trap), and a
+  no-answer input. That last one is the only case that ever reaches either
+  listing's final `return []` — canonical line 15 / 10. Those lines had
+  per-language `lineMap` entries since F14 but no shipped frame had ever
+  pointed at one; `solutions/index.test.ts` now unions frame lines across all
+  cases rather than checking the headline case alone.
+- **Constraint on any future case:** optimized pushes one slot per
+  non-matching element, and both `FlatView` and `LabelLayer` key slots by map
+  key, so no input may store the same key twice. A repeated value that *hits*
+  is fine (the trace returns before the second push) — which is why the new
+  test asserts on generated slots, not on `nums` having no duplicates.
+- **`SET_CASE` resets the step rather than clamping it**, unlike
+  `SET_APPROACH`. The two approaches narrate the same input so "where you
+  were" carries over; a different input is a different story. It also pauses
+  and bumps `restartNonce`, so F12's camera re-establishes on the new array
+  instead of staying dollied in on a tile that may not exist any more.
+- **The scene subtree is keyed on the case id** (`ScenePanel`'s new `resetKey`,
+  applied to `TwoSumScene` and `LabelLayer`, deliberately not to `SceneShell`).
+  `ArrayTiles`/`HashMapWall` size their per-tile ref arrays and spring state
+  once at mount from `nums.length`; an input with a different length would
+  index past them and write `NaN` into a transform. The Canvas itself owns the
+  WebGL context and camera rig, neither of which depends on the trace, so it
+  is not remounted.
+- **Layout:** the desktop grid gains a fourth row (`auto_1fr_auto_auto`) for
+  the brief, between the scrolling code pane and the controls; the scene spans
+  rows 2–5. The mobile fixed-footer clearance moved from `CodePaneStack` to
+  `ProblemBrief`, since the brief is now the last thing in the document flow.
+- **Not done:** `content.mdx` is still empty — the brief is player chrome
+  (what the animation is showing), not F17's long-form article.
+
+Verified: `pnpm traces` (8 frame files + manifest; sample still 25/20, first-pair
+9/4, late-answer 13/7, no-answer 14/7), `tsc --noEmit`, `vitest run` (119
+passing, up from 94), `eslint` (clean except the pre-existing
+`design-reference/support.js` findings), `next build` (clean, `/problems/two-sum`
+still prerenders). **Not checked in a browser this session** — the new left-column
+row split at `lg:` and the case cards at 390×844 both still want a visual pass.

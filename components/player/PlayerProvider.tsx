@@ -18,6 +18,8 @@ export type PlayerState = {
   speed: number;
   language: Language;
   approach: Approach;
+  /** Which pre-generated input is playing — a `TestCase.id` from cases.json. */
+  caseId: string;
   renderMode: RenderMode;
   /**
    * Incremented only by RESTART. Scrubbing or stepping back to step 0 via
@@ -39,10 +41,15 @@ export type PlayerAction =
   | { type: "SET_SPEED"; speed: number }
   | { type: "SET_LANGUAGE"; language: Language }
   | { type: "SET_APPROACH"; approach: Approach }
+  | { type: "SET_CASE"; caseId: string }
   | { type: "SET_RENDER_MODE"; renderMode: RenderMode };
 
 /** Milliseconds per step at speed = 1. The RAF loop divides this by `speed`. */
 const BASE_STEP_MS = 600;
+
+/** Frame count per case id, then per approach — the shape of the whole
+ *  pre-generated trace set the player can move between. */
+export type FrameCounts = Record<string, Record<Approach, number>>;
 
 function clampStep(step: number, frameCount: number): number {
   if (frameCount <= 0) return 0;
@@ -55,14 +62,17 @@ function clampStep(step: number, frameCount: number): number {
  * the same transition — never a separate effect that would let an
  * out-of-range step render for a frame.
  */
-function createPlayerReducer(frameCounts: Record<Approach, number>) {
+function createPlayerReducer(frameCounts: FrameCounts) {
+  const countOf = (caseId: string, approach: Approach): number =>
+    frameCounts[caseId]?.[approach] ?? 0;
+
   return function playerReducer(
     state: PlayerState,
     action: PlayerAction,
   ): PlayerState {
     switch (action.type) {
       case "NEXT": {
-        const frameCount = frameCounts[state.approach];
+        const frameCount = countOf(state.caseId, state.approach);
         const step = clampStep(state.step + 1, frameCount);
         const atEnd = step >= frameCount - 1;
         return { ...state, step, isPlaying: atEnd ? false : state.isPlaying };
@@ -70,7 +80,7 @@ function createPlayerReducer(frameCounts: Record<Approach, number>) {
       case "PREV":
         return {
           ...state,
-          step: clampStep(state.step - 1, frameCounts[state.approach]),
+          step: clampStep(state.step - 1, countOf(state.caseId, state.approach)),
         };
       case "PLAY":
         return { ...state, isPlaying: true };
@@ -81,7 +91,7 @@ function createPlayerReducer(frameCounts: Record<Approach, number>) {
       case "SEEK":
         return {
           ...state,
-          step: clampStep(action.step, frameCounts[state.approach]),
+          step: clampStep(action.step, countOf(state.caseId, state.approach)),
         };
       case "SET_SPEED":
         return { ...state, speed: Math.max(0.1, action.speed) };
@@ -89,14 +99,30 @@ function createPlayerReducer(frameCounts: Record<Approach, number>) {
         return {
           ...state,
           language: action.language,
-          step: clampStep(state.step, frameCounts[state.approach]),
+          step: clampStep(state.step, countOf(state.caseId, state.approach)),
         };
       case "SET_APPROACH":
         return {
           ...state,
           approach: action.approach,
-          step: clampStep(state.step, frameCounts[action.approach]),
+          step: clampStep(state.step, countOf(state.caseId, action.approach)),
         };
+      case "SET_CASE": {
+        if (action.caseId === state.caseId) return state;
+        // Unlike SET_APPROACH, the step is RESET rather than clamped: the two
+        // approaches narrate the same input, so "where you were" carries over,
+        // but a different input is a different story and step 7 of it means
+        // nothing. Playback stops for the same reason, and `restartNonce` is
+        // bumped so F12's camera re-establishes on the new array instead of
+        // staying dollied in on a tile that may no longer exist.
+        return {
+          ...state,
+          caseId: action.caseId,
+          step: 0,
+          isPlaying: false,
+          restartNonce: state.restartNonce + 1,
+        };
+      }
       case "SET_RENDER_MODE":
         return { ...state, renderMode: action.renderMode };
       default: {
@@ -129,8 +155,11 @@ export function usePlayerDispatch(): Dispatch<PlayerAction> {
 }
 
 type PlayerProviderProps = {
-  /** Frame count per approach, e.g. `{ optimized: problem.frames.optimized.length, brute: problem.frames.brute.length }`. */
-  frameCounts: Record<Approach, number>;
+  /** Frame count per case id, then per approach — every pre-generated trace
+   *  the player can move between. */
+  frameCounts: FrameCounts;
+  /** Case the player starts on; normally `problem.cases[0].id`. */
+  initialCaseId: string;
   initialApproach?: Approach;
   initialLanguage?: Language;
   initialRenderMode?: RenderMode;
@@ -140,6 +169,7 @@ type PlayerProviderProps = {
 
 export function PlayerProvider({
   frameCounts,
+  initialCaseId,
   initialApproach = "optimized",
   initialLanguage = "javascript",
   initialRenderMode = "3d",
@@ -157,6 +187,7 @@ export function PlayerProvider({
     speed: initialSpeed,
     language: initialLanguage,
     approach: initialApproach,
+    caseId: initialCaseId,
     renderMode: initialRenderMode,
     restartNonce: 0,
   });

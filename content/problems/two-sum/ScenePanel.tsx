@@ -15,9 +15,17 @@ import { TwoSumFlatView } from "./FlatView";
 import { TwoSumScene, type SlotScreenPosition, type TileScreenPosition } from "./scene";
 
 type ScenePanelProps = {
+  /**
+   * Remounts the scene subtree (and its label overlay) when it changes. Both
+   * size ref arrays and spring state to `nums.length` on mount, so a switch to
+   * an input with a different array length has to remount rather than
+   * re-render. The Canvas itself is deliberately NOT keyed: it owns the WebGL
+   * context and the camera rig, neither of which depends on the trace.
+   */
+  resetKey: string;
   /** Frames for the CURRENTLY SELECTED approach only — the caller has already
-   *  resolved `framesByApproach[state.approach]`, matching TwoSumScene's own
-   *  contract. */
+   *  resolved `framesByCase[state.caseId][state.approach]`, matching
+   *  TwoSumScene's own contract. */
   frames: TwoSumFrame[];
   /** Current frame (same resolution as `frames[step]`) — read here only for
    *  the desktop floating VariablesPanel overlay. */
@@ -111,7 +119,7 @@ function FullscreenButton({ targetRef }: { targetRef: React.RefObject<HTMLDivEle
  * never duplicated, since a second mount would mean a second WebGL context
  * and a second F12 camera rig fighting the same player state.
  */
-export function ScenePanel({ frames, frame, className = "" }: ScenePanelProps) {
+export function ScenePanel({ resetKey, frames, frame, className = "" }: ScenePanelProps) {
   const { isPlaying, renderMode } = usePlayerState();
   const containerRef = useRef<HTMLDivElement>(null);
   const cameraRig = useRef<SceneShellHandle>(null);
@@ -156,13 +164,19 @@ export function ScenePanel({ frames, frame, className = "" }: ScenePanelProps) {
             initialCameraPosition={[2.5, 3.5, 8]}
           >
             <TwoSumScene
+              key={resetKey}
               frames={frames}
               onTilePositions={handleTilePositions}
               onSlotPositions={handleSlotPositions}
               cameraRig={cameraRig}
             />
           </SceneShell>
-          <LabelLayer ref={labelLayerRef} values={values} slotCapacity={slotCapacity} />
+          <LabelLayer
+            key={resetKey}
+            ref={labelLayerRef}
+            values={values}
+            slotCapacity={slotCapacity}
+          />
           <div className="pointer-events-none absolute bottom-16 left-16 hidden lg:block">
             <div className="pointer-events-auto">
               <VariablesPanel frame={frame} />

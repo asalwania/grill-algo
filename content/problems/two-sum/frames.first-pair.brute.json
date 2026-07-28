@@ -1,0 +1,177 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "Nothing remembered. Every pair, checked by hand.",
+    "why": "The only tool here is comparison, so the only way forward is to try each pair and see. Watch the work accumulate: the first number is checked against every number after it, the second against every number after that, and so on down.",
+    "vars": {
+      "target": 9,
+      "n": 4,
+      "comparisons": 0
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11,
+        15
+      ],
+      "target": 9,
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 2,
+    "kind": "compare",
+    "narration": "i = 0. Anchor on 2.",
+    "why": "The inner loop starts one step past the anchor and never looks back — every pair to the left has already been tried. That is why the second pass is shorter than the first, and the last is a single comparison.",
+    "vars": {
+      "target": 9,
+      "n": 4,
+      "comparisons": 0,
+      "i": 0,
+      "a": 2
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11,
+        15
+      ],
+      "target": 9,
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.tiles",
+      "vars.a",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 4,
+    "kind": "match",
+    "narration": "2 + 7 = 9.",
+    "why": "Found by exhaustion rather than by memory — 1 comparisons, against one lookup per element on the other side. On six numbers that is barely a difference. On six million it is the difference between an answer and a hung tab.",
+    "vars": {
+      "target": 9,
+      "n": 4,
+      "comparisons": 1,
+      "i": 0,
+      "j": 1,
+      "a": 2,
+      "b": 7,
+      "sum": 9,
+      "found": true
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11,
+        15
+      ],
+      "target": 9,
+      "tiles": [
+        "active",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.found",
+      "vars.j",
+      "vars.sum"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 5,
+    "kind": "return",
+    "narration": "Return [0, 1].",
+    "why": "The same pair and the same indices the map approach returns — the answer was never in doubt. What differs is how much work it took to become certain of it.",
+    "vars": {
+      "target": 9,
+      "n": 4,
+      "comparisons": 1,
+      "i": 0,
+      "j": 1,
+      "a": 2,
+      "b": 7,
+      "sum": 9,
+      "found": true,
+      "result": "[0, 1]"
+    },
+    "scene": {
+      "nums": [
+        2,
+        7,
+        11,
+        15
+      ],
+      "target": 9,
+      "tiles": [
+        "match",
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        1
+      ],
+      "result": [
+        0,
+        1
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.result",
+      "scene.tiles",
+      "vars.result"
+    ]
+  }
+]

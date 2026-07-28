@@ -12,10 +12,11 @@ type CodePaneStackProps = {
   panes: Record<Approach, Record<Language, ReactNode>>;
   /** Canonical trace line -> this listing's line, per F14's Solution.lineMap. */
   lineMaps: Record<Approach, Record<Language, Record<number, number>>>;
-  /** `frame.line` for every step, per approach — the only piece of the frame
-   *  array this component actually needs, kept as plain numbers rather than
-   *  full Frame objects so it stays decoupled from the scene's TScene shape. */
-  lines: Record<Approach, number[]>;
+  /** `frame.line` for every step, keyed by case id then approach — the only
+   *  piece of the frame array this component actually needs, kept as plain
+   *  numbers rather than full Frame objects so it stays decoupled from the
+   *  scene's TScene shape. */
+  lines: Record<string, Record<Approach, number[]>>;
   className?: string;
   style?: CSSProperties;
 };
@@ -40,12 +41,12 @@ export function CodePaneStack({
   className = "",
   style,
 }: CodePaneStackProps) {
-  const { approach, language, step } = usePlayerState();
+  const { approach, caseId, language, step } = usePlayerState();
   const containerRef = useRef<HTMLDivElement>(null);
   const lastManualScrollAt = useRef(0);
   const programmaticScrollUntil = useRef(0);
 
-  const approachLines = lines[approach];
+  const approachLines = lines[caseId][approach];
   const canonicalLine = approachLines[Math.min(step, approachLines.length - 1)];
   const activeLine = lineMaps[approach][language][canonicalLine] ?? 1;
   const pane = panes[approach][language];

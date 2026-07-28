@@ -1,7 +1,9 @@
 /**
- * Runs every problem's generators and writes one frames.<approach>.json per
- * approach into that problem's folder. Wired as `prebuild`, so `pnpm build`
- * regenerates traces before Next ever looks at them.
+ * Runs every problem's generators once per playable input and writes one
+ * frames.<case>.<approach>.json per combination into that problem's folder,
+ * plus a cases.json manifest the runtime loader reads to discover them. Wired
+ * as `prebuild`, so `pnpm build` regenerates traces before Next ever looks at
+ * them.
  *
  *   pnpm traces
  *
@@ -54,36 +56,58 @@ for (const slug of slugs) {
 
   console.log(`${slug}  —  ${traces.example}`)
 
-  for (const approach of APPROACHES) {
-    const build = traces.build[approach]
-    const listing = traces.listings[approach]
+  const cases = traces.cases
+  if (!cases || cases.length === 0) {
+    throw new Error(`${show(traceFile)} exports no \`cases\``)
+  }
 
-    if (!build || !listing) {
-      throw new Error(`${show(traceFile)} is missing \`${approach}\``)
+  const ids = new Set<string>()
+  for (const input of cases) {
+    if (ids.has(input.id)) {
+      throw new Error(`${show(traceFile)} has two cases with id "${input.id}"`)
     }
+    ids.add(input.id)
+  }
 
-    const frames = build()
-    const lines = listing.split('\n')
+  // The manifest, not a directory scan, is what tells the runtime loader which
+  // cases exist and in what order — order is meaningful (the first is the
+  // default selection) and a readdir would lose it.
+  const manifestFile = join(problemsDir, slug, 'cases.json')
+  await writeFile(manifestFile, `${JSON.stringify(cases, null, 2)}\n`, 'utf8')
+  console.log(`  ${String(cases.length).padStart(3)} case(s)  ->  ${show(manifestFile)}`)
 
-    // Guard the one invariant that would silently mis-highlight the code pane.
-    // The tests assert this too; failing the BUILD is the point of doing it here.
-    for (const frame of frames) {
-      const source = lines[frame.line - 1]
-      if (source === undefined || source.trim() === '') {
-        throw new Error(
-          `${slug}/${approach}: frame ${frame.step} points at line ${frame.line}, ` +
-            `which is ${source === undefined ? `past the end of the ${lines.length}-line listing` : 'blank'}`,
-        )
+  for (const input of cases) {
+    for (const approach of APPROACHES) {
+      const build = traces.build[approach]
+      const listing = traces.listings[approach]
+
+      if (!build || !listing) {
+        throw new Error(`${show(traceFile)} is missing \`${approach}\``)
       }
+
+      const frames = build(input)
+      const lines = listing.split('\n')
+
+      // Guard the one invariant that would silently mis-highlight the code pane.
+      // The tests assert this too; failing the BUILD is the point of doing it here.
+      for (const frame of frames) {
+        const source = lines[frame.line - 1]
+        if (source === undefined || source.trim() === '') {
+          throw new Error(
+            `${slug}/${input.id}/${approach}: frame ${frame.step} points at line ${frame.line}, ` +
+              `which is ${source === undefined ? `past the end of the ${lines.length}-line listing` : 'blank'}`,
+          )
+        }
+      }
+
+      const outFile = join(problemsDir, slug, `frames.${input.id}.${approach}.json`)
+      await writeFile(outFile, `${JSON.stringify(frames, null, 2)}\n`, 'utf8')
+      written++
+
+      console.log(
+        `  ${input.id.padEnd(12)} ${approach.padEnd(9)} ${String(frames.length).padStart(3)} frames  ->  ${show(outFile)}`,
+      )
     }
-
-    const outFile = join(problemsDir, slug, `frames.${approach}.json`)
-    await writeFile(outFile, `${JSON.stringify(frames, null, 2)}\n`, 'utf8')
-    written++
-
-    console.log(
-      `  ${approach.padEnd(9)} ${String(frames.length).padStart(3)} frames  ->  ${show(outFile)}`,
-    )
   }
 }
 

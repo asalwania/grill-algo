@@ -14,7 +14,12 @@ const APPROACHES: Approach[] = ['optimized', 'brute']
  * have a mapping, for every language, or the test fails.
  */
 describe.each(APPROACHES)('%s solutions', (approach) => {
-  const frameLines = new Set(traces.build[approach]().map((frame) => frame.line))
+  // Every shipped case, not just the headline one: only the no-answer case
+  // ever reaches either listing's final `return []`, so checking one case
+  // would leave those mappings unverified.
+  const frameLines = new Set(
+    traces.cases.flatMap((input) => traces.build[approach](input).map((frame) => frame.line)),
+  )
 
   it.each(solutions[approach])('$language lineMap covers every frame line', (solution) => {
     for (const line of frameLines) {

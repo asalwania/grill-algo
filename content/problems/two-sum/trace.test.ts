@@ -6,6 +6,7 @@ import {
   EXAMPLE_NUMS,
   EXAMPLE_TARGET,
   OPTIMIZED_LISTING,
+  TEST_CASES,
   traceBrute,
   traceOptimized,
   traces,
@@ -14,16 +15,14 @@ import {
 type Case = { label: string; nums: number[]; target: number }
 
 /**
- * The shipped example first, then a handful chosen to exercise the branches:
- * an early exit, a match on the very first comparison, duplicate keys, and a
- * target with no answer at all.
+ * Every SHIPPED case (so the inputs the player can actually select are the
+ * ones under test), plus a few extra that exercise branches no shipped case
+ * reaches: a mid-array early exit and duplicate map keys.
  */
 const CASES: Case[] = [
-  { label: 'shipped example', nums: EXAMPLE_NUMS, target: EXAMPLE_TARGET },
+  ...TEST_CASES.map(({ label, nums, target }) => ({ label, nums, target })),
   { label: 'early exit', nums: EXAMPLE_NUMS, target: 9 },
-  { label: 'answer at the end', nums: [3, 2, 4], target: 6 },
   { label: 'duplicate values', nums: [3, 3], target: 6 },
-  { label: 'no answer', nums: [2, 7, 11], target: 100 },
 ]
 
 const APPROACHES: { name: Approach; run: typeof traceOptimized; listing: string }[] = [
@@ -113,12 +112,19 @@ describe.each(CASES)('$label — nums=[$nums] target=$target', ({ nums, target }
 })
 
 describe('the shipped traces', () => {
+  const headline = traces.cases[0]
+
   it('describes the example it was generated from', () => {
     expect(traces.example).toBe('nums = [2, 7, 11, 15, 3, 6], target = 21')
   })
 
+  it('defaults to SP3 Finding 1s canonical example', () => {
+    expect(headline.nums).toEqual(EXAMPLE_NUMS)
+    expect(headline.target).toBe(EXAMPLE_TARGET)
+  })
+
   it('fills the hash-map wall and touches every tile (SP3 Finding 1)', () => {
-    const frames = traces.build.optimized()
+    const frames = traces.build.optimized(headline)
     const last = frames[frames.length - 1]
 
     expect(frames).toHaveLength(25)
@@ -127,7 +133,7 @@ describe('the shipped traces', () => {
   })
 
   it('crisscrosses every pair in the brute trace', () => {
-    const frames = traces.build.brute()
+    const frames = traces.build.brute(headline)
     const compares = frames.filter((frame) => frame.line === 4)
 
     expect(compares).toHaveLength(14)
@@ -135,7 +141,55 @@ describe('the shipped traces', () => {
   })
 
   it('agrees on the answer across both shipped approaches', () => {
-    expect(answerOf(traces.build.brute())).toEqual([3, 5])
-    expect(answerOf(traces.build.optimized())).toEqual([3, 5])
+    expect(answerOf(traces.build.brute(headline))).toEqual([3, 5])
+    expect(answerOf(traces.build.optimized(headline))).toEqual([3, 5])
+  })
+})
+
+describe('the playable cases', () => {
+  it('offers at least three inputs, each with a unique id', () => {
+    expect(traces.cases.length).toBeGreaterThanOrEqual(3)
+    expect(new Set(traces.cases.map((input) => input.id)).size).toBe(
+      traces.cases.length,
+    )
+  })
+
+  /**
+   * The optimized generator pushes one slot per non-matching element, and both
+   * FlatView and LabelLayer key slots by their map key — two slots sharing a
+   * key would collide as React keys. A repeated value that HITS is fine (the
+   * trace returns before the second push), which is why this asserts on the
+   * generated slots rather than on `nums` having no duplicates.
+   */
+  it.each(TEST_CASES)('$id never stores the same map key twice', (input) => {
+    const frames = traces.build.optimized(input)
+    for (const frame of frames) {
+      const keys = frame.scene.slots.map((slot) => slot.key)
+      expect(new Set(keys).size).toBe(keys.length)
+    }
+  })
+
+  it.each(TEST_CASES)('$id agrees on the answer across approaches', (input) => {
+    expect(answerOf(traces.build.brute(input))).toEqual(
+      answerOf(traces.build.optimized(input)),
+    )
+  })
+
+  /**
+   * Neither listing's final `return []` was ever an active line before a case
+   * with no answer shipped — the headline example always returns early. This
+   * pins that: at least one shipped case has to reach the exhausted branch, or
+   * those lines (and their per-language lineMap entries) are dead.
+   */
+  it('reaches the exhausted return in both listings', () => {
+    const optimizedLines = TEST_CASES.flatMap((input) =>
+      traces.build.optimized(input).map((frame) => frame.line),
+    )
+    const bruteLines = TEST_CASES.flatMap((input) =>
+      traces.build.brute(input).map((frame) => frame.line),
+    )
+
+    expect(optimizedLines).toContain(15)
+    expect(bruteLines).toContain(10)
   })
 })
