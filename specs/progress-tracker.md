@@ -105,6 +105,18 @@ with `path:line` where it helps a reader jump straight to the code.>
 | F18 | SEO and shipping | - | | | |
 | - | Plain-words brief + playable test cases | Done | 2026-07-28 | Ajay | `content/problems/two-sum/ProblemBrief.tsx`, `components/player/TestCasePicker.tsx`; traces now generated per case — see full entry below |
 
+## Phase 6 — Homepage + catalog
+
+Not in `main.md` — `main.md` deferred the homepage deliberately. Decisions are
+recorded in `specs/homepage-catalog.md`; do not re-litigate them here.
+
+| ID | Task | Status | Date | Owner | Notes |
+| --- | --- | --- | --- | --- | --- |
+| H1 | Catalog data + types | Done | 2026-07-28 | Ajay | `content/catalog.ts` (150 rows), `lib/catalog.ts`, `getCatalog()` in `lib/content.ts`, `lib/catalog.test.ts`, `scripts/verify-catalog.ts` — see full entry below |
+| H2 | `/problems` catalog page | Done | 2026-07-28 | Ajay | `app/problems/page.tsx`, `components/catalog/` (`ProblemCard`, `CategoryGlyph`, `CategoryRail`) — see full entry below |
+| H3 | `/` cinematic homepage | - | | | |
+| H4 | Shared chrome + metadata | - | | | |
+
 ---
 
 ## Full entries
@@ -476,3 +488,105 @@ passing, up from 94), `eslint` (clean except the pre-existing
 `design-reference/support.js` findings), `next build` (clean, `/problems/two-sum`
 still prerenders). **Not checked in a browser this session** — the new left-column
 row split at `lg:` and the case cards at 390×844 both still want a visual pass.
+
+---
+
+### H1 — Catalog data + types
+
+**Status:** Done
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+Data-only slice. No UI, no route, nothing rendered — provable by `pnpm test`
+alone, which is why it goes first: H2–H4 all consume it.
+
+- **`content/catalog.ts`** — all 150 NeetCode rows in NeetCode's teaching
+  order. Authored, not scraped. It is deliberately NOT derived from
+  `content/problems/*`: 149 of these have no content directory and won't until
+  someone builds them, so `getAllProblemMeta()` (which reads that directory)
+  can never be the catalog's source.
+- **Two fields are derived, never authored.** `status` comes from whether
+  `content/problems/<slug>/` exists, so the day a second problem lands its card
+  lights up with zero edits to the catalog. `leetcodeUrl` comes from `slug`,
+  with a `leetcodeSlug` override used by exactly one row (`pow-x-n` →
+  `powx-n`) — storing 150 near-identical URLs is 150 chances to typo one.
+- **`lib/catalog.ts` exists because `lib/content.ts` can't be imported from a
+  test.** Its first line is `import 'server-only'`, which throws outside a
+  server-component graph. So the logic that decides what a card renders
+  (`resolveCatalog`, `groupByCategory`, `readyProblems`, `leetcodeUrl`) takes
+  the built slugs as an *argument* instead of reading the filesystem, and is
+  fully covered. `getCatalog()` in `lib/content.ts` is the thin async wrapper
+  supplying the filesystem half, plus the `meta` load for `ready` rows only.
+- **`CATEGORIES` is a runtime const in `lib/types.ts`**, with
+  `Category = (typeof CATEGORIES)[number]`. The order IS content — it drives
+  the 18 sections and the rail — and deriving the union from the array means
+  the two can't disagree. A hand-written union plus a separate ordered array
+  would need a test to prove exhaustiveness and still drift.
+- **`ProblemMeta.difficulty` now uses the shared `Difficulty` type.**
+- **The contiguity test is the non-obvious one.** Asserting each category
+  appears as ONE run (and that the runs match `CATEGORIES` order) is what
+  catches a row filed under the wrong heading — nothing else would.
+- **Known open risk, stated in `specs/homepage-catalog.md` too:** a
+  plausible-but-wrong number↔title pairing survives both the test and
+  `pnpm verify:catalog`, because both halves genuinely exist on LeetCode. Only
+  a human reading the file catches it. `verify:catalog` is manual by design —
+  LeetCode rate-limits, so a red run means "go look", not "the build is
+  broken", and it is wired to neither `build` nor CI.
+
+### H2 — `/problems` catalog page
+
+**Status:** Done
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+S4's design, extended from 6 mock cards to 150 real ones. Server Component with
+no dynamic APIs, so it prerenders static; the only client island is the rail.
+
+- **`CategoryGlyph` is 18 glyphs, not 150.** S4's brief says the diagram hints
+  at the data structure, which is a category-level fact. Shape only, no text —
+  the same discipline `AGENTS.md` imposes on the canvas, held to here because a
+  glyph with a label stops being a glyph. Every colour is a token; `muted`
+  collapses all three tones onto the skeleton pair, which is how a `soon` card
+  renders.
+- **`ProblemCard` is one component with two states, deliberately.** 149 `soon`
+  cards beside 1 `ready` one IS the page's composition, and any height
+  difference between the two shapes wrecks the grid rows.
+- **Stretched-link, not a wrapping anchor.** The card is clickable anywhere,
+  but the card is not an `<a>` — the TITLE is the link and its `::after` covers
+  the card, with the LeetCode anchor lifted to `z-10` above it. Nesting the
+  LeetCode anchor inside a card-wide anchor is invalid HTML and collapses to
+  one unusable tab stop.
+- **Deviation from the grill: no `aria-disabled` on `soon` cards.** I'd said
+  I'd add it. It's wrong — the card is a non-interactive `<article>`, where
+  `aria-disabled` is meaningless noise. The visible `SOON` pill is real text and
+  is what actually announces the state.
+- **Deviation from the design export: spacing rounded to the token ladder.**
+  PI uses 26px/28px for card padding and grid gap; neither is in `@theme`'s
+  ladder, and S6's reconciliation evidently dropped them on purpose (it did
+  mine PI for `--radius-bar` and `--color-surface-skeleton`). Used 24 rather
+  than re-opening that decision or scattering arbitrary values.
+- **One new token: `--shadow-card-glow`.** PI draws the cyan glow on the first
+  card to indicate hover; with exactly one problem built it reads better as that
+  card's resting state.
+- **`max-lg:` for the rail's mobile chrome, not `lg:` undo.** `--blur-*:
+  initial` deletes Tailwind's blur scale, so there is no `backdrop-blur-none` to
+  undo `backdrop-blur-panel` with.
+- **Scroll-spy is IntersectionObserver over a tracked visible set**, picking the
+  topmost visible section — a single "last intersecting" entry is ambiguous
+  while several sections straddle the viewport. Only the discrete active id
+  becomes state.
+- **`content-visibility: auto` per section** instead of virtualization: the
+  browser skips offscreen layout/paint, the HTML stays fully static, and it
+  costs one style prop rather than a windowing library.
+
+Verified: `tsc --noEmit`, `eslint`, `vitest run` (140 passing, up from 138 —
+`categoryId` added), `next build` (clean; `/problems` listed as `○ Static`).
+Checked the PRERENDERED HTML in `.next/server/app/problems.html`, not just that
+the build passed: 151 `<article>` elements (150 + Two Sum featured a second
+time), 149 `SOON` pills, 151 LeetCode links, 2 internal links to
+`/problems/two-sum`, and all 18 section ids present and correctly slugged
+(`heap-priority-queue`, `1-d-dynamic-programming`, `math-geometry`).
+
+**Not verified: anything visual.** No browser this session — the 3-column grid
+at 1440, the rail's sticky behaviour, the mobile chip scroller at 390×844, and
+whether 18 glyphs actually read as distinct at 202×52 are all still open.

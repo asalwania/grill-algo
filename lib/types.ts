@@ -76,13 +76,88 @@ export type TwoSumFrame = Frame<TwoSumScene>
 // Content
 // ---------------------------------------------------------------------------
 
+export type Difficulty = 'Easy' | 'Medium' | 'Hard'
+
+/**
+ * NeetCode 150's own grouping, in NeetCode's own order.
+ *
+ * This is a runtime value, not just a type, because the order IS the content:
+ * it drives the section order on /problems and the category rail. Deriving
+ * `Category` from it means the list and the union can never disagree — the
+ * alternative (a hand-written union plus a separate ordered array) needs a
+ * test to prove exhaustiveness, and still drifts between the two.
+ */
+export const CATEGORIES = [
+  'Arrays & Hashing',
+  'Two Pointers',
+  'Sliding Window',
+  'Stack',
+  'Binary Search',
+  'Linked List',
+  'Trees',
+  'Tries',
+  'Heap / Priority Queue',
+  'Backtracking',
+  'Graphs',
+  'Advanced Graphs',
+  '1-D Dynamic Programming',
+  '2-D Dynamic Programming',
+  'Greedy',
+  'Intervals',
+  'Math & Geometry',
+  'Bit Manipulation',
+] as const
+
+export type Category = (typeof CATEGORIES)[number]
+
 export type ProblemMeta = {
   slug: string
   number: number
   title: string
-  difficulty: 'Easy' | 'Medium' | 'Hard'
+  difficulty: Difficulty
   pattern: string
   blurb: string
+}
+
+/**
+ * One row of the NeetCode 150 catalog (content/catalog.ts).
+ *
+ * Deliberately NOT ProblemMeta: a catalog row exists for all 150 problems,
+ * of which all but one have no content directory, no trace, no frames and
+ * nothing to say about themselves. The catalog owns the facts that exist
+ * before anything is built (number, title, difficulty, category); ProblemMeta
+ * owns the facts that only exist once it is (pattern, blurb).
+ */
+export type CatalogEntry = {
+  /**
+   * LeetCode's own URL slug. Doubles as the /problems/<slug> route segment
+   * once the problem is built, which is what lets `status` be derived.
+   */
+  slug: string
+  /** LeetCode problem number. Displayed on the card; not an ordering key. */
+  number: number
+  title: string
+  difficulty: Difficulty
+  category: Category
+  /**
+   * Only for the rare problem whose LeetCode slug can't be our route segment.
+   * Overrides the derived LeetCode URL; leave unset otherwise, because 150
+   * stored URLs is 150 chances to typo one.
+   */
+  leetcodeSlug?: string
+}
+
+/** A catalog row resolved against what has actually been built. */
+export type CatalogProblem = CatalogEntry & {
+  /**
+   * DERIVED from whether content/problems/<slug>/ exists — never authored.
+   * An authored flag drifts; this one lights the card up the day the
+   * directory lands, with no edit to the catalog.
+   */
+  status: 'ready' | 'soon'
+  leetcodeUrl: string
+  /** Non-null iff `status` is 'ready'. Carries the blurb and pattern pill. */
+  meta: ProblemMeta | null
 }
 
 export type Language = 'javascript' | 'python' | 'java' | 'go'

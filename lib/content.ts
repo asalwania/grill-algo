@@ -3,7 +3,15 @@ import 'server-only'
 import { readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
-import type { Approach, Frame, ProblemMeta, Solution, TestCase } from './types'
+import { resolveCatalog } from './catalog'
+import type {
+  Approach,
+  CatalogProblem,
+  Frame,
+  ProblemMeta,
+  Solution,
+  TestCase,
+} from './types'
 
 const PROBLEMS_DIR = join(process.cwd(), 'content', 'problems')
 const APPROACHES: Approach[] = ['optimized', 'brute']
@@ -48,6 +56,26 @@ export async function getAllProblemMeta(): Promise<ProblemMeta[]> {
 export async function getProblemMeta(slug: string): Promise<ProblemMeta> {
   const mod = await import(`../content/problems/${slug}/meta`)
   return mod.meta as ProblemMeta
+}
+
+/**
+ * The full NeetCode 150 catalog, with `status` derived from what is actually
+ * built. This is the only place the two halves meet: content/catalog.ts knows
+ * all 150 rows and nothing about the filesystem; getProblemSlugs() knows the
+ * filesystem and nothing about the catalog.
+ *
+ * `meta` is loaded only for `ready` rows — it's the sole reason a card can show
+ * a blurb and a pattern pill, and there is nothing to load for the other 149.
+ */
+export async function getCatalog(): Promise<CatalogProblem[]> {
+  const resolved = resolveCatalog(await getProblemSlugs())
+  return Promise.all(
+    resolved.map(async (problem) =>
+      problem.status === 'ready'
+        ? { ...problem, meta: await getProblemMeta(problem.slug) }
+        : problem,
+    ),
+  )
 }
 
 async function readCases(dir: string): Promise<TestCase[]> {

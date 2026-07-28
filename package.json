@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "traces": "node scripts/build-traces.ts",
+    "verify:catalog": "node scripts/verify-catalog.ts",
     "prebuild": "node scripts/build-traces.ts",
     "build": "next build",
     "start": "next start",

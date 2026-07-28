@@ -219,6 +219,10 @@
   /* Shared across every file: the cyan node dot. */
   --shadow-node: 0 0 16px rgba(61, 220, 255, 0.75);
 
+  /* PI's playable card. The mock draws this on the first card to show hover;
+     with one problem built it reads better as that card's resting state. */
+  --shadow-card-glow: 0 0 40px rgba(61, 220, 255, 0.14);
+
   /* ------------------------------------------------------------------------
      COMPONENT GLOWS — UNRESOLVED desktop/mobile fork (§9).
      LVM and MS agree with each other; LVD differs on all four. Both sets are
