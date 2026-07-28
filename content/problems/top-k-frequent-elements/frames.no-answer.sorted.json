@@ -1,0 +1,383 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "Work on a copy — the answer never mentions a position, so the original order is not worth keeping.",
+    "why": "Two Sum could not do this: it has to return indices, so reordering destroys the answer. Here the answer is a set of VALUES, which makes the array free to rearrange.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "runs": "{ }"
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 3,
+    "kind": "store",
+    "narration": "Sorted: 4, 6, 9.",
+    "why": "Once the array is ordered, every count is a RUN of neighbours. Counting stops being a lookup and becomes \"same as the one before me?\", which needs nothing remembered at all.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "runs": "{ }",
+      "order": "4, 6, 9"
+    },
+    "scene": {
+      "nums": [
+        4,
+        6,
+        9
+      ],
+      "target": 3,
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.nums",
+      "vars.order"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 6,
+    "kind": "compare",
+    "narration": "Take position 0 — the value 4.",
+    "why": "One pass, left to right. Nothing before position i - 1 is ever consulted again.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "runs": "{ }",
+      "i": 0,
+      "num": 4
+    },
+    "scene": {
+      "nums": [
+        4,
+        6,
+        9
+      ],
+      "target": 3,
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.i",
+      "vars.num",
+      "vars.order"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 10,
+    "kind": "store",
+    "narration": "4 starts the first run.",
+    "why": "A change of value in a sorted array is the end of a count, and there can never be another copy of the previous value further along.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "runs": "{ 4→1 }",
+      "i": 0,
+      "num": 4
+    },
+    "scene": {
+      "nums": [
+        4,
+        6,
+        9
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.runs"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 6,
+    "kind": "compare",
+    "narration": "Take position 1 — the value 6.",
+    "why": "One pass, left to right. Nothing before position i - 1 is ever consulted again.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "runs": "{ 4→1 }",
+      "i": 1,
+      "num": 6
+    },
+    "scene": {
+      "nums": [
+        4,
+        6,
+        9
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 10,
+    "kind": "store",
+    "narration": "Different from 4 — 6 starts a new run.",
+    "why": "A change of value in a sorted array is the end of a count, and there can never be another copy of the previous value further along.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "runs": "{ 4→1, 6→1 }",
+      "i": 1,
+      "num": 6
+    },
+    "scene": {
+      "nums": [
+        4,
+        6,
+        9
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.runs"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 6,
+    "kind": "compare",
+    "narration": "Take position 2 — the value 9.",
+    "why": "One pass, left to right. Nothing before position i - 1 is ever consulted again.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "runs": "{ 4→1, 6→1 }",
+      "i": 2,
+      "num": 9
+    },
+    "scene": {
+      "nums": [
+        4,
+        6,
+        9
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 10,
+    "kind": "store",
+    "narration": "Different from 6 — 9 starts a new run.",
+    "why": "A change of value in a sorted array is the end of a count, and there can never be another copy of the previous value further along.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "runs": "{ 4→1, 6→1, 9→1 }",
+      "i": 2,
+      "num": 9
+    },
+    "scene": {
+      "nums": [
+        4,
+        6,
+        9
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.runs"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 14,
+    "kind": "store",
+    "narration": "Runs ranked by length: { 4→1, 6→1, 9→1 }.",
+    "why": "The second sort, and the one the optimized tab does not need. Comparing counts to each other costs O(d log d); dropping them into buckets indexed by the count costs O(d).",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "runs": "{ 4→1, 6→1, 9→1 }",
+      "order": "{ 4→1, 6→1, 9→1 }"
+    },
+    "scene": {
+      "nums": [
+        4,
+        6,
+        9
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "vars.i",
+      "vars.num",
+      "vars.order"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 16,
+    "kind": "return",
+    "narration": "The 3 most frequent: [4, 6, 9].",
+    "why": "The same answer, and the shortest trace of the three — because the work that makes it short happened inside two sort frames, off screen. The comparisons are still there; they are just not steps you were shown.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "runs": "{ 4→1, 6→1, 9→1 }",
+      "result": "[4, 6, 9]"
+    },
+    "scene": {
+      "nums": [
+        4,
+        6,
+        9
+      ],
+      "target": 3,
+      "tiles": [
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.order",
+      "vars.result"
+    ]
+  }
+]

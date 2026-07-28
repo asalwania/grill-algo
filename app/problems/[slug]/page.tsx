@@ -9,6 +9,7 @@ import { ProblemView as TwoSumView } from "@/content/problems/two-sum/ProblemVie
 import { ProblemView as ContainsDuplicateView } from "@/content/problems/contains-duplicate/ProblemView";
 import { ProblemView as ValidAnagramView } from "@/content/problems/valid-anagram/ProblemView";
 import { ProblemView as GroupAnagramsView } from "@/content/problems/group-anagrams/ProblemView";
+import { ProblemView as TopKFrequentElementsView } from "@/content/problems/top-k-frequent-elements/ProblemView";
 
 const LANGUAGES: Language[] = ["javascript", "python", "java", "go"];
 
@@ -34,6 +35,7 @@ const VIEWS: Record<
   "contains-duplicate": ContainsDuplicateView,
   "valid-anagram": ValidAnagramView,
   "group-anagrams": GroupAnagramsView,
+  "top-k-frequent-elements": TopKFrequentElementsView,
 };
 
 export async function generateStaticParams() {

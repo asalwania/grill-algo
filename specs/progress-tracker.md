@@ -116,6 +116,7 @@ recorded in `specs/homepage-catalog.md`; do not re-litigate them here.
 | H2 | `/problems` catalog page | Done | 2026-07-28 | Ajay | `app/problems/page.tsx`, `components/catalog/` (`ProblemCard`, `CategoryGlyph`, `CategoryRail`) — see full entry below |
 | H3 | `/` cinematic homepage | Done | 2026-07-28 | Ajay | `app/page.tsx`, `components/home/ScrollScrubbedTrace.tsx` — see full entry below |
 | H4 | Shared chrome + metadata | Done | 2026-07-28 | Ajay | `components/chrome/` (`SiteHeader`, `SiteFooter`, `SkipLink`), title template in `app/layout.tsx`, `generateMetadata` on `/problems/[slug]` — see full entry below |
+| - | `/problems` frozen chrome (desktop) | Done | 2026-07-28 | Ajay | Only the card column scrolls at `lg`; header, hero, rail and footer are fixed. `app/problems/page.tsx` + `CategoryRail` scroll-spy root — see full entry below |
 
 ## Phase 7 — Second problem
 
@@ -129,6 +130,7 @@ single-problem machinery into a reusable family is recorded here.
 | - | Add-a-problem recipe | Done | 2026-07-28 | Ajay | `specs/add-a-problem.md` — self-contained spec so a new problem needs no reading of G1/G2 code; docs only, no code changed |
 | G3 | Valid Anagram | Done | 2026-07-28 | Ajay | `content/problems/valid-anagram/`, three approaches, first string problem (char codes in `nums`, `labels`/`keyLabel`, `target` as boundary index). Shipped in `8bed439` without a row; logged here retroactively |
 | G4 | Group Anagrams | Done | 2026-07-28 | Ajay | `content/problems/group-anagrams/`, three approaches, first problem whose answer is a partition — see full entry below |
+| G5 | Top K Frequent Elements | Done | 2026-07-28 | Ajay | `content/problems/top-k-frequent-elements/`, three approaches, first problem to use `scene.target` as a genuine parameter (k) — see full entry below |
 
 ---
 
@@ -993,3 +995,114 @@ regroup rather than a glitch — the same risk Contains Duplicate's sort frame
 flagged, but over six tiles at once; (2) whether `biggest group: 3 words`,
 `O(n·k log k + n log n)` and the wider `a1 e1 t1 has a group` probe pill fit
 their rows at 390×844.
+
+---
+
+### G5 — Top K Frequent Elements
+
+**Status:** Done
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+Built to `specs/add-a-problem.md` with no deviation from the recipe. Nine files
+in `content/problems/top-k-frequent-elements/` plus the two one-line edits to
+`app/problems/[slug]/page.tsx`. Nothing shared changed — no scene, no player,
+no layout, no `components/problem/`.
+
+Four things a future session should not re-derive:
+
+- **`scene.target` is k, and this is the first problem where `target` is a real
+  algorithm parameter.** Two Sum's target is a value to search for and Valid
+  Anagram repurposes it as a boundary index; here it is genuinely "the problem's
+  other input", which is what the field was described as all along. No new type,
+  no new chrome field — `formatArrayCaption` renders `k = 2` and the canvas
+  never sees it.
+- **The input needed no packing.** First problem in the family whose input IS
+  one array of plain numbers, so there is no `labels` and no `keyLabel`
+  anywhere; `chrome.ts` has no decoder. The memory wall is the count map
+  directly: `slot.key` is a value, `slot.value` is how often it has been seen.
+- **The bucket pass is ONE frame, and it reorders the WALL, not the array.**
+  Filling `buckets[freq]` and reading them from the top is exactly a stable sort
+  of the map entries by count descending, so the frame performs that reorder on
+  `scene.slots`. It also sets `cursor = null`, which is load-bearing: an input
+  whose values already appear in descending-count order reorders nothing, and
+  the cursor move is what stops that frame being scene-identical to the one
+  before it. Same hazard, same fix, as G4's sort frame.
+- **`result === null` means "no value repeats", not "no answer".** Top K always
+  has an answer, so the family's not-found branch had to be given a meaning: the
+  `no-answer` case is the one where every count is 1 and nothing is more
+  frequent than anything else. The picker's pill reads as a negative and the
+  flat view's return chip is suppressed, as elsewhere; the k values are still
+  returned and still spelled out in `vars.result`. As with G4, the final frame
+  relays the row — every occurrence of a chosen value moves to the front, in
+  pick order — so `result` is the real tile span the answer covers.
+
+One consequence worth knowing before writing another test: **the three
+approaches can legitimately return DIFFERENT value sets.** When counts tie, any
+choice among the tied values is correct, and the `no-answer` case is entirely
+ties — `optimized` returns `[9, 4, 6]` (first-appearance order) where `sorted`
+returns `[4, 6, 9]` (ascending). `trace.test.ts` therefore compares the multiset
+of the chosen values' COUNTS against the top-k counts overall, not the values
+themselves. Every other shipped case is tie-free at the k boundary, so the tabs
+agree exactly there.
+
+Approaches ship as `['optimized', 'sorted', 'brute']`. `sorted` is legitimate
+here for the same reason it was for G4: the answer is a set of values and never
+a position, so reordering the array destroys nothing. `brute` collapses its
+inner `n`-element scan into ONE frame per candidate — the per-comparison version
+is 72 steps at n = 6 for the same story, and the cost it is paying is carried in
+`vars.comparisons` instead.
+
+Headline frame counts (`nums = [3, 1, 2, 3, 2, 3], k = 2`):
+**optimized 23, sorted 16, brute 22** — the same inversion G2 and G4 record.
+`sorted` is the shortest of the three because its two sorts are off-screen
+frames, so the complexity readout carries that story, not the step counter.
+
+Verified this session: `pnpm traces` (12 new frame files + two manifests),
+`npx tsc --noEmit` clean, `vitest run` **1122 passing** (up from 824), `eslint`
+clean apart from the pre-existing `design-reference/support.js` errors, and
+`pnpm build` green with `/problems/top-k-frequent-elements` prerendered.
+
+**Not verified: anything visual.** Two things want a real pass: (1) the bucket
+frame, where the wall's rows reorder under Framer Motion's `layout` while the
+array below it does not move at all — that is the only frame in any problem so
+far where the memory structure animates and the tiles don't, and it has to read
+as "ranked", not as a glitch; (2) whether `O(k·n²)`, `COUNTS — value → times
+seen` and `top k: 5 elements` fit their rows at 390×844.
+
+### - — `/problems` frozen chrome (desktop)
+
+**Status:** Done
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+At `lg` and up, `/problems` claims the viewport (`lg:h-dvh lg:overflow-hidden`
+on a wrapper local to the page) and the ONLY scroller is the card column,
+`#problem-sections`. Header, hero paragraph, category rail and footer no longer
+move. Scoped to the page on purpose — a `app/problems/layout.tsx` would also
+catch `/problems/[slug]`, which already lays itself out with `lg:h-screen`, and
+`app/layout.tsx` mounts no chrome for exactly that reason.
+
+Below `lg` nothing changed: the page scrolls as a normal document, because a
+phone viewport has no height to spend on frozen chrome.
+
+Two things a future session should not re-derive:
+
+- **The rail's scroll-spy had to be told what scrolls.** `IntersectionObserver`
+  with `root: null` measures against the viewport, and at `lg` the sections no
+  longer move through the viewport — every one of them would read as visible at
+  once and the rail would pin to Arrays & Hashing forever. `CategoryRail` now
+  takes an optional `scrollRootId` and observes against that element.
+- **Which root is correct is a CSS decision, so the JS asks the CSS.** The
+  observer picks its root by reading `getComputedStyle(el).overflowY` — the
+  container is only a root once it is actually a scroller — rather than
+  duplicating the `lg` breakpoint as a `matchMedia` string in JS. A `resize`
+  listener re-runs that check and re-subscribes only when the answer flips.
+
+The rail itself is now `lg:max-h-full lg:overflow-y-auto`: `sticky` is inert
+when no ancestor scrolls, and 18 categories overflow a short viewport, so it
+scrolls on its own inside a grid area of fixed height.
+
+Verified: `tsc --noEmit` clean and `pnpm build` green with `/problems` still
+prerendered static. **Not verified: anything visual** — the rail-overflow case
+in particular wants a look at a short (~700px) viewport.

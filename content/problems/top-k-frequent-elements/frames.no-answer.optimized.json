@@ -1,0 +1,772 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "An empty map. Its keys will be the values in the array, its entries how often each one turns up.",
+    "why": "Nothing about frequency can be known from one element on its own, and the array is the only place the information lives. One pass that writes down what it sees is the cheapest way to learn all of it at once.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ }"
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take nums[0] = 9.",
+    "why": "Every element is read exactly once, in order, and never compared against another element.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ }",
+      "i": 0,
+      "num": 9
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Nothing under 9 yet — that reads as a count of 0.",
+    "why": "The lookup is the whole cost of the step, and it does not grow with the array — a map answers \"how many so far?\" in the same time on element six as on element six million.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ }",
+      "i": 0,
+      "num": 9,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": 9,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.found"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 6,
+    "kind": "store",
+    "narration": "9 is now on 1.",
+    "why": "Write it back and this element is finished with, forever. By the end of the pass the map knows every count, having looked at each element once.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ 9→1 }",
+      "i": 0,
+      "num": 9,
+      "count": 1
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 9,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": 9,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.count",
+      "vars.counts",
+      "vars.found"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take nums[1] = 4.",
+    "why": "Every element is read exactly once, in order, and never compared against another element.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ 9→1 }",
+      "i": 1,
+      "num": 4
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 9,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.count",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Nothing under 4 yet — that reads as a count of 0.",
+    "why": "The lookup is the whole cost of the step, and it does not grow with the array — a map answers \"how many so far?\" in the same time on element six as on element six million.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ 9→1 }",
+      "i": 1,
+      "num": 4,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 9,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": 4,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.found"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 6,
+    "kind": "store",
+    "narration": "4 is now on 1.",
+    "why": "Write it back and this element is finished with, forever. By the end of the pass the map knows every count, having looked at each element once.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ 9→1, 4→1 }",
+      "i": 1,
+      "num": 4,
+      "count": 1
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 9,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 4,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": 4,
+      "link": [
+        1,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.count",
+      "vars.counts",
+      "vars.found"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take nums[2] = 6.",
+    "why": "Every element is read exactly once, in order, and never compared against another element.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ 9→1, 4→1 }",
+      "i": 2,
+      "num": 6
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 9,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 4,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.count",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Nothing under 6 yet — that reads as a count of 0.",
+    "why": "The lookup is the whole cost of the step, and it does not grow with the array — a map answers \"how many so far?\" in the same time on element six as on element six million.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ 9→1, 4→1 }",
+      "i": 2,
+      "num": 6,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 9,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 4,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": 6,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.found"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 6,
+    "kind": "store",
+    "narration": "6 is now on 1.",
+    "why": "Write it back and this element is finished with, forever. By the end of the pass the map knows every count, having looked at each element once.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ 9→1, 4→1, 6→1 }",
+      "i": 2,
+      "num": 6,
+      "count": 1
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 9,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 4,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 6,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": 6,
+      "link": [
+        2,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.count",
+      "vars.counts",
+      "vars.found"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 11,
+    "kind": "store",
+    "narration": "Every value dropped into the bucket named by its count, then read back from the top: { 9→1, 4→1, 6→1 }.",
+    "why": "This is the step that replaces the sort. A count is at most n, so it can be an INDEX rather than something to compare — filling the buckets is one pass over the distinct values and reading them back is one pass over the buckets. No comparison, and no log n.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ 9→1, 4→1, 6→1 }",
+      "order": "{ 9→1, 4→1, 6→1 }"
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 9,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 4,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 6,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "vars.count",
+      "vars.i",
+      "vars.num",
+      "vars.order"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 17,
+    "kind": "match",
+    "narration": "Take 9 — seen 1 time. 1 of 3.",
+    "why": "The buckets are already in order, so taking the answer is just reading off the front. Nothing is searched for and nothing is compared.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ 9→1, 4→1, 6→1 }",
+      "num": 9,
+      "count": 1,
+      "picked": "[9]"
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "match",
+        "done",
+        "done"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 9,
+          "value": 1,
+          "state": "hit"
+        },
+        {
+          "key": 4,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 6,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": 9,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.count",
+      "vars.num",
+      "vars.order",
+      "vars.picked"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 17,
+    "kind": "match",
+    "narration": "Take 4 — seen 1 time. 2 of 3.",
+    "why": "The buckets are already in order, so taking the answer is just reading off the front. Nothing is searched for and nothing is compared.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ 9→1, 4→1, 6→1 }",
+      "num": 4,
+      "count": 1,
+      "picked": "[9, 4]"
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "match",
+        "match",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 9,
+          "value": 1,
+          "state": "hit"
+        },
+        {
+          "key": 4,
+          "value": 1,
+          "state": "hit"
+        },
+        {
+          "key": 6,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": 4,
+      "link": [
+        1,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.num",
+      "vars.picked"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 17,
+    "kind": "match",
+    "narration": "Take 6 — seen 1 time. 3 of 3.",
+    "why": "The buckets are already in order, so taking the answer is just reading off the front. Nothing is searched for and nothing is compared.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ 9→1, 4→1, 6→1 }",
+      "num": 6,
+      "count": 1,
+      "picked": "[9, 4, 6]"
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 9,
+          "value": 1,
+          "state": "hit"
+        },
+        {
+          "key": 4,
+          "value": 1,
+          "state": "hit"
+        },
+        {
+          "key": 6,
+          "value": 1,
+          "state": "hit"
+        }
+      ],
+      "probe": 6,
+      "link": [
+        2,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.num",
+      "vars.picked"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 22,
+    "kind": "return",
+    "narration": "The 3 most frequent: [9, 4, 6].",
+    "why": "Every element was read once and every distinct value was filed once — 3 lookups and 3 bucket drops, with no two counts ever compared. That is O(n) for a question that looks like it must be a ranking.",
+    "vars": {
+      "n": 3,
+      "k": 3,
+      "counts": "{ 9→1, 4→1, 6→1 }",
+      "result": "[9, 4, 6]"
+    },
+    "scene": {
+      "nums": [
+        9,
+        4,
+        6
+      ],
+      "target": 3,
+      "tiles": [
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 9,
+          "value": 1,
+          "state": "hit"
+        },
+        {
+          "key": 4,
+          "value": 1,
+          "state": "hit"
+        },
+        {
+          "key": 6,
+          "value": 1,
+          "state": "hit"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "vars.count",
+      "vars.num",
+      "vars.picked",
+      "vars.result"
+    ]
+  }
+]

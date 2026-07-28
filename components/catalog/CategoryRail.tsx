@@ -20,8 +20,19 @@ export type RailItem = {
  * the work off the main thread and there is no continuous value to throttle.
  * Only the discrete active id becomes state, which is the same rule AGENTS.md
  * imposes on the player.
+ *
+ * `scrollRootId` names the element the sections scroll INSIDE, when they scroll
+ * inside one at all. /problems freezes its chrome at lg and scrolls only the
+ * card column, so above that breakpoint the viewport is the wrong root — every
+ * section would read as visible at once and the rail would stick on the first.
  */
-export function CategoryRail({ items }: { items: RailItem[] }) {
+export function CategoryRail({
+  items,
+  scrollRootId,
+}: {
+  items: RailItem[];
+  scrollRootId?: string;
+}) {
   const [activeId, setActiveId] = useState(items[0]?.id ?? "");
   const activeChip = useRef<HTMLAnchorElement | null>(null);
 
@@ -36,24 +47,53 @@ export function CategoryRail({ items }: { items: RailItem[] }) {
     // viewport, so track the full set and pick the topmost visible one.
     const visible = new Set<string>();
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) visible.add(entry.target.id);
-          else visible.delete(entry.target.id);
-        }
-        const topmost = items.find((item) => visible.has(item.id));
-        if (topmost) setActiveId(topmost.id);
-      },
-      // Bias the band toward the top of the viewport: a section counts as
-      // "current" once its heading is near the top, not when its last card
-      // finally scrolls away.
-      { rootMargin: "-10% 0px -70% 0px", threshold: 0 },
-    );
+    // Which element actually scrolls is a CSS decision made at a breakpoint, so
+    // ask the CSS rather than re-declaring the breakpoint in JS: the container
+    // is only a root once it is a scroller.
+    const resolveRoot = () => {
+      const element = scrollRootId
+        ? document.getElementById(scrollRootId)
+        : null;
+      if (!element) return null;
+      return getComputedStyle(element).overflowY === "visible" ? null : element;
+    };
 
-    for (const section of sections) observer.observe(section);
-    return () => observer.disconnect();
-  }, [items]);
+    let observer: IntersectionObserver | null = null;
+    let root: HTMLElement | null | undefined;
+
+    const observe = () => {
+      const next = resolveRoot();
+      if (observer && next === root) return;
+      root = next;
+      observer?.disconnect();
+      visible.clear();
+
+      observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) visible.add(entry.target.id);
+            else visible.delete(entry.target.id);
+          }
+          const topmost = items.find((item) => visible.has(item.id));
+          if (topmost) setActiveId(topmost.id);
+        },
+        // Bias the band toward the top of the scrollport: a section counts as
+        // "current" once its heading is near the top, not when its last card
+        // finally scrolls away.
+        { root, rootMargin: "-10% 0px -70% 0px", threshold: 0 },
+      );
+
+      for (const section of sections) observer.observe(section);
+    };
+
+    observe();
+    // Crossing the breakpoint swaps the scroller in or out from under us.
+    window.addEventListener("resize", observe);
+    return () => {
+      window.removeEventListener("resize", observe);
+      observer?.disconnect();
+    };
+  }, [items, scrollRootId]);
 
   // Keep the active chip in view on mobile, where the rail scrolls sideways.
   // `nearest` on both axes so this never scrolls the PAGE, only the strip.
@@ -72,7 +112,10 @@ export function CategoryRail({ items }: { items: RailItem[] }) {
     // undo it with.
     <nav
       aria-label="Problem categories"
-      className="sticky top-0 z-20 max-lg:-mx-24 max-lg:border-b max-lg:border-border-hairline max-lg:bg-surface-glass max-lg:px-24 max-lg:py-12 max-lg:backdrop-blur-panel lg:top-32 lg:self-start"
+      // At lg nothing around it scrolls, so `sticky` is inert there and the
+      // rail instead has to fit — and scroll on its own — inside a grid area of
+      // fixed height. 18 categories overflow a short viewport.
+      className="sticky top-0 z-20 max-lg:-mx-24 max-lg:border-b max-lg:border-border-hairline max-lg:bg-surface-glass max-lg:px-24 max-lg:py-12 max-lg:backdrop-blur-panel lg:max-h-full lg:self-start lg:overflow-y-auto"
     >
       <ul className="flex gap-8 overflow-x-auto lg:flex-col lg:gap-4 lg:overflow-visible">
         {items.map((item) => {

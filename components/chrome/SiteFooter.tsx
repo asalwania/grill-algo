@@ -10,7 +10,7 @@ export function SiteFooter() {
         <span className="font-mono text-mono-13 tracking-label-widest text-text-muted-dim">
           GRILL-ALGO
         </span>
-        <span className="text-narration-sm text-text-muted">
+        {/* <span className="text-narration-sm text-text-muted">
           {CATALOG.length} problems on the list.{" "}
           <Link
             href="/problems"
@@ -19,7 +19,7 @@ export function SiteFooter() {
             Browse them
           </Link>
           .
-        </span>
+        </span> */}
       </div>
     </footer>
   );

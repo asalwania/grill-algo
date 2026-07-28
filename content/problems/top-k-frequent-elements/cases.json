@@ -1,0 +1,55 @@
+[
+  {
+    "id": "sample",
+    "label": "The walkthrough",
+    "nums": [
+      3,
+      1,
+      2,
+      3,
+      2,
+      3
+    ],
+    "target": 2,
+    "note": "Six elements, three values, counts of 3, 2 and 1 — nothing is tied."
+  },
+  {
+    "id": "first-pair",
+    "label": "A repeat straight away",
+    "nums": [
+      7,
+      7,
+      4,
+      9,
+      4,
+      4
+    ],
+    "target": 2,
+    "note": "The first value doubles up immediately, then loses the lead to one that started later."
+  },
+  {
+    "id": "late-answer",
+    "label": "Decided by the last element",
+    "nums": [
+      8,
+      5,
+      8,
+      5,
+      6,
+      5
+    ],
+    "target": 1,
+    "note": "Two values are tied at two apiece until the very last element breaks it."
+  },
+  {
+    "id": "no-answer",
+    "label": "Nothing repeats at all",
+    "nums": [
+      9,
+      4,
+      6
+    ],
+    "target": 3,
+    "note": "Every value appears once, so no value is more frequent than any other."
+  }
+]

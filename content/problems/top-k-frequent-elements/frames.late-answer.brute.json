@@ -1,0 +1,754 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "No map and no sorting. Each round finds the most frequent value still available by counting every candidate from scratch.",
+    "why": "With nothing written down, the only way to know how often a value occurs is to look at every element — and knowing that for one value says nothing about the next.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 0
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Candidate at 0: the value 8.",
+    "why": "Nothing learned about an earlier candidate helps here, so every one of them starts from zero — including the ones that are copies of a value this round already counted.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 0,
+      "i": 0,
+      "num": 8
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 13,
+    "kind": "match",
+    "narration": "8 appears 2 times — the round has a new leader.",
+    "why": "One full pass of the array to learn one number. That pass happens again for the next candidate, and every round starts the whole thing over.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 6,
+      "i": 0,
+      "num": 8,
+      "count": 2,
+      "leader": 8,
+      "bestCount": 2
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "active",
+        "idle",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.bestCount",
+      "vars.comparisons",
+      "vars.count",
+      "vars.leader"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Candidate at 1: the value 5.",
+    "why": "Nothing learned about an earlier candidate helps here, so every one of them starts from zero — including the ones that are copies of a value this round already counted.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 6,
+      "i": 1,
+      "num": 5
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "done",
+        "idle",
+        "done",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.bestCount",
+      "vars.count",
+      "vars.i",
+      "vars.leader",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 13,
+    "kind": "match",
+    "narration": "5 appears 3 times — the round has a new leader.",
+    "why": "One full pass of the array to learn one number. That pass happens again for the next candidate, and every round starts the whole thing over.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 12,
+      "i": 1,
+      "num": 5,
+      "count": 3,
+      "leader": 5,
+      "bestCount": 3
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "done",
+        "active",
+        "done",
+        "active",
+        "idle",
+        "active"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        5
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.bestCount",
+      "vars.comparisons",
+      "vars.count",
+      "vars.leader"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Candidate at 2: the value 8.",
+    "why": "Nothing learned about an earlier candidate helps here, so every one of them starts from zero — including the ones that are copies of a value this round already counted.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 12,
+      "i": 2,
+      "num": 8
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.bestCount",
+      "vars.count",
+      "vars.i",
+      "vars.leader",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 13,
+    "kind": "compare",
+    "narration": "8 appears 2 times; 5 still leads on 3.",
+    "why": "One full pass of the array to learn one number. That pass happens again for the next candidate, and every round starts the whole thing over.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 18,
+      "i": 2,
+      "num": 8,
+      "count": 2,
+      "leader": 5,
+      "bestCount": 3
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "active",
+        "done",
+        "active",
+        "done",
+        "idle",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.bestCount",
+      "vars.comparisons",
+      "vars.count",
+      "vars.leader"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Candidate at 3: the value 5.",
+    "why": "Nothing learned about an earlier candidate helps here, so every one of them starts from zero — including the ones that are copies of a value this round already counted.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 18,
+      "i": 3,
+      "num": 5
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.bestCount",
+      "vars.count",
+      "vars.i",
+      "vars.leader",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 13,
+    "kind": "compare",
+    "narration": "5 appears 3 times; 5 still leads on 3.",
+    "why": "One full pass of the array to learn one number. That pass happens again for the next candidate, and every round starts the whole thing over.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 24,
+      "i": 3,
+      "num": 5,
+      "count": 3,
+      "leader": 5,
+      "bestCount": 3
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "done",
+        "active",
+        "done",
+        "active",
+        "idle",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": [
+        3,
+        5
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.bestCount",
+      "vars.comparisons",
+      "vars.count",
+      "vars.leader"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Candidate at 4: the value 6.",
+    "why": "Nothing learned about an earlier candidate helps here, so every one of them starts from zero — including the ones that are copies of a value this round already counted.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 24,
+      "i": 4,
+      "num": 6
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "done"
+      ],
+      "cursor": 4,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.bestCount",
+      "vars.count",
+      "vars.i",
+      "vars.leader",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 13,
+    "kind": "compare",
+    "narration": "6 appears 1 time; 5 still leads on 3.",
+    "why": "One full pass of the array to learn one number. That pass happens again for the next candidate, and every round starts the whole thing over.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 30,
+      "i": 4,
+      "num": 6,
+      "count": 1,
+      "leader": 5,
+      "bestCount": 3
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "done"
+      ],
+      "cursor": 4,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.bestCount",
+      "vars.comparisons",
+      "vars.count",
+      "vars.leader"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 8,
+    "kind": "compare",
+    "narration": "Candidate at 5: the value 5.",
+    "why": "Nothing learned about an earlier candidate helps here, so every one of them starts from zero — including the ones that are copies of a value this round already counted.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 30,
+      "i": 5,
+      "num": 5
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 5,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.bestCount",
+      "vars.count",
+      "vars.i",
+      "vars.leader",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 13,
+    "kind": "compare",
+    "narration": "5 appears 3 times; 5 still leads on 3.",
+    "why": "One full pass of the array to learn one number. That pass happens again for the next candidate, and every round starts the whole thing over.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[]",
+      "comparisons": 36,
+      "i": 5,
+      "num": 5,
+      "count": 3,
+      "leader": 5,
+      "bestCount": 3
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "done",
+        "active",
+        "done",
+        "active",
+        "done",
+        "active"
+      ],
+      "cursor": 5,
+      "slots": [],
+      "probe": null,
+      "link": [
+        5,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.bestCount",
+      "vars.comparisons",
+      "vars.count",
+      "vars.leader"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 22,
+    "kind": "match",
+    "narration": "Round over — 5 wins it on 3. 1 of 1.",
+    "why": "Exhausting every candidate is what proves this one is the most frequent, and it is also what makes the next round cost just as much as this one did.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "taken": "[5]",
+      "comparisons": 36,
+      "num": 5,
+      "count": 3
+    },
+    "scene": {
+      "nums": [
+        8,
+        5,
+        8,
+        5,
+        6,
+        5
+      ],
+      "target": 1,
+      "tiles": [
+        "done",
+        "match",
+        "done",
+        "match",
+        "done",
+        "match"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.bestCount",
+      "vars.i",
+      "vars.leader",
+      "vars.taken"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 25,
+    "kind": "return",
+    "narration": "The 1 most frequent: [5].",
+    "why": "The same answer as the other two, bought with 36 element comparisons where the map approach does 6 lookups and never compares anything.",
+    "vars": {
+      "n": 6,
+      "k": 1,
+      "comparisons": 36,
+      "result": "[5]"
+    },
+    "scene": {
+      "nums": [
+        5,
+        5,
+        5,
+        8,
+        8,
+        6
+      ],
+      "target": 1,
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        2
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.nums",
+      "scene.result",
+      "scene.tiles",
+      "vars.count",
+      "vars.num",
+      "vars.result",
+      "vars.taken"
+    ]
+  }
+]

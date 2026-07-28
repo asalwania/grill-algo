@@ -5,6 +5,13 @@ import { SiteFooter, SiteHeader, SkipLink } from "@/components/chrome";
 import { categoryId, groupByCategory, readyProblems } from "@/lib/catalog";
 import { getCatalog } from "@/lib/content";
 
+/**
+ * The scrolling card column. Shared with CategoryRail so its scroll-spy can
+ * observe against the right root — at lg the sections do NOT move through the
+ * viewport, they move through this element.
+ */
+const SECTION_SCROLLER = "problem-sections";
+
 export const metadata: Metadata = {
   title: "Problems",
   description:
@@ -31,14 +38,18 @@ export default async function ProblemsPage() {
   }));
 
   return (
-    <>
+    // Desktop only: the page claims the viewport and nothing outside the card
+    // column scrolls. Header, hero, rail and footer stay put; the sections
+    // scroll inside SECTION_SCROLLER. Below lg the page scrolls normally —
+    // a phone viewport has no room to spend on frozen chrome.
+    <div className="lg:flex lg:h-dvh lg:flex-col lg:overflow-hidden">
       <SkipLink />
       <SiteHeader current="problems" />
       <main
         id="main"
-        className="mx-auto flex max-w-[1440px] flex-col px-24 pb-64 lg:px-72"
+        className="mx-auto flex w-full max-w-[1440px] flex-col px-24 pb-64 lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:px-72 lg:pb-0"
       >
-        <header className="flex flex-col gap-14 pt-48 pb-32 lg:pt-72">
+        <header className="flex flex-col gap-14 pt-48 pb-32 lg:shrink-0 lg:pt-72">
           <h1 className="font-display text-display-32 tracking-display lg:text-display-48">
             The NeetCode 150.
           </h1>
@@ -52,15 +63,18 @@ export default async function ProblemsPage() {
           </p>
         </header>
 
-        <div className="flex flex-col gap-32 lg:grid lg:grid-cols-[220px_1fr] lg:gap-48">
-          <CategoryRail items={railItems} />
+        <div className="flex flex-col gap-32 lg:grid lg:min-h-0 lg:flex-1 lg:grid-cols-[220px_1fr] lg:gap-48 lg:overflow-hidden">
+          <CategoryRail items={railItems} scrollRootId={SECTION_SCROLLER} />
 
-          <div className="flex flex-col gap-48">
+          <div
+            id={SECTION_SCROLLER}
+            className="flex flex-col gap-48 lg:min-h-0 lg:overflow-y-auto lg:pb-64"
+          >
             {/* Pinned above the 18 sections on purpose: with 149 cards greyed
               out, the one thing a visitor can actually use must not be two
               thousand pixels down inside Arrays & Hashing. These problems
               appear twice — here, and in their real category slot below. */}
-            {ready.length > 0 ? (
+            {/* {ready.length > 0 ? (
               <section aria-labelledby="available-now">
                 <SectionHeading id="available-now" label="Available now" />
                 <CardGrid>
@@ -69,7 +83,7 @@ export default async function ProblemsPage() {
                   ))}
                 </CardGrid>
               </section>
-            ) : null}
+            ) : null} */}
 
             {sections.map((section) => {
               const id = categoryId(section.category);
@@ -104,7 +118,7 @@ export default async function ProblemsPage() {
         </div>
       </main>
       <SiteFooter />
-    </>
+    </div>
   );
 }
 
