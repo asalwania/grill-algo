@@ -25,9 +25,22 @@ const codeMono = JetBrains_Mono({
   variable: "--font-mono-family",
 });
 
+/**
+ * No header/footer here on purpose — the learning view lays itself out with
+ * `lg:h-screen`, so shared chrome is mounted per-page instead. See
+ * components/chrome/SiteHeader.tsx.
+ *
+ * F18 still owns canonical URLs, the OG image route, JSON-LD, sitemap and
+ * robots; this is only the title template and a real default description,
+ * which every page under it needs before any of that is worth doing.
+ */
 export const metadata: Metadata = {
-  title: "grill-algo",
-  description: "",
+  title: {
+    default: "Execution Visualizer — Watch algorithms think.",
+    template: "%s — Execution Visualizer",
+  },
+  description:
+    "Step through real algorithm execution, one frame at a time — no guessing, no hand-waving.",
 };
 
 export default function RootLayout({

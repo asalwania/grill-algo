@@ -1,7 +1,8 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { CodePane } from "@/components/panels/CodePane";
-import { getProblem, getProblemSlugs } from "@/lib/content";
+import { getProblem, getProblemMeta, getProblemSlugs } from "@/lib/content";
 import type { Approach, Language, TwoSumScene as TwoSumSceneType } from "@/lib/types";
 import { ProblemView } from "@/content/problems/two-sum/ProblemView";
 
@@ -16,6 +17,22 @@ export async function generateStaticParams() {
 type ProblemPageProps = {
   params: Promise<{ slug: string }>;
 };
+
+/**
+ * Title and description only. F18 still owns canonical, OG image, JSON-LD,
+ * sitemap and robots — this is the minimum so the tab doesn't read
+ * "Execution Visualizer" on every problem.
+ */
+export async function generateMetadata({
+  params,
+}: ProblemPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const meta = await getProblemMeta(slug);
+  return {
+    title: `${meta.number}. ${meta.title}`,
+    description: `${meta.blurb} Stepped through one frame at a time, ${meta.difficulty.toLowerCase()}, ${meta.pattern.toLowerCase()}.`,
+  };
+}
 
 export default async function ProblemPage({ params }: ProblemPageProps) {
   const { slug } = await params;

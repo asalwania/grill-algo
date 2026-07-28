@@ -114,8 +114,8 @@ recorded in `specs/homepage-catalog.md`; do not re-litigate them here.
 | --- | --- | --- | --- | --- | --- |
 | H1 | Catalog data + types | Done | 2026-07-28 | Ajay | `content/catalog.ts` (150 rows), `lib/catalog.ts`, `getCatalog()` in `lib/content.ts`, `lib/catalog.test.ts`, `scripts/verify-catalog.ts` — see full entry below |
 | H2 | `/problems` catalog page | Done | 2026-07-28 | Ajay | `app/problems/page.tsx`, `components/catalog/` (`ProblemCard`, `CategoryGlyph`, `CategoryRail`) — see full entry below |
-| H3 | `/` cinematic homepage | - | | | |
-| H4 | Shared chrome + metadata | - | | | |
+| H3 | `/` cinematic homepage | Done | 2026-07-28 | Ajay | `app/page.tsx`, `components/home/ScrollScrubbedTrace.tsx` — see full entry below |
+| H4 | Shared chrome + metadata | Done | 2026-07-28 | Ajay | `components/chrome/` (`SiteHeader`, `SiteFooter`, `SkipLink`), title template in `app/layout.tsx`, `generateMetadata` on `/problems/[slug]` — see full entry below |
 
 ---
 
@@ -590,3 +590,172 @@ time), 149 `SOON` pills, 151 LeetCode links, 2 internal links to
 **Not verified: anything visual.** No browser this session — the 3-column grid
 at 1440, the rail's sticky behaviour, the mobile chip scroller at 390×844, and
 whether 18 glyphs actually read as distinct at 202×52 are all still open.
+
+### H3 — `/` cinematic homepage
+
+**Status:** Done
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+Five beats: hero, premise, scroll-scrubbed demonstration, pillars, close.
+`app/page.tsx` was a one-line stub until now.
+
+- **Beat 3 reuses F16's `TwoSumFlatView` UNCHANGED.** It already takes a single
+  `frame` and owns no state, so scroll-driven playback needed no changes to it
+  and no fork. Confirms the grill's assumption; the compact-variant prop was
+  never needed.
+- **Three constraints, all verified rather than asserted:**
+  - *No three.js on the landing page.* Checked by walking the script tags in
+    each prerendered HTML and grepping the referenced chunks: `/` is 766KB raw
+    across 10 chunks with NO `THREE.`/`WebGLRenderer` marker; `/problems/two-sum`
+    is 1694KB across 12 with the marker present in one.
+  - *No GSAP, no new dependency.* `position: sticky` pins, `useScroll` scrubs.
+  - *The continuous value never becomes React state.* `scrollYProgress` stays a
+    MotionValue bound straight to the progress bar's `scaleX`; only the ROUNDED
+    step index is `useState`, and only when it changes.
+- **Reduced motion is handled in CSS AND in JS, because neither alone is
+  enough.** `motion-reduce:` variants collapse the 320vh track and unpin the
+  sticky child — but that leaves no scroll travel, so the scrubbed step would
+  sit at frame 0 forever, which is the least interesting frame in the trace.
+  So a post-mount `matchMedia` check swaps in the frame where the answer lands.
+- **That check is deliberately NOT framer-motion's `useReducedMotion`, and
+  deliberately not a lazy `useState` initializer.** `matchMedia` doesn't exist
+  on the server, so any first-render answer but `false` desyncs the HTML. This
+  repo already paid for that lesson once — F16's `FullscreenButton`, where
+  `document.fullscreenEnabled` differed across the boundary and React discarded
+  the whole `ScenePanel` subtree. Detected after mount instead.
+- **`<MotionConfig reducedMotion="user">`** wraps the beat so `TwoSumFlatView`'s
+  own `layout` animations respect the preference too — Framer's default is
+  `"never"`, so without this the flat view would keep animating.
+- **Imports one frame file directly** (`frames.sample.optimized.json`) rather
+  than calling `getProblem()`, which would pull all four cases, both approaches,
+  four languages of solutions and the mdx to show 25 frames.
+- **No scroll-reveal animations on beats 1/2/4/5, on purpose.** `whileInView`
+  with a zeroed `initial` means the copy is invisible in the SSR'd HTML, which
+  is the one thing a landing page must not trade away. The algorithm stepping
+  as you scroll is the effect; fading text in is not.
+
+Verified: `tsc --noEmit`, `eslint`, `vitest run` (140 passing), `next build`
+(clean, `/` listed as `○ Static`). Read the prerendered
+`.next/server/app/index.html`: hero copy, both CTAs, `STEP 01`, the flat view's
+`ARRAY` section and frame 0's narration ("An empty map, and one pass to fill
+it.") are all in the static HTML — the beat degrades to a readable first frame
+with no JS.
+
+**Not verified: anything visual, and this beat is the one that most needs it.**
+Whether 320vh of scroll feels right for 25 frames, whether the sticky panel
+composes at 1440 and at 390×844, and whether `TwoSumFlatView`'s `py-56`
+padding (tuned for `ScenePanel`'s floating toggle, which isn't here) reads as
+too generous are all open.
+
+### H4 — Shared chrome + metadata
+
+**Status:** Done
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+- **The chrome is NOT in `app/layout.tsx`, and this is the entry's main point.**
+  `ProblemView.tsx:71` lays the learning view out with `lg:h-screen
+  lg:overflow-hidden` — it claims the whole viewport at desktop. A root-layout
+  header would push it down by its own height and make the split view overflow.
+  A route group can't carve `/problems/[slug]` out of a `/problems` layout
+  either, since both live under the same segment. So `SiteHeader`/`SiteFooter`
+  are mounted explicitly by `/` and `/problems`, and the learning view gets a
+  compact `← ALL PROBLEMS` link inside `ProblemHeader`'s existing flex column
+  instead — which it needed regardless, because until now there was NO way back
+  to the catalog from a problem page at all.
+- **`SiteHeader` takes `current` as a prop rather than calling
+  `usePathname()`**, so it stays a Server Component and ships zero JS.
+- **`Patterns` / `About` remain absent**, per the H-series decision.
+- **Title template, not per-page duplication.** `app/layout.tsx` gains
+  `default` + `%s` template. `/` deliberately sets NO title — the layout default
+  already is its title, and setting it would run it through `%s` and say
+  "Execution Visualizer" twice.
+- **`generateMetadata` on `/problems/[slug]`** reads `getProblemMeta` for title
+  and description. F18 still owns canonical URLs, the OG image route, JSON-LD,
+  `sitemap.ts` and `robots.ts` — deliberately not started here.
+- **A skip link ships with the nav**, since adding a nav without one only makes
+  the tab order worse. F18 still owns the full keyboard pass.
+
+Verified: `tsc --noEmit`, `eslint`, `vitest run` (140 passing), `next build`
+(clean; `/` and `/problems` both `○ Static`). Read all three prerendered HTML
+files: `/` renders `<title>Execution Visualizer — Watch algorithms think.</title>`
+(no doubled suffix), `/problems` renders `Problems — Execution Visualizer` with
+`aria-current="page"` on its nav link, and `/problems/two-sum` renders
+`1. Two Sum — Execution Visualizer` with NO site header (correct — that page
+must keep its full viewport) and the back-link present.
+
+**Not verified: anything visual**, same as H2/H3. The whole H-series still wants
+one browser pass at 1440 and 390×844.
+
+### H5 — Homepage: dead space, scroll affordance, depth
+
+**Status:** Done
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+Reported from a screenshot: "lot of empty space, I don't know if I should
+scroll or not, and the page looks dull." Three separate causes, fixed
+separately.
+
+- **The void under beat 2 was a real layout bug, not taste.**
+  `ScrollScrubbedTrace`'s sticky pane is `h-dvh` and its content was
+  `justify-center`. Sticky only pins once the track's top reaches the viewport
+  top — before that the pane sits at the track's top, so a *centred* child
+  renders half a viewport BELOW the fold. The section was literally blank until
+  you had already scrolled past the thing meant to make you scroll. The pane now
+  FILLS its height: fixed header row (identity + `STEP nn / 25` + progress
+  hairline), `flex-1 min-h-0` body, fixed footer row. Recorded as a layout rule
+  in the component's docblock, because re-centring it would silently bring the
+  void back.
+- **`TwoSumFlatView` gains `floatingControls` (default `true`).** H3 left this
+  open: the `py-56 lg:pb-64` and the header row's `pr-32` exist only to clear
+  `ScenePanel`'s floating fullscreen / render-mode toggles, and on the homepage
+  nothing floats, so it was ~36px of dead space at the top of every card. Both
+  pages that render it bare pass `false`.
+- **Scroll affordance is now explicit, in three places at once**: a `ScrollCue`
+  at the hero's bottom edge ("SCROLL — THE ALGORITHM STEPS WITH YOU", pure CSS
+  `--animate-scroll-hint`, `motion-reduce:animate-none` leaves the label), a
+  footer line in the sticky pane that switches between "KEEP SCROLLING TO STEP"
+  and "TRACE COMPLETE", and numbered eyebrows (01/02/03) so the page never
+  presents a screen that looks finished. Hero is sized
+  `min-h-[calc(100dvh-160px)]` so the cue sits just above the fold and the next
+  beat's rule peeks under it.
+- **The hero's empty right half now renders a real frame.** `frames[15]` through
+  `TwoSumFlatView` — mid-run on purpose (frame 0 is an empty map, frame 24 gives
+  away the scroll demo's ending). Costs nothing: same array, same renderer the
+  demo already pulls into the bundle. Captioned "NOT A MOCK — THE REAL TRACE",
+  which is also the product claim.
+- **Depth, using only existing tokens**: a fixed decorative layer (radial
+  `surface-spotlight` wash + a 72px hairline grid masked to fade out), a
+  `animate-halo` glow behind the primary CTA, a facts row (25 frames / 4
+  languages / 2 approaches / 0 guesswork), and the pillars promoted from bare
+  text to bordered cards with hover. No new dependency, no new token colour.
+  The decor layer is `fixed` so the document is wrapped in a `relative` div to
+  paint above it — which is also what finally makes `SiteFooter`'s `mt-auto` do
+  anything.
+- **Fixed a global CSS bug on the way past.** `globals.css` had
+  `button :hover { scale: 1.1 !important }` — a DESCENDANT selector, so it
+  scaled whatever child sat under the pointer (an icon, a label span) rather
+  than the button, with no way for a component to opt out. Now
+  `button:not(:disabled) { cursor: pointer }`. This affects every page, not just
+  `/`.
+- **The chip row under the narration uses a FIXED key list**
+  (`i`, `num`, `complement`, `lookups`), not `Object.entries(frame.vars)`. The
+  generator introduces keys as the run progresses, so mapping the object would
+  grow the row mid-scroll and shove the narration upward. `seen` is excluded —
+  the map on the right IS that variable, rendered properly.
+
+Verified: `tsc --noEmit`, `eslint` (only pre-existing errors, both in
+`design-reference/support.js`), `vitest run` (140 passing), `next build` (clean,
+`/` still `○ Static`). Confirmed in the built CSS that the new utilities
+compiled (`animate-scroll-hint`, `animate-halo`, `blur-panel`, `-inset-8`,
+`min-h-[calc(100dvh-160px)]`, the masked grid) and in the prerendered
+`.next/server/app/index.html` that the cue, the eyebrows, the pane footer and
+both flat views are in the static HTML.
+
+**Not verified: anything visual.** Same gap H2/H3/H4 all flagged — no browser
+in this environment. Track height is now `340vh` for 25 frames; whether that
+scrub rate feels right, and whether the hero's two columns hold at 390×844
+(where the grid collapses and the hero card stacks under the copy), still need
+one real browser pass.

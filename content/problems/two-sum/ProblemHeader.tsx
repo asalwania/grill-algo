@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { ApproachTabs, LanguageSelector } from "@/components/player";
 import { ComplexityReadout } from "@/components/panels";
 import type { ProblemMeta } from "@/lib/types";
@@ -23,6 +25,16 @@ export function ProblemHeader({ meta, className = "" }: ProblemHeaderProps) {
     <div
       className={`flex flex-col gap-16 border-b border-border-hairline px-24 py-20 lg:px-32 lg:py-24 ${className}`}
     >
+      {/* The learning view can't carry SiteHeader — it lays out with
+          `lg:h-screen` and a global bar would push it past the fold. Without
+          this link there is no way back to the catalog at all. */}
+      <Link
+        href="/problems"
+        className="font-mono text-mono-13 tracking-label-wide text-text-muted transition-colors hover:text-text-primary"
+      >
+        <span aria-hidden="true">←</span> ALL PROBLEMS
+      </Link>
+
       <div className="flex flex-wrap items-center gap-14">
         <h1 className="font-display text-display-24 lg:text-display-32">
           {meta.number}. {meta.title}

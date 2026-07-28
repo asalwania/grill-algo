@@ -19,6 +19,14 @@ type TwoSumFlatViewProps = {
    * and a flat document laid out top-down does not.
    */
   children?: ReactNode;
+  /**
+   * Whether ScenePanel's buttons are floating over this view. The generous
+   * vertical padding and the header row's right inset exist ONLY to keep rows
+   * clear of the fullscreen toggle (top-right) and the render-mode toggle
+   * (bottom-right). The homepage renders this view bare, where that padding is
+   * just dead space at the top of the card.
+   */
+  floatingControls?: boolean;
   className?: string;
 };
 
@@ -291,6 +299,7 @@ export function TwoSumFlatView({
   frame,
   isFallback = false,
   children,
+  floatingControls = true,
   className = "",
 }: TwoSumFlatViewProps) {
   const { target, slots, result } = frame.scene;
@@ -303,15 +312,21 @@ export function TwoSumFlatView({
   const hasMap = slots.length > 0 || frame.scene.probe !== null;
 
   return (
-    // pb-56 / lg:pb-64 keeps the last row clear of the render-mode toggle
-    // ScenePanel floats in this panel's bottom-right corner.
+    // py-56 / lg:pb-64 keeps the first and last rows clear of the fullscreen
+    // and render-mode toggles ScenePanel floats in this panel's corners.
     <div
-      className={`flex h-full w-full flex-col gap-20 overflow-auto p-20 py-56 lg:p-24 lg:pb-64 ${className}`}
+      className={`flex h-full w-full flex-col gap-20 overflow-auto p-20 lg:p-24 ${
+        floatingControls ? "py-56 lg:pb-64" : ""
+      } ${className}`}
     >
       {/* pr-* clears the fullscreen toggle ScenePanel floats in this panel's
           top-right corner (32px button inset 12px / lg:16px from the edge,
           minus this container's own 20px / lg:24px padding). */}
-      <div className="flex items-baseline justify-between gap-12 pr-32">
+      <div
+        className={`flex items-baseline justify-between gap-12 ${
+          floatingControls ? "pr-32" : ""
+        }`}
+      >
         <SectionLabel>ARRAY</SectionLabel>
         <span className="font-mono text-mono-13 text-text-muted">
           target = <span className="text-text-primary">{target}</span>

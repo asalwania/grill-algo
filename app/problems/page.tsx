@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 
 import { CategoryRail, ProblemCard, type RailItem } from "@/components/catalog";
+import { SiteFooter, SiteHeader, SkipLink } from "@/components/chrome";
 import { categoryId, groupByCategory, readyProblems } from "@/lib/catalog";
 import { getCatalog } from "@/lib/content";
 
 export const metadata: Metadata = {
-  title: "Problems — Execution Visualizer",
+  title: "Problems",
   description:
     "The NeetCode 150, stepped through one frame at a time. One built properly so far.",
 };
@@ -30,7 +31,13 @@ export default async function ProblemsPage() {
   }));
 
   return (
-    <main className="mx-auto flex max-w-[1440px] flex-col px-24 pb-64 lg:px-72">
+    <>
+      <SkipLink />
+      <SiteHeader current="problems" />
+      <main
+        id="main"
+        className="mx-auto flex max-w-[1440px] flex-col px-24 pb-64 lg:px-72"
+      >
       <header className="flex flex-col gap-14 pt-48 pb-32 lg:pt-72">
         <h1 className="font-display text-display-32 tracking-display lg:text-display-48">
           The NeetCode 150.
@@ -95,7 +102,9 @@ export default async function ProblemsPage() {
           })}
         </div>
       </div>
-    </main>
+      </main>
+      <SiteFooter />
+    </>
   );
 }
 

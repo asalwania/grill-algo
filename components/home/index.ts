@@ -1,0 +1,1 @@
+export { ScrollScrubbedTrace } from "./ScrollScrubbedTrace";
