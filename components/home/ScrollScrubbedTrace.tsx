@@ -3,7 +3,12 @@
 import { MotionConfig, motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-import { TwoSumFlatView } from "@/content/problems/two-sum/FlatView";
+// Two Sum specifically, not a generic problem: WATCHED_VARS below names THIS
+// problem's variables, so parameterizing the renderer would only have hidden
+// what the beat already is. Importing the bound view also keeps the chrome
+// (which holds functions) on the client side of the RSC boundary, where the
+// server-rendered homepage cannot pass it.
+import { TwoSumFlatView } from "@/content/problems/two-sum/TwoSumFlatView";
 import type { TwoSumFrame } from "@/lib/types";
 
 /**

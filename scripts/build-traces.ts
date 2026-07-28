@@ -1,9 +1,9 @@
 /**
  * Runs every problem's generators once per playable input and writes one
  * frames.<case>.<approach>.json per combination into that problem's folder,
- * plus a cases.json manifest the runtime loader reads to discover them. Wired
- * as `prebuild`, so `pnpm build` regenerates traces before Next ever looks at
- * them.
+ * plus cases.json and approaches.json manifests the runtime loader reads to
+ * discover them. Wired as `prebuild`, so `pnpm build` regenerates traces
+ * before Next ever looks at them.
  *
  *   pnpm traces
  *
@@ -23,7 +23,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url'
 
 import type { Approach, ProblemTraces } from '../lib/types.ts'
 
-const APPROACHES: Approach[] = ['optimized', 'brute']
+/** Every approach the union admits — used only to validate what a problem
+ *  declares, never to iterate. Iteration is over `traces.approaches`. */
+const KNOWN_APPROACHES: Approach[] = ['brute', 'sorted', 'optimized']
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const problemsDir = join(root, 'content', 'problems')
@@ -56,6 +58,35 @@ for (const slug of slugs) {
 
   console.log(`${slug}  —  ${traces.example}`)
 
+  // Approaches are per problem, not a fixed triple (lib/types.ts) — a problem
+  // ships only the ones that teach something about IT. Order is meaningful
+  // (first = default selection and leftmost tab), so this is written out as a
+  // manifest for the same reason cases.json is.
+  const approaches = traces.approaches
+  if (!approaches || approaches.length === 0) {
+    throw new Error(`${show(traceFile)} declares no \`approaches\``)
+  }
+
+  const seenApproaches = new Set<Approach>()
+  for (const approach of approaches) {
+    if (!KNOWN_APPROACHES.includes(approach)) {
+      throw new Error(
+        `${show(traceFile)} declares unknown approach "${approach}" — ` +
+          `expected one of ${KNOWN_APPROACHES.join(', ')}`,
+      )
+    }
+    if (seenApproaches.has(approach)) {
+      throw new Error(`${show(traceFile)} declares "${approach}" twice`)
+    }
+    seenApproaches.add(approach)
+  }
+
+  const approachesFile = join(problemsDir, slug, 'approaches.json')
+  await writeFile(approachesFile, `${JSON.stringify(approaches, null, 2)}\n`, 'utf8')
+  console.log(
+    `  ${String(approaches.length).padStart(3)} approach(es) ->  ${show(approachesFile)}  (${approaches.join(', ')})`,
+  )
+
   const cases = traces.cases
   if (!cases || cases.length === 0) {
     throw new Error(`${show(traceFile)} exports no \`cases\``)
@@ -77,7 +108,7 @@ for (const slug of slugs) {
   console.log(`  ${String(cases.length).padStart(3)} case(s)  ->  ${show(manifestFile)}`)
 
   for (const input of cases) {
-    for (const approach of APPROACHES) {
+    for (const approach of approaches) {
       const build = traces.build[approach]
       const listing = traces.listings[approach]
 

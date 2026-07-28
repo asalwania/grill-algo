@@ -38,70 +38,70 @@ export default async function ProblemsPage() {
         id="main"
         className="mx-auto flex max-w-[1440px] flex-col px-24 pb-64 lg:px-72"
       >
-      <header className="flex flex-col gap-14 pt-48 pb-32 lg:pt-72">
-        <h1 className="font-display text-display-32 tracking-display lg:text-display-48">
-          The NeetCode 150.
-        </h1>
-        <p className="max-w-[640px] text-body-16 text-text-muted">
-          Step through real execution, one frame at a time — no guessing, no
-          hand-waving.{" "}
-          <span className="text-text-primary">
-            {ready.length} of {catalog.length} built so far.
-          </span>{" "}
-          The rest link straight to LeetCode until they are.
-        </p>
-      </header>
+        <header className="flex flex-col gap-14 pt-48 pb-32 lg:pt-72">
+          <h1 className="font-display text-display-32 tracking-display lg:text-display-48">
+            The NeetCode 150.
+          </h1>
+          <p className="max-w-[640px] text-body-16 text-text-muted">
+            Step through real execution, one frame at a time — no guessing, no
+            hand-waving.{" "}
+            <span className="text-text-primary">
+              {ready.length} of {catalog.length} built so far.
+            </span>{" "}
+            The rest link straight to LeetCode until they are.
+          </p>
+        </header>
 
-      <div className="flex flex-col gap-32 lg:grid lg:grid-cols-[220px_1fr] lg:gap-48">
-        <CategoryRail items={railItems} />
+        <div className="flex flex-col gap-32 lg:grid lg:grid-cols-[220px_1fr] lg:gap-48">
+          <CategoryRail items={railItems} />
 
-        <div className="flex flex-col gap-48">
-          {/* Pinned above the 18 sections on purpose: with 149 cards greyed
+          <div className="flex flex-col gap-48">
+            {/* Pinned above the 18 sections on purpose: with 149 cards greyed
               out, the one thing a visitor can actually use must not be two
               thousand pixels down inside Arrays & Hashing. These problems
               appear twice — here, and in their real category slot below. */}
-          {ready.length > 0 ? (
-            <section aria-labelledby="available-now">
-              <SectionHeading id="available-now" label="Available now" />
-              <CardGrid>
-                {ready.map((problem) => (
-                  <ProblemCard key={problem.slug} problem={problem} />
-                ))}
-              </CardGrid>
-            </section>
-          ) : null}
-
-          {sections.map((section) => {
-            const id = categoryId(section.category);
-            return (
-              <section
-                key={id}
-                id={id}
-                aria-labelledby={`${id}-heading`}
-                // Cheap version of virtualization: the browser skips layout and
-                // paint for offscreen sections. One CSS line instead of a
-                // windowing library, and it keeps the HTML fully static.
-                style={{
-                  contentVisibility: "auto",
-                  containIntrinsicSize: "auto 640px",
-                }}
-                className="scroll-mt-64"
-              >
-                <SectionHeading
-                  id={`${id}-heading`}
-                  label={section.category}
-                  count={section.problems.length}
-                />
+            {ready.length > 0 ? (
+              <section aria-labelledby="available-now">
+                <SectionHeading id="available-now" label="Available now" />
                 <CardGrid>
-                  {section.problems.map((problem) => (
+                  {ready.map((problem) => (
                     <ProblemCard key={problem.slug} problem={problem} />
                   ))}
                 </CardGrid>
               </section>
-            );
-          })}
+            ) : null}
+
+            {sections.map((section) => {
+              const id = categoryId(section.category);
+              return (
+                <section
+                  key={id}
+                  id={id}
+                  aria-labelledby={`${id}-heading`}
+                  // Cheap version of virtualization: the browser skips layout and
+                  // paint for offscreen sections. One CSS line instead of a
+                  // windowing library, and it keeps the HTML fully static.
+                  style={{
+                    contentVisibility: "auto",
+                    containIntrinsicSize: "auto 640px",
+                  }}
+                  // className="scroll-mt-64"
+                >
+                  <SectionHeading
+                    id={`${id}-heading`}
+                    label={section.category}
+                    count={section.problems.length}
+                  />
+                  <CardGrid>
+                    {section.problems.map((problem) => (
+                      <ProblemCard key={problem.slug} problem={problem} />
+                    ))}
+                  </CardGrid>
+                </section>
+              );
+            })}
+          </div>
         </div>
-      </div>
       </main>
       <SiteFooter />
     </>

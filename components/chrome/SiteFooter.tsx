@@ -8,7 +8,7 @@ export function SiteFooter() {
     <footer className="mt-auto border-t border-border-hairline">
       <div className="mx-auto flex max-w-[1440px] flex-col gap-12 px-24 py-32 sm:flex-row sm:items-center sm:justify-between lg:px-72">
         <span className="font-mono text-mono-13 tracking-label-widest text-text-muted-dim">
-          EXECUTION VISUALIZER
+          GRILL-ALGO
         </span>
         <span className="text-narration-sm text-text-muted">
           {CATALOG.length} problems on the list.{" "}

@@ -253,7 +253,9 @@ const BRUTE: Record<Language, Solution> = {
 
 const LANGUAGES: Language[] = ['javascript', 'python', 'java', 'go']
 
-export const solutions: Record<Approach, Solution[]> = {
+/** Keyed only by the approaches Two Sum ships (see `traces.approaches`) —
+ *  `Partial` because the `Approach` union spans every problem, not this one. */
+export const solutions: Partial<Record<Approach, Solution[]>> = {
   optimized: LANGUAGES.map((language) => OPTIMIZED[language]),
   brute: LANGUAGES.map((language) => BRUTE[language]),
 }

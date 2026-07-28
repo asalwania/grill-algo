@@ -5,8 +5,8 @@ import { useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, type RefObject } from "react";
 import * as THREE from "three";
 import { usePlayerState } from "@/components/player";
-import type { SceneShellHandle } from "@/components/scene";
-import type { Approach, TileState, TwoSumFrame } from "@/lib/types";
+import type { SceneShellHandle } from "./SceneShell";
+import type { ArrayMemoryFrame, TileState } from "@/lib/types";
 
 /** Canvas-relative pixel position of one tile, for F9's DOM label layer. */
 export type TileScreenPosition = {
@@ -23,7 +23,7 @@ export type TileScreenPosition = {
   scale: number;
 };
 
-/** Canvas-relative pixel position of one hash-map slot frame, for F10's DOM
+/** Canvas-relative pixel position of one memory slot frame, for F10's DOM
  *  label layer — the slot's key/value entry is rendered as text there, never
  *  on the canvas. */
 export type SlotScreenPosition = {
@@ -37,11 +37,11 @@ export type SlotScreenPosition = {
   text: string | null;
 };
 
-type TwoSumSceneProps = {
+type ArrayMemorySceneProps = {
   /** Frames for the currently selected approach — the caller has already
-   *  resolved `problem.frames[state.approach]`, so this component only ever
+   *  resolved `problem.frames[caseId][approach]`, so this component only ever
    *  reads `step` off player state. */
-  frames: TwoSumFrame[];
+  frames: ArrayMemoryFrame[];
   /**
    * Called on every rendered frame with each tile's projected screen
    * position. The array is mutated in place and passed by the same
@@ -50,10 +50,10 @@ type TwoSumSceneProps = {
    */
   onTilePositions?: (positions: TileScreenPosition[]) => void;
   /**
-   * Same contract as onTilePositions, for the hash-map wall's slots (F10).
-   * Called every frame regardless of approach (F13's wall mounts for both,
-   * sunk out of view during brute) — every slot's `text` is simply null
-   * while sunk, since brute frames never populate scene.slots.
+   * Same contract as onTilePositions, for the memory wall's slots (F10).
+   * Called every frame regardless of approach (F13's wall mounts for all of
+   * them, sunk out of view for the memoryless ones) — every slot's `text` is
+   * simply null while sunk, since those frames never populate scene.slots.
    */
   onSlotPositions?: (positions: SlotScreenPosition[]) => void;
   /**
@@ -161,12 +161,26 @@ function colorNear(a: THREE.Color, b: THREE.Color, eps: number): boolean {
 }
 
 /**
+ * Whether the given approach's frames ever populate `scene.slots` — i.e.
+ * whether this approach has a memory structure for the wall to represent.
+ *
+ * This, not the approach NAME, is what the scene keys its wall on. The scene
+ * has no business knowing that "optimized" means a hash map while "sorted" and
+ * "brute" mean no memory at all; it only needs to know whether there is
+ * anything to raise. That is also what keeps this file problem-agnostic as
+ * approaches are added.
+ */
+function framesUseMemory(frames: ArrayMemoryFrame[]): boolean {
+  return frames.some((frame) => frame.scene.slots.length > 0);
+}
+
+/**
  * Mounted as a sibling of the tiles, never a parent. Subscribing to
  * usePlayerState() here re-renders only this null-returning component on
  * step change — the mesh tree below reads `frameRef` imperatively inside
  * useFrame instead of taking the frame as a prop, so it never re-renders.
  *
- * Also mirrors the discrete `approach` flag into `approachRef` (F13) — same
+ * Also mirrors the discrete `wallUp` flag into `wallUpRef` (F13) — same
  * rationale as `frameRef`: the flag itself is fine to cross Context (it's
  * discrete, not interpolated), but the mesh tree below only ever reads it
  * imperatively, so this is still the one place a step/approach change
@@ -174,20 +188,22 @@ function colorNear(a: THREE.Color, b: THREE.Color, eps: number): boolean {
  */
 function FrameCursor({
   frames,
+  wallUp,
   frameRef,
-  approachRef,
+  wallUpRef,
 }: {
-  frames: TwoSumFrame[];
-  frameRef: RefObject<TwoSumFrame>;
-  approachRef: RefObject<Approach>;
+  frames: ArrayMemoryFrame[];
+  wallUp: boolean;
+  frameRef: RefObject<ArrayMemoryFrame>;
+  wallUpRef: RefObject<boolean>;
 }) {
-  const { step, approach } = usePlayerState();
+  const { step } = usePlayerState();
   useEffect(() => {
     frameRef.current = frames[Math.min(step, frames.length - 1)] ?? frameRef.current;
   }, [frames, step, frameRef]);
   useEffect(() => {
-    approachRef.current = approach;
-  }, [approach, approachRef]);
+    wallUpRef.current = wallUp;
+  }, [wallUp, wallUpRef]);
   return null;
 }
 
@@ -242,14 +258,15 @@ function computeMatchFocus(
 function CameraChoreography({
   frames,
   count,
+  hasWall,
   cameraRig,
 }: {
-  frames: TwoSumFrame[];
+  frames: ArrayMemoryFrame[];
   count: number;
+  hasWall: boolean;
   cameraRig?: RefObject<SceneShellHandle | null>;
 }) {
   const { step, restartNonce } = usePlayerState();
-  const hasWall = useMemo(() => computeMapCapacity(frames) > 0, [frames]);
   // Last real (non-null) active tile index. Holds the camera in place across
   // the one-frame gap between "tile lights" and "cursor set" (F1's staggered
   // staging, AGENTS.md) instead of snapping back to the establishing shot and
@@ -277,9 +294,9 @@ function CameraChoreography({
       return;
     }
 
-    // `link`'s second index is a tile index only for the brute trace (no
-    // wall) — for optimized it is a wall-slot index (lib/types.ts), so
-    // `cursor` is the only tile-space signal there (F1's note, AGENTS.md).
+    // `link`'s second index is a tile index only when there is no wall — with
+    // one it is a wall-slot index (lib/types.ts), so `cursor` is the only
+    // tile-space signal there (F1's note, AGENTS.md).
     const activeIndex = hasWall
       ? frame.scene.cursor
       : frame.scene.link
@@ -313,34 +330,38 @@ function CameraChoreography({
 // from wherever `progressRef` currently sits, same contract as every other
 // damped value in this file.
 const APPROACH_TRANSITION_DAMPING = 4.3;
-// How far below the ground plane the wall sinks in brute mode. Comfortably
-// clear of the reflective ground and the default camera framing, so "raises
-// out of the ground plane" reads as emerging from nothing rather than
-// sliding up from a visible stack of slots.
+// How far below the ground plane the wall sinks for a memoryless approach.
+// Comfortably clear of the reflective ground and the default camera framing,
+// so "raises out of the ground plane" reads as emerging from nothing rather
+// than sliding up from a visible stack of slots.
 const WALL_SUNK_Y = -3.2;
 
 /**
- * F13 — the single source of truth for "how far toward Optimized is the
- * scene." Everything the toggle animates (the wall's rise, the lookup beam's
- * fade-in, the brute beams' fade-out) reads the SAME damped value here rather
- * than each re-deriving its own, so they move in lockstep instead of drifting
- * out of sync with each other.
+ * F13 — the single source of truth for "how far up is the memory wall."
+ * Everything the approach toggle animates (the wall's rise, the lookup beam's
+ * fade-in, the tile-to-tile beams' fade-out) reads the SAME damped value here
+ * rather than each re-deriving its own, so they move in lockstep instead of
+ * drifting out of sync with each other.
  *
  * A continuous, interpolated value — so, per AGENTS.md, it lives only in this
- * ref, never in Context. `approachRef` (written by FrameCursor from the
- * discrete, Context-safe `approach` flag) is the only thing crossing the
- * Canvas boundary; this component turns that flag into the damped 0..1 float
- * every other scene component reads imperatively.
+ * ref, never in Context. `wallUpRef` (written by FrameCursor from the
+ * discrete, Context-safe flag) is the only thing crossing the Canvas
+ * boundary; this component turns that flag into the damped 0..1 float every
+ * other scene component reads imperatively.
+ *
+ * Note this is keyed on "does this approach remember anything", not on which
+ * approach it is — so a third, memoryless approach (sort-and-scan) resolves to
+ * 0 and shares brute force's staging with no extra case to write.
  */
-function ApproachTransition({
-  approachRef,
+function MemoryTransition({
+  wallUpRef,
   progressRef,
 }: {
-  approachRef: RefObject<Approach>;
+  wallUpRef: RefObject<boolean>;
   progressRef: RefObject<number>;
 }) {
   useFrame((state, delta) => {
-    const target = approachRef.current === "optimized" ? 1 : 0;
+    const target = wallUpRef.current ? 1 : 0;
     progressRef.current = THREE.MathUtils.damp(
       progressRef.current,
       target,
@@ -358,7 +379,7 @@ function ArrayTiles({
   onTilePositions,
 }: {
   count: number;
-  frameRef: RefObject<TwoSumFrame>;
+  frameRef: RefObject<ArrayMemoryFrame>;
   onTilePositions?: (positions: TileScreenPosition[]) => void;
 }) {
   const groupRefs = useRef<(THREE.Group | null)[]>([]);
@@ -457,56 +478,35 @@ function ArrayTiles({
 }
 
 /**
- * Whether the CURRENTLY SELECTED approach's frames actually populate
- * scene.slots. Only CameraChoreography (F12) reads this — it needs to know
- * whether the frame in front of it right now is walking a map or comparing
- * pairs. HashMapWall and LookupBeam do NOT use this: since F13 they mount
- * unconditionally (see `wallCapacity` below) so their rise/fade can animate
- * smoothly across an approach switch instead of snapping in and out with the
- * frames array reference.
- */
-function computeMapCapacity(frames: TwoSumFrame[]): number {
-  const hasMap = frames.some((frame) => frame.scene.slots.length > 0);
-  return hasMap ? frames[0].scene.nums.length : 0;
-}
-
-/**
- * The hash-map wall behind the array. Sized to `nums.length` — the most
- * entries the map could ever hold — not to the current frame's slot count,
- * so empty capacity is visible as bare frames from the first frame onward.
+ * The memory wall behind the array. Sized to `nums.length` — the most entries
+ * the structure could ever hold — not to the current frame's slot count, so
+ * empty capacity is visible as bare frames from the first frame onward.
  *
- * Mounted for BOTH approaches (F13): `wallCapacity` is problem-level, not
+ * Mounted for EVERY approach (F13): capacity is problem-level, not
  * approach-level, because the wall's existence is what the toggle animates.
- * `progressRef` (0 = brute, 1 = optimized) drives how far it has risen out
- * of the ground plane; brute frames never populate scene.slots, so every
- * slot simply reads as empty while sunk, exactly like before F13's toggle
- * existed.
+ * A memoryless approach's frames never populate scene.slots, so every slot
+ * simply reads as empty while sunk.
  */
-function HashMapWall({
-  frames,
+function MemoryWall({
+  capacity,
   frameRef,
   progressRef,
   onSlotPositions,
 }: {
-  frames: TwoSumFrame[];
-  frameRef: RefObject<TwoSumFrame>;
+  capacity: number;
+  frameRef: RefObject<ArrayMemoryFrame>;
   progressRef: RefObject<number>;
   onSlotPositions?: (positions: SlotScreenPosition[]) => void;
 }) {
-  // nums.length is constant across approaches for this problem, so there is
-  // no approach-specific value to memoize against — `capacity` is a plain
-  // problem-level constant, mounted for both brute and optimized (F13).
-  const capacity = frames[0]?.scene.nums.length ?? 0;
-  const maxCapacity = capacity;
   const wallGroupRef = useRef<THREE.Group>(null);
   const groupRefs = useRef<(THREE.Group | null)[]>([]);
   const materialRefs = useRef<(THREE.MeshStandardMaterial | null)[]>([]);
   const springValues = useRef<number[]>(
-    Array.from({ length: maxCapacity }, () => EMPTY_SLOT_SCALE),
+    Array.from({ length: capacity }, () => EMPTY_SLOT_SCALE),
   );
-  const springVelocities = useRef<number[]>(Array.from({ length: maxCapacity }, () => 0));
+  const springVelocities = useRef<number[]>(Array.from({ length: capacity }, () => 0));
   const positions = useRef<SlotScreenPosition[]>(
-    Array.from({ length: maxCapacity }, (_, index) => ({
+    Array.from({ length: capacity }, (_, index) => ({
       index,
       x: 0,
       y: 0,
@@ -523,7 +523,7 @@ function HashMapWall({
     const wallGroup = wallGroupRef.current;
     if (wallGroup) {
       // Directly from `progressRef`, not re-damped here — it is already the
-      // damped value (ApproachTransition owns that), and LookupBeam derives
+      // damped value (MemoryTransition owns that), and LookupBeam derives
       // its own slot-Y target with the same lerp so the beam always points
       // at where the wall actually is, not its resting position.
       wallGroup.position.y = THREE.MathUtils.lerp(WALL_SUNK_Y, 0, progressRef.current);
@@ -635,18 +635,18 @@ const BEAM_MISS_OVERSHOOT = 0.5;
 const GLOW_RADIUS = 0.14;
 const GLOW_MAX_SCALE = 2.2;
 // Instantaneous velocity kick applied to the flash spring on a hit — reuses
-// HashMapWall's SPRING_STIFFNESS/SPRING_DAMPING (already tuned underdamped)
+// MemoryWall's SPRING_STIFFNESS/SPRING_DAMPING (already tuned underdamped)
 // but drives it as a one-shot pulse toward 0 rather than a move to a target:
 // releasing the spring from rest with this velocity peaks its displacement
 // at roughly FLASH_KICK / omega_d ≈ 1, i.e. a flash that reads as a full pop.
 const FLASH_KICK = 14;
 
 /**
- * F11 — the lookup beam. Travels from the tile currently probing the map up
- * to the wall slot its complement would occupy (or, on a miss, the next
- * still-empty slot the coming `store` step is about to fill). Landing on a
- * hit flashes both ends green via the spring kick above; missing dissipates
- * past the gap instead of landing solid.
+ * F11 — the lookup beam. Travels from the tile currently probing the memory
+ * structure up to the wall slot its key would occupy (or, on a miss, the next
+ * still-empty slot the coming `store` step is about to fill). Landing on a hit
+ * flashes both ends green via the spring kick above; missing dissipates past
+ * the gap instead of landing solid.
  *
  * The hit/miss determination is frozen the moment `scene.probe` changes, not
  * re-derived every frame: on a miss, the very next frame's `store` step
@@ -659,25 +659,24 @@ const FLASH_KICK = 14;
  * (AGENTS.md: "a single reusable mesh ... not a new mesh per step") — never
  * recreated per frame or per step.
  *
- * Mounted for both approaches (F13), matching HashMapWall's own capacity —
+ * Mounted for every approach (F13), matching MemoryWall's own capacity —
  * `targetOpacity` is additionally scaled by `progressRef` so this beam fades
  * in alongside the wall's rise instead of popping the instant the approach
- * flag flips. In practice `probe` is null throughout every brute frame
- * anyway (see trace.ts), so this only ever matters during the transition
+ * flag flips. In practice `probe` is null throughout every memoryless
+ * approach's frames anyway, so this only ever matters during the transition
  * window itself.
  */
 function LookupBeam({
-  frames,
+  capacity,
   frameRef,
   count,
   progressRef,
 }: {
-  frames: TwoSumFrame[];
-  frameRef: RefObject<TwoSumFrame>;
+  capacity: number;
+  frameRef: RefObject<ArrayMemoryFrame>;
   count: number;
   progressRef: RefObject<number>;
 }) {
-  const capacity = frames[0]?.scene.nums.length ?? 0;
   const wallTopY = ((capacity - 1) * SLOT_GAP) / 2;
   const startX = -((count - 1) * TILE_GAP) / 2;
 
@@ -746,7 +745,7 @@ function LookupBeam({
       // (also-damped) lift — the beam's own damping toward this target still
       // produces a smooth ease-in, just not pixel-identical to the tile's.
       currentStart.current.set(startX + cursor * TILE_GAP, TILE_HEIGHT / 2 + LIFT_HEIGHT, 0);
-      // Wall's own current sink offset (F13) — same lerp HashMapWall applies
+      // Wall's own current sink offset (F13) — same lerp MemoryWall applies
       // to its wrapping group, so the beam always lands on the slot's actual
       // position, not its fully-risen resting position.
       const wallOffsetY = THREE.MathUtils.lerp(WALL_SUNK_Y, 0, progressRef.current);
@@ -843,14 +842,16 @@ function LookupBeam({
 const COMPARE_BEAM_MAX_OPACITY = 0.8;
 
 /**
- * F13 — brute force's per-frame comparison beam. Connects the two tiles
- * `scene.link` names this frame, tile-to-tile along the ground row rather
+ * F13 — the memoryless approaches' per-frame comparison beam. Connects the two
+ * tiles `scene.link` names this frame, tile-to-tile along the ground row rather
  * than tile-to-wall (there is no wall to aim at — `slots` is always `[]` in
- * the brute trace, per lib/types.ts's doc on `link`'s dual meaning).
+ * those traces, per lib/types.ts's doc on `link`'s dual meaning). Serves brute
+ * force's every-pair scan and sort-and-scan's neighbour comparison alike; both
+ * are just "two tiles, one line."
  *
  * Unlike LookupBeam there is nothing to freeze: `link` is only ever non-null
- * on the exact frame it describes (trace.ts clears it back to null between
- * comparisons), so reading it fresh every tick is correct as-is.
+ * on the exact frame it describes (the generators clear it back to null
+ * between comparisons), so reading it fresh every tick is correct as-is.
  *
  * `targetOpacity` is scaled by `1 - progressRef.current` — the mirror image
  * of LookupBeam's scaling — so this beam fades out exactly as the tile-to-
@@ -861,7 +862,7 @@ function CompareBeam({
   count,
   progressRef,
 }: {
-  frameRef: RefObject<TwoSumFrame>;
+  frameRef: RefObject<ArrayMemoryFrame>;
   count: number;
   progressRef: RefObject<number>;
 }) {
@@ -884,8 +885,8 @@ function CompareBeam({
     const { kind } = frameRef.current;
     const { link, slots } = frameRef.current.scene;
     // Guard on `slots.length === 0` (not just `link !== null`) so this never
-    // fires on optimized's one link-bearing frame, where link's second index
-    // is a wall-slot index, not a tile index (lib/types.ts).
+    // fires on a wall-bearing approach's one link-bearing frame, where link's
+    // second index is a wall-slot index, not a tile index (lib/types.ts).
     const visible = link !== null && slots.length === 0;
     const targetOpacity = (visible ? COMPARE_BEAM_MAX_OPACITY : 0) * (1 - progressRef.current);
 
@@ -937,12 +938,12 @@ const CRISSCROSS_LIFTS = [1.1, 0.75, 1.4, 0.45];
  * F13's decorative "crisscross beams" — the visual brute force never shows
  * during ordinary playback (CompareBeam already covers that; this is purely
  * the toggle's showpiece). A fixed set of tile-to-tile arcs whose opacity is
- * `4 * progress * (1 - progress)`: zero at both resting states (pure brute,
- * pure optimized) and peaking only mid-transition, so switching either
- * direction reads as the same beams blooming and then collapsing into
- * LookupBeam's single vertical line — no separate one-shot state needed,
- * because that shape falls straight out of the same `progressRef` everything
- * else in this file already reads.
+ * `4 * progress * (1 - progress)`: zero at both resting states (wall down,
+ * wall up) and peaking only mid-transition, so switching either direction
+ * reads as the same beams blooming and then collapsing into LookupBeam's
+ * single vertical line — no separate one-shot state needed, because that
+ * shape falls straight out of the same `progressRef` everything else in this
+ * file already reads.
  */
 function CrissCrossBeams({
   count,
@@ -1046,39 +1047,72 @@ function ReflectiveGround() {
   );
 }
 
-export function TwoSumScene({
+/**
+ * The shared learning-view scene for the "one array, optionally one remembered
+ * structure behind it" family — every Arrays & Hashing problem, not just Two
+ * Sum.
+ *
+ * Nothing here is problem-specific, and that is not an accident: AGENTS.md's
+ * hard rule confines every word and number to the DOM layer, so all this
+ * component ever reads are tile STATES and INDICES. It never touches a value,
+ * a key, a target or a label. Making it generic therefore cost no
+ * parameterization at all — the only thing that had to change was keying the
+ * wall on "do these frames use memory" rather than on the approach's name.
+ */
+export function ArrayMemoryScene({
   frames,
   onTilePositions,
   onSlotPositions,
   cameraRig,
-}: TwoSumSceneProps) {
-  const frameRef = useRef<TwoSumFrame>(frames[0]);
+}: ArrayMemorySceneProps) {
+  const frameRef = useRef<ArrayMemoryFrame>(frames[0]);
+  // Only the LENGTH of `nums` is invariant across a trace (lib/types.ts) — a
+  // sort-based approach reorders the values themselves — and length is all
+  // the geometry needs, since every tile's position comes from its index.
   const count = frames[0].scene.nums.length;
-  // Lazily seeded from whether THIS render's frames carry a map at all.
-  // FrameCursor corrects it from the real `approach` flag in an effect on
-  // mount, so this guess only matters for the very first render, before that
-  // effect has run. Computed once as a plain value (not read back off a ref
-  // during render) since refs may only be read imperatively, never at render
-  // time.
-  const initialApproach: Approach = frames.some((frame) => frame.scene.slots.length > 0)
-    ? "optimized"
-    : "brute";
-  const approachRef = useRef<Approach>(initialApproach);
-  const progressRef = useRef(initialApproach === "optimized" ? 1 : 0);
+
+  // Capacity is problem-level, not approach-level: the wall mounts for every
+  // approach so its rise/sink can animate across a switch (F13), sized to the
+  // most entries the structure could ever hold.
+  const capacity = count;
+
+  // Whether THIS render's frames carry a memory structure at all. Derived
+  // fresh each render rather than from the approach name, so a new memoryless
+  // approach needs no case added here. FrameCursor mirrors it into a ref for
+  // the mesh tree; `progressRef` is seeded from it so the first render starts
+  // at the resting state instead of animating in from the wrong one.
+  const wallUp = framesUseMemory(frames);
+  const wallUpRef = useRef<boolean>(wallUp);
+  const progressRef = useRef(wallUp ? 1 : 0);
 
   return (
     <>
-      <FrameCursor frames={frames} frameRef={frameRef} approachRef={approachRef} />
-      <ApproachTransition approachRef={approachRef} progressRef={progressRef} />
-      <CameraChoreography frames={frames} count={count} cameraRig={cameraRig} />
-      <ArrayTiles count={count} frameRef={frameRef} onTilePositions={onTilePositions} />
-      <HashMapWall
+      <FrameCursor
         frames={frames}
+        wallUp={wallUp}
+        frameRef={frameRef}
+        wallUpRef={wallUpRef}
+      />
+      <MemoryTransition wallUpRef={wallUpRef} progressRef={progressRef} />
+      <CameraChoreography
+        frames={frames}
+        count={count}
+        hasWall={wallUp}
+        cameraRig={cameraRig}
+      />
+      <ArrayTiles count={count} frameRef={frameRef} onTilePositions={onTilePositions} />
+      <MemoryWall
+        capacity={capacity}
         frameRef={frameRef}
         progressRef={progressRef}
         onSlotPositions={onSlotPositions}
       />
-      <LookupBeam frames={frames} frameRef={frameRef} count={count} progressRef={progressRef} />
+      <LookupBeam
+        capacity={capacity}
+        frameRef={frameRef}
+        count={count}
+        progressRef={progressRef}
+      />
       <CompareBeam frameRef={frameRef} count={count} progressRef={progressRef} />
       <CrissCrossBeams count={count} progressRef={progressRef} />
       <ReflectiveGround />

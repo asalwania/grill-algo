@@ -1,0 +1,382 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "The numbers as they arrived, in no particular order.",
+    "why": "A duplicate can be anywhere in here, which is why brute force has to try every pair. But that is only true because the array is unordered — and that is something we can change.",
+    "vars": {
+      "n": 6,
+      "comparisons": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 2,
+    "kind": "store",
+    "narration": "Sorted. Now any repeat has to be sitting next to its twin.",
+    "why": "This is the trade: O(n log n) up front, in exchange for never needing to remember anything. Equal numbers cannot end up apart once the row is in order, so checking neighbours is enough.",
+    "vars": {
+      "n": 6,
+      "comparisons": 0,
+      "sorted": "[1, 3, 4, 7, 9, 9]"
+    },
+    "scene": {
+      "nums": [
+        1,
+        3,
+        4,
+        7,
+        9,
+        9
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.nums",
+      "scene.tiles",
+      "vars.sorted"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 5,
+    "kind": "compare",
+    "narration": "1 then 3. Different, so move on.",
+    "why": "One comparison per element, and never a backward glance — anything equal to this number would already have been the one before it.",
+    "vars": {
+      "n": 6,
+      "comparisons": 1,
+      "i": 1,
+      "previous": 1,
+      "current": 3,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        1,
+        3,
+        4,
+        7,
+        9,
+        9
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.found",
+      "vars.i",
+      "vars.previous",
+      "vars.sorted"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 5,
+    "kind": "compare",
+    "narration": "3 then 4. Different, so move on.",
+    "why": "One comparison per element, and never a backward glance — anything equal to this number would already have been the one before it.",
+    "vars": {
+      "n": 6,
+      "comparisons": 2,
+      "i": 2,
+      "previous": 3,
+      "current": 4,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        1,
+        3,
+        4,
+        7,
+        9,
+        9
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.i",
+      "vars.previous"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 5,
+    "kind": "compare",
+    "narration": "4 then 7. Different, so move on.",
+    "why": "One comparison per element, and never a backward glance — anything equal to this number would already have been the one before it.",
+    "vars": {
+      "n": 6,
+      "comparisons": 3,
+      "i": 3,
+      "previous": 4,
+      "current": 7,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        1,
+        3,
+        4,
+        7,
+        9,
+        9
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.i",
+      "vars.previous"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 5,
+    "kind": "compare",
+    "narration": "7 then 9. Different, so move on.",
+    "why": "One comparison per element, and never a backward glance — anything equal to this number would already have been the one before it.",
+    "vars": {
+      "n": 6,
+      "comparisons": 4,
+      "i": 4,
+      "previous": 7,
+      "current": 9,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        1,
+        3,
+        4,
+        7,
+        9,
+        9
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "active",
+        "idle"
+      ],
+      "cursor": 4,
+      "slots": [],
+      "probe": null,
+      "link": [
+        3,
+        4
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.i",
+      "vars.previous"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 5,
+    "kind": "match",
+    "narration": "9 then 9. The same number, twice in a row.",
+    "why": "Sorting turned \"is this value anywhere else in the array\" into \"is it immediately to my left\" — the same question, asked somewhere much cheaper.",
+    "vars": {
+      "n": 6,
+      "comparisons": 5,
+      "i": 5,
+      "previous": 9,
+      "current": 9,
+      "found": true
+    },
+    "scene": {
+      "nums": [
+        1,
+        3,
+        4,
+        7,
+        9,
+        9
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "active"
+      ],
+      "cursor": 5,
+      "slots": [],
+      "probe": null,
+      "link": [
+        4,
+        5
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.found",
+      "vars.i",
+      "vars.previous"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 6,
+    "kind": "return",
+    "narration": "Return true. (Positions 4 and 5 of the SORTED row.)",
+    "why": "The answer is a yes/no, so losing track of where the numbers originally sat costs nothing. That is precisely the freedom Two Sum does not have — it has to report indices, so it can never sort.",
+    "vars": {
+      "n": 6,
+      "comparisons": 5,
+      "i": 5,
+      "previous": 9,
+      "current": 9,
+      "found": true,
+      "result": "true"
+    },
+    "scene": {
+      "nums": [
+        1,
+        3,
+        4,
+        7,
+        9,
+        9
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "match",
+        "match"
+      ],
+      "cursor": 5,
+      "slots": [],
+      "probe": null,
+      "link": [
+        4,
+        5
+      ],
+      "result": [
+        4,
+        5
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.result",
+      "scene.tiles",
+      "vars.result"
+    ]
+  }
+]

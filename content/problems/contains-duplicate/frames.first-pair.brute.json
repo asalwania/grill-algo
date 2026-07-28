@@ -1,0 +1,166 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "Nothing remembered, nothing sorted. Every pair, checked by hand.",
+    "why": "With no memory and no order, the only way to know a number is unique is to compare it against every other one. Watch the work accumulate.",
+    "vars": {
+      "n": 4,
+      "comparisons": 0
+    },
+    "scene": {
+      "nums": [
+        5,
+        5,
+        9,
+        2
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 2,
+    "kind": "compare",
+    "narration": "Anchor on 5, at index 0.",
+    "why": "The inner loop starts one step past the anchor and never looks back — every pair to the left has already been tried. That is why each pass is shorter than the last.",
+    "vars": {
+      "n": 4,
+      "comparisons": 0,
+      "i": 0,
+      "a": 5
+    },
+    "scene": {
+      "nums": [
+        5,
+        5,
+        9,
+        2
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.tiles",
+      "vars.a",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 4,
+    "kind": "match",
+    "narration": "5 against 5. The same number.",
+    "why": "Found by exhaustion rather than by memory — 1 comparisons to get here. On six numbers that is barely a difference. On six million it is the difference between an answer and a hung tab.",
+    "vars": {
+      "n": 4,
+      "comparisons": 1,
+      "i": 0,
+      "j": 1,
+      "a": 5,
+      "b": 5,
+      "found": true
+    },
+    "scene": {
+      "nums": [
+        5,
+        5,
+        9,
+        2
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.found",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 5,
+    "kind": "return",
+    "narration": "Return true. Indices 0 and 1 hold the same value.",
+    "why": "The same answer the other two approaches reach — it was never in doubt. What differs is how much work it took to become certain of it.",
+    "vars": {
+      "n": 4,
+      "comparisons": 1,
+      "i": 0,
+      "j": 1,
+      "a": 5,
+      "b": 5,
+      "found": true,
+      "result": "true"
+    },
+    "scene": {
+      "nums": [
+        5,
+        5,
+        9,
+        2
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        1
+      ],
+      "result": [
+        0,
+        1
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.result",
+      "scene.tiles",
+      "vars.result"
+    ]
+  }
+]

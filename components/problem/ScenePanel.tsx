@@ -4,15 +4,18 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "
 import {
   SceneShell,
   LabelLayer,
+  ArrayMemoryScene,
   detectWebGLSupport,
   type LabelLayerHandle,
   type SceneShellHandle,
+  type SlotScreenPosition,
+  type TileScreenPosition,
 } from "@/components/scene";
 import { VariablesPanel } from "@/components/panels";
 import { RenderModeToggle, usePlayerState } from "@/components/player";
-import type { TwoSumFrame } from "@/lib/types";
-import { TwoSumFlatView } from "./FlatView";
-import { TwoSumScene, type SlotScreenPosition, type TileScreenPosition } from "./scene";
+import type { ArrayMemoryFrame } from "@/lib/types";
+import { ArrayMemoryFlatView } from "./FlatView";
+import type { ProblemChrome } from "./types";
 
 type ScenePanelProps = {
   /**
@@ -25,11 +28,14 @@ type ScenePanelProps = {
   resetKey: string;
   /** Frames for the CURRENTLY SELECTED approach only — the caller has already
    *  resolved `framesByCase[state.caseId][state.approach]`, matching
-   *  TwoSumScene's own contract. */
-  frames: TwoSumFrame[];
-  /** Current frame (same resolution as `frames[step]`) — read here only for
-   *  the desktop floating VariablesPanel overlay. */
-  frame: TwoSumFrame;
+   *  ArrayMemoryScene's own contract. */
+  frames: ArrayMemoryFrame[];
+  /** Current frame (same resolution as `frames[step]`) — read here for the
+   *  desktop floating VariablesPanel overlay, the flat view, and the label
+   *  layer's per-frame values. */
+  frame: ArrayMemoryFrame;
+  /** Problem-specific labels and formatters, forwarded to the flat view. */
+  chrome: ProblemChrome;
   className?: string;
 };
 
@@ -114,12 +120,18 @@ function FullscreenButton({ targetRef }: { targetRef: React.RefObject<HTMLDivEle
 /**
  * F15 — the whole visualization stage, self-contained: canvas + DOM label
  * overlay + the fullscreen toggle + (desktop only) the floating VariablesPanel
- * card. Mounted exactly once by ProblemView and repositioned per breakpoint
- * via `className` (sticky 40vh strip on mobile, right column on desktop) —
- * never duplicated, since a second mount would mean a second WebGL context
- * and a second F12 camera rig fighting the same player state.
+ * card. Mounted exactly once by the problem view and repositioned per
+ * breakpoint via `className` (sticky 40vh strip on mobile, right column on
+ * desktop) — never duplicated, since a second mount would mean a second WebGL
+ * context and a second F12 camera rig fighting the same player state.
  */
-export function ScenePanel({ resetKey, frames, frame, className = "" }: ScenePanelProps) {
+export function ScenePanel({
+  resetKey,
+  frames,
+  frame,
+  chrome,
+  className = "",
+}: ScenePanelProps) {
   const { isPlaying, renderMode } = usePlayerState();
   const containerRef = useRef<HTMLDivElement>(null);
   const cameraRig = useRef<SceneShellHandle>(null);
@@ -138,13 +150,17 @@ export function ScenePanel({ resetKey, frames, frame, className = "" }: ScenePan
   }, []);
 
   const handleSlotPositions = useCallback((positions: SlotScreenPosition[]) => {
-    // TwoSumScene calls onTilePositions every frame too — LabelLayer.update
+    // ArrayMemoryScene calls onTilePositions every frame too — LabelLayer.update
     // takes both together, so slot positions ride along on the same call
     // rather than needing their own imperative path.
     labelLayerRef.current?.update([], positions);
   }, []);
 
-  const values = frames[0]?.scene.nums ?? [];
+  // Per FRAME, not per trace: a sort-based approach reorders the array
+  // mid-run (lib/types.ts), so reading this once off `frames[0]` would leave
+  // every label pinned to the pre-sort value. Only the length is invariant,
+  // which is what keeps LabelLayer's ref arrays stable across the change.
+  const values = frame.scene.nums;
   const slotCapacity = frames.some((f) => f.scene.slots.length > 0) ? values.length : 0;
 
   return (
@@ -160,10 +176,10 @@ export function ScenePanel({ resetKey, frames, frame, className = "" }: ScenePan
             // Unreachable in practice — `showCanvas` already gated on the same
             // probe — but SceneShell's own gate stays authoritative rather than
             // being duplicated away, so it can never render nothing.
-            fallback={<TwoSumFlatView frame={frame} isFallback />}
+            fallback={<ArrayMemoryFlatView frame={frame} chrome={chrome} isFallback />}
             initialCameraPosition={[2.5, 3.5, 8]}
           >
-            <TwoSumScene
+            <ArrayMemoryScene
               key={resetKey}
               frames={frames}
               onTilePositions={handleTilePositions}
@@ -184,12 +200,16 @@ export function ScenePanel({ resetKey, frames, frame, className = "" }: ScenePan
           </div>
         </>
       ) : (
-        <TwoSumFlatView frame={frame} isFallback={!webglSupported}>
+        <ArrayMemoryFlatView
+          frame={frame}
+          chrome={chrome}
+          isFallback={!webglSupported}
+        >
           {/* Below lg the MobileVariablesSheet already covers this. */}
           <div className="hidden lg:block">
             <VariablesPanel frame={frame} />
           </div>
-        </TwoSumFlatView>
+        </ArrayMemoryFlatView>
       )}
 
       <FullscreenButton targetRef={containerRef} />

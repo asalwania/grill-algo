@@ -29,7 +29,7 @@ export type Frame<TScene = unknown> = {
 }
 
 // ---------------------------------------------------------------------------
-// Two Sum scene
+// Array + memory scene
 // ---------------------------------------------------------------------------
 
 export type TileState = 'idle' | 'active' | 'done' | 'match'
@@ -38,16 +38,41 @@ export type SlotState = 'empty' | 'filled' | 'probed' | 'hit'
 /**
  * Geometry-bearing state only. The canvas reads states/indices to place and
  * light objects; every key, value and index is rendered as text by the DOM.
+ *
+ * Shared by every problem in the "one array, optionally one remembered
+ * structure behind it" family — Two Sum, Contains Duplicate and the rest of
+ * Arrays & Hashing. It is deliberately NOT per-problem: the 3D scene reads
+ * only states and indices (never a value, never a label), so nothing in it is
+ * problem-specific. What differs between problems is the DOM chrome around it,
+ * which is why `ProblemChrome` exists rather than a second scene component.
  */
-export type TwoSumScene = {
-  /** Constant across frames, but carried so each frame stands alone. */
+export type ArrayMemoryScene = {
+  /**
+   * The array as it stands ON THIS FRAME.
+   *
+   * NOT constant across a trace: a sort-based approach reorders it mid-run,
+   * and that reorder IS the step the frame is there to show. Anything that
+   * caches this (label text, a flat-view row) must read it per frame rather
+   * than once off `frames[0]`. Only its LENGTH is invariant, which is what
+   * lets the scene size its per-tile ref arrays once at mount.
+   */
   nums: number[]
-  target: number
+  /**
+   * The problem's scalar input, when it has one — Two Sum's target. Absent for
+   * problems that take only an array (Contains Duplicate). Rendered by the DOM
+   * chrome; the canvas never reads it.
+   */
+  target?: number
   /** One entry per element of `nums`. */
   tiles: TileState[]
   /** Index of the tile under the beam, or null. */
   cursor: number | null
-  /** Insertion-ordered hash map slots. Empty for approaches with no memory structure. */
+  /**
+   * Insertion-ordered memory slots — a hash map's entries, or a set's members
+   * with `value` carrying the index they were seen at. Empty for approaches
+   * with no memory structure (brute force, sort-and-scan), which is exactly
+   * what the wall's rise/sink animates against.
+   */
   slots: { key: number; value: number; state: SlotState }[]
   /**
    * The key currently being looked up, or null.
@@ -60,15 +85,29 @@ export type TwoSumScene = {
   probe: number | null
   /**
    * Beam endpoints, or null. Read the second index against `slots`:
-   *   optimized -> [tileIndex, slotIndex] — a tile probing the wall.
-   *   brute     -> [tileIndex, tileIndex] — `slots` is empty, so there is no
-   *                wall to aim at and the beam runs tile to tile (F13's
-   *                "crisscross beams").
+   *   slots non-empty -> [tileIndex, slotIndex] — a tile probing the wall.
+   *   slots empty     -> [tileIndex, tileIndex] — there is no wall to aim at,
+   *                      so the beam runs tile to tile (F13's "crisscross
+   *                      beams"). Both brute force and sort-and-scan.
    */
   link: [number, number] | null
-  /** Tile indices of the answer once found. */
+  /**
+   * Tile indices of the answer once found, indexed against THIS FRAME's
+   * `nums`. For a sort-based approach that means positions in the sorted
+   * array, not in the caller's original one.
+   *
+   * A problem whose answer is a boolean (Contains Duplicate) still reports the
+   * pair that decided it, and lets `result !== null` be the boolean —
+   * `ProblemChrome.formatAnswer` is what turns it back into the answer the
+   * problem actually asks for.
+   */
   result: [number, number] | null
 }
+
+export type ArrayMemoryFrame = Frame<ArrayMemoryScene>
+
+/** Two Sum's scene — the shared one, with `target` narrowed to required. */
+export type TwoSumScene = ArrayMemoryScene & { target: number }
 
 export type TwoSumFrame = Frame<TwoSumScene>
 
@@ -161,7 +200,19 @@ export type CatalogProblem = CatalogEntry & {
 }
 
 export type Language = 'javascript' | 'python' | 'java' | 'go'
-export type Approach = 'brute' | 'optimized'
+
+/**
+ * Every approach ANY problem can offer — not the set any single problem does.
+ *
+ * A problem declares its own subset, in its own order, via
+ * `ProblemTraces.approaches`; the tab strip, the build script and the loader
+ * all read that rather than this union. Forcing all three on every problem
+ * would mean inventing one: sorting Two Sum destroys the indices it has to
+ * return, so recovering them costs O(n) space and kills the very "sorted is
+ * the cheap middle" story that justifies the tab.
+ */
+export type Approach = 'brute' | 'sorted' | 'optimized'
+
 /** Whether the learning view renders the R3F scene or the DOM-only fallback. */
 export type RenderMode = '3d' | '2d'
 
@@ -185,7 +236,8 @@ export type TestCase = {
   /** Short label for the picker, e.g. "Answer at the end". */
   label: string
   nums: number[]
-  target: number
+  /** The problem's scalar input, when it has one. Omitted for array-only problems. */
+  target?: number
   /** One line on what this input is here to show. Rendered in the DOM. */
   note: string
 }
@@ -194,14 +246,28 @@ export type TestCase = {
  * What every content/problems/<slug>/trace.ts must export as `traces`.
  * scripts/build-traces.ts discovers problems by directory and knows nothing
  * else about them.
+ *
+ * Generic over the approach set so a problem gets exact types for the
+ * approaches it actually ships — `traces.build.optimized` is non-optional for
+ * a problem that declared `optimized`, and a compile error for one that did
+ * not, rather than every access needing a `Partial` null check.
  */
-export type ProblemTraces<TScene = unknown> = {
+export type ProblemTraces<
+  TScene = unknown,
+  TApproach extends Approach = Approach,
+> = {
   /** Human-readable input the shipped frames were generated from. Printed by the build. */
   example: string
+  /**
+   * The approaches this problem ships, in tab order. The FIRST is the default
+   * selection — same convention as `cases`. Written to approaches.json by the
+   * build so the runtime loader knows which frame files to expect.
+   */
+  approaches: readonly TApproach[]
   /** Canonical listing per approach. Every frame's `line` is a 1-based index into it. */
-  listings: Record<Approach, string>
+  listings: Record<TApproach, string>
   /** Every playable input. The FIRST entry is the default selection. */
   cases: TestCase[]
   /** Runs the generator for one case. */
-  build: Record<Approach, (input: TestCase) => Frame<TScene>[]>
+  build: Record<TApproach, (input: TestCase) => Frame<TScene>[]>
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useImperativeHandle, useRef, type CSSProperties } from "react";
-import type { SlotScreenPosition, TileScreenPosition } from "@/content/problems/two-sum/scene";
+import type { SlotScreenPosition, TileScreenPosition } from "./ArrayMemoryScene";
 
 export type LabelLayerHandle = {
   /**
@@ -15,11 +15,19 @@ export type LabelLayerHandle = {
 };
 
 type LabelLayerProps = {
-  /** Array values to label, in tile order. Constant for a given trace — only
-   *  positions move frame to frame. */
+  /**
+   * Array values to label, in tile order, AS OF THE CURRENT FRAME.
+   *
+   * Deliberately not read once off `frames[0]`: a sort-based approach
+   * reorders the array mid-trace (lib/types.ts's note on `nums`), and the
+   * reorder is the whole point of the frame that performs it. Only the LENGTH
+   * is invariant, which is what keeps the ref arrays below stable — the text
+   * itself is re-rendered by React, on the same step change that already
+   * re-renders this layer's parent.
+   */
   values: number[];
-  /** Hash-map wall capacity (F10) — 0 for approaches with no wall, matching
-   *  HashMapWall's own capacity check. Defaults to 0. */
+  /** Memory-wall capacity (F10) — 0 for approaches with no wall, matching
+   *  MemoryWall's own capacity check. Defaults to 0. */
   slotCapacity?: number;
 };
 

@@ -2,13 +2,16 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import type { CSSProperties, ReactNode } from "react";
-import type { SlotState, TileState, TwoSumFrame } from "@/lib/types";
+import type { ArrayMemoryFrame, SlotState, TileState } from "@/lib/types";
+import type { ProblemChrome } from "./types";
 
-type TwoSumFlatViewProps = {
+type ArrayMemoryFlatViewProps = {
   /** The full frame snapshot for the current step. Same object the 3D scene
    *  reads — this view derives everything from it and owns no state of its own,
    *  so 2D and 3D can never disagree about what step they are showing. */
-  frame: TwoSumFrame;
+  frame: ArrayMemoryFrame;
+  /** Problem-specific labels and formatters. See ProblemChrome. */
+  chrome: ProblemChrome;
   /** Rendered because WebGL is missing rather than because the user asked for
    *  2D — adds the S5 mock's "3D unavailable" note. */
   isFallback?: boolean;
@@ -70,9 +73,9 @@ function columnSpan(from: number, to: number, count: number): string {
 // ---------------------------------------------------------------------------
 
 // The 3D scene expresses these states as material colour + emissive intensity
-// (scene.tsx's COLOR_*/EMISSIVE_* constants, which are the design tokens'
-// hexes). Here the same four states map onto the token set's fill/border/glow
-// tiers, so a tile means the same thing in either mode.
+// (ArrayMemoryScene's COLOR_*/EMISSIVE_* constants, which are the design
+// tokens' hexes). Here the same four states map onto the token set's
+// fill/border/glow tiers, so a tile means the same thing in either mode.
 const TILE_STYLES: Record<TileState, string> = {
   idle: "border-border-idle bg-surface-raised text-text-primary",
   active:
@@ -110,11 +113,11 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 // ---------------------------------------------------------------------------
 
 /**
- * `link` is only drawn tile-to-tile, and only when `slots` is empty — in the
- * optimized trace `link`'s second index is a WALL SLOT index, not a tile index
- * (lib/types.ts), so drawing it across this row would connect two unrelated
- * cells. Optimized's probe is shown against the map section instead, which is
- * where it actually points.
+ * `link` is only drawn tile-to-tile, and only when `slots` is empty — with a
+ * memory structure `link`'s second index is a WALL SLOT index, not a tile
+ * index (lib/types.ts), so drawing it across this row would connect two
+ * unrelated cells. Those approaches show their probe against the memory
+ * section instead, which is where it actually points.
  */
 function CompareConnector({
   link,
@@ -149,7 +152,7 @@ function CompareConnector({
   );
 }
 
-function ArrayRow({ frame }: { frame: TwoSumFrame }) {
+function ArrayRow({ frame }: { frame: ArrayMemoryFrame }) {
   const { nums, tiles, cursor, link, slots } = frame.scene;
   const count = nums.length;
   const trackStyle: CSSProperties = {
@@ -206,7 +209,7 @@ function ArrayRow({ frame }: { frame: TwoSumFrame }) {
 }
 
 // ---------------------------------------------------------------------------
-// Hash map
+// Memory structure
 // ---------------------------------------------------------------------------
 
 /**
@@ -221,7 +224,13 @@ function probedSlotIndex(probe: number | null, keys: number[]): number {
   return keys.indexOf(probe);
 }
 
-function HashMapSection({ frame }: { frame: TwoSumFrame }) {
+function MemorySection({
+  frame,
+  chrome,
+}: {
+  frame: ArrayMemoryFrame;
+  chrome: ProblemChrome;
+}) {
   const { slots, probe } = frame.scene;
   const hitIndex = probedSlotIndex(
     probe,
@@ -231,7 +240,7 @@ function HashMapSection({ frame }: { frame: TwoSumFrame }) {
   return (
     <section className="flex flex-col gap-10">
       <div className="flex items-baseline justify-between gap-12">
-        <SectionLabel>SEEN — value → index</SectionLabel>
+        <SectionLabel>{chrome.memoryLabel}</SectionLabel>
         {probe !== null && (
           <span
             className={`rounded-pill border px-10 py-4 font-mono text-mono-13 ${
@@ -240,7 +249,7 @@ function HashMapSection({ frame }: { frame: TwoSumFrame }) {
                 : "border-signal-green-border bg-signal-green-fill text-signal-green-on"
             }`}
           >
-            {hitIndex === -1 ? `${probe} not seen` : `${probe} found`}
+            {chrome.formatProbe(probe, hitIndex !== -1)}
           </span>
         )}
       </div>
@@ -293,23 +302,26 @@ function HashMapSection({ frame }: { frame: TwoSumFrame }) {
  * Reads the frame directly rather than the frames array. It has no playback
  * loop, no interpolation and nothing to damp, so there is no reason for it to
  * know the trace exists — "each frame is a full state snapshot" (AGENTS.md) is
- * exactly what makes a second renderer this cheap.
+ * exactly what makes a second renderer this cheap. It is also what makes a
+ * sort-based approach free here: the row re-derives from `frame.scene.nums`
+ * every render, so a reordered array simply renders reordered.
  */
-export function TwoSumFlatView({
+export function ArrayMemoryFlatView({
   frame,
+  chrome,
   isFallback = false,
   children,
   floatingControls = true,
   className = "",
-}: TwoSumFlatViewProps) {
-  const { target, slots, result } = frame.scene;
-  // Presence of a map is an APPROACH-level fact, and `slots` is empty on the
-  // optimized trace's own first frames too — so this section would flicker in
-  // if keyed on the current frame. Keyed on `probe`/`slots` history isn't
-  // available here either (one frame, by design), so the trace's own signal is
-  // used: optimized frames always carry a probe or slots by the time the map
-  // matters, and brute frames carry neither, ever.
-  const hasMap = slots.length > 0 || frame.scene.probe !== null;
+}: ArrayMemoryFlatViewProps) {
+  const { slots, result } = frame.scene;
+  const caption = chrome.formatArrayCaption(frame.scene);
+  // Presence of a memory structure is an APPROACH-level fact, and `slots` is
+  // empty on a memory-bearing trace's own first frames too — so this section
+  // would flicker in if keyed on the current frame alone. The trace's own
+  // signal is used instead: those frames always carry a probe or slots by the
+  // time the structure matters, and memoryless frames carry neither, ever.
+  const hasMemory = slots.length > 0 || frame.scene.probe !== null;
 
   return (
     // py-56 / lg:pb-64 keeps the first and last rows clear of the fullscreen
@@ -328,18 +340,21 @@ export function TwoSumFlatView({
         }`}
       >
         <SectionLabel>ARRAY</SectionLabel>
-        <span className="font-mono text-mono-13 text-text-muted">
-          target = <span className="text-text-primary">{target}</span>
-        </span>
+        {caption && (
+          <span className="font-mono text-mono-13 text-text-muted">
+            {caption.label} ={" "}
+            <span className="text-text-primary">{caption.value}</span>
+          </span>
+        )}
       </div>
 
       <ArrayRow frame={frame} />
 
-      {hasMap && <HashMapSection frame={frame} />}
+      {hasMemory && <MemorySection frame={frame} chrome={chrome} />}
 
       {result && (
         <div className="rounded-chip border border-signal-green-border bg-signal-green-fill px-12 py-10 font-mono text-mono-13 text-signal-green-on">
-          return [{result[0]}, {result[1]}]
+          return {chrome.formatAnswer(result)}
         </div>
       )}
 

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ============================================================================
-   EXECUTION VISUALIZER — TOKEN SET
+   GRILL-ALGO — TOKEN SET
    ----------------------------------------------------------------------------
    Tailwind v4 is CSS-first. There is no tailwind.config.ts; this @theme block
    IS the config. The `--namespace-*: initial` lines below DELETE Tailwind's

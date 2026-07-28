@@ -14,15 +14,15 @@ import type {
 } from './types'
 
 const PROBLEMS_DIR = join(process.cwd(), 'content', 'problems')
-const APPROACHES: Approach[] = ['optimized', 'brute']
 
 /**
  * On-disk shape of content/problems/<slug>/:
  *   meta.ts                       -> export const meta: ProblemMeta
  *   trace.ts                      -> export const traces: ProblemTraces (build-time only)
  *   cases.json                    -> TestCase[], emitted by scripts/build-traces.ts
+ *   approaches.json               -> Approach[], emitted by scripts/build-traces.ts
  *   frames.<case>.<approach>.json -> Frame[],    emitted by scripts/build-traces.ts
- *   solutions/index.ts            -> export const solutions: Record<Approach, Solution[]>
+ *   solutions/index.ts            -> export const solutions: Partial<Record<Approach, Solution[]>>
  *   content.mdx                   -> prose, returned here as raw source
  */
 export type Problem<TScene = unknown> = {
@@ -30,12 +30,21 @@ export type Problem<TScene = unknown> = {
   /** Playable inputs in author order; the first is the default selection. */
   cases: TestCase[]
   /**
+   * The approaches this problem ships, in tab order; the first is the default.
+   * Read from approaches.json rather than assumed, because the set is
+   * per-problem (lib/types.ts) — Two Sum has two, Contains Duplicate three.
+   */
+  approaches: Approach[]
+  /**
    * Keyed by case id, then approach. Every combination is loaded together, for
    * the same reason F13's toggle loads both approaches at once: switching is a
    * frame-array swap and must never wait on a fetch.
+   *
+   * `Partial` in the approach axis: only the keys in `approaches` are present.
+   * Consumers should resolve through `approaches`, never enumerate the union.
    */
-  frames: Record<string, Record<Approach, Frame<TScene>[]>>
-  solutions: Record<Approach, Solution[]>
+  frames: Record<string, Partial<Record<Approach, Frame<TScene>[]>>>
+  solutions: Partial<Record<Approach, Solution[]>>
   mdx: string
 }
 
@@ -83,14 +92,20 @@ async function readCases(dir: string): Promise<TestCase[]> {
   return JSON.parse(json) as TestCase[]
 }
 
+async function readApproaches(dir: string): Promise<Approach[]> {
+  const json = await readFile(join(dir, 'approaches.json'), 'utf8')
+  return JSON.parse(json) as Approach[]
+}
+
 async function readFrames<TScene>(
   dir: string,
   cases: TestCase[],
-): Promise<Record<string, Record<Approach, Frame<TScene>[]>>> {
+  approaches: Approach[],
+): Promise<Record<string, Partial<Record<Approach, Frame<TScene>[]>>>> {
   const loaded = await Promise.all(
     cases.map(async (input) => {
       const perApproach = await Promise.all(
-        APPROACHES.map(async (approach) => {
+        approaches.map(async (approach) => {
           const json = await readFile(
             join(dir, `frames.${input.id}.${approach}.json`),
             'utf8',
@@ -103,7 +118,7 @@ async function readFrames<TScene>(
   )
   return Object.fromEntries(loaded) as Record<
     string,
-    Record<Approach, Frame<TScene>[]>
+    Partial<Record<Approach, Frame<TScene>[]>>
   >
 }
 
@@ -111,12 +126,15 @@ export async function getProblem<TScene = unknown>(
   slug: string,
 ): Promise<Problem<TScene>> {
   const dir = join(PROBLEMS_DIR, slug)
-  // cases.json names the frame files, so it has to resolve before they can be
-  // read — the only sequential step in an otherwise parallel load.
-  const cases = await readCases(dir)
+  // Both manifests name the frame files, so they have to resolve before those
+  // can be read — the only sequential step in an otherwise parallel load.
+  const [cases, approaches] = await Promise.all([
+    readCases(dir),
+    readApproaches(dir),
+  ])
   const [meta, frames, solutionsMod, mdx] = await Promise.all([
     getProblemMeta(slug),
-    readFrames<TScene>(dir, cases),
+    readFrames<TScene>(dir, cases, approaches),
     import(`../content/problems/${slug}/solutions/index`),
     readFile(join(dir, 'content.mdx'), 'utf8'),
   ])
@@ -124,8 +142,9 @@ export async function getProblem<TScene = unknown>(
   return {
     meta,
     cases,
+    approaches,
     frames,
-    solutions: solutionsMod.solutions as Record<Approach, Solution[]>,
+    solutions: solutionsMod.solutions as Partial<Record<Approach, Solution[]>>,
     mdx,
   }
 }

@@ -48,8 +48,10 @@ export type PlayerAction =
 const BASE_STEP_MS = 600;
 
 /** Frame count per case id, then per approach — the shape of the whole
- *  pre-generated trace set the player can move between. */
-export type FrameCounts = Record<string, Record<Approach, number>>;
+ *  pre-generated trace set the player can move between. Partial in the
+ *  approach axis: approaches are per-problem (lib/types.ts), and `countOf`
+ *  below already reads a missing one as 0. */
+export type FrameCounts = Record<string, Partial<Record<Approach, number>>>;
 
 function clampStep(step: number, frameCount: number): number {
   if (frameCount <= 0) return 0;
@@ -160,7 +162,14 @@ type PlayerProviderProps = {
   frameCounts: FrameCounts;
   /** Case the player starts on; normally `problem.cases[0].id`. */
   initialCaseId: string;
-  initialApproach?: Approach;
+  /**
+   * Approach the player starts on; normally `problem.approaches[0]`.
+   *
+   * Has no default, on purpose: approaches are per-problem, so there is no
+   * value that is safe for every problem — defaulting to "optimized" would
+   * silently start a problem that doesn't ship one on an empty frame array.
+   */
+  initialApproach: Approach;
   initialLanguage?: Language;
   initialRenderMode?: RenderMode;
   initialSpeed?: number;
@@ -170,7 +179,7 @@ type PlayerProviderProps = {
 export function PlayerProvider({
   frameCounts,
   initialCaseId,
-  initialApproach = "optimized",
+  initialApproach,
   initialLanguage = "javascript",
   initialRenderMode = "3d",
   initialSpeed = 1,

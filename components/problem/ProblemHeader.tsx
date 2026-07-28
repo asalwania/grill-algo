@@ -1,11 +1,18 @@
+"use client";
+
 import Link from "next/link";
 
 import { ApproachTabs, LanguageSelector } from "@/components/player";
 import { ComplexityReadout } from "@/components/panels";
-import type { ProblemMeta } from "@/lib/types";
+import type { Approach, ProblemMeta } from "@/lib/types";
+import type { ProblemChrome } from "./types";
 
 type ProblemHeaderProps = {
   meta: ProblemMeta;
+  /** The approaches this problem ships, in tab order — from approaches.json,
+   *  never the full union (lib/types.ts). */
+  approaches: Approach[];
+  complexity: ProblemChrome["complexity"];
   className?: string;
 };
 
@@ -16,11 +23,20 @@ const DIFFICULTY_STYLES: Record<ProblemMeta["difficulty"], string> = {
 };
 
 /**
- * No client hooks of its own — a plain Server Component composing the
- * (client) tabs/pills beneath the static title and badges, same pattern as
- * any Server Component rendering interactive children.
+ * Composes the (client) tabs/pills beneath the static title and badges.
+ *
+ * Now a Client Component rather than the Server Component it was: it is
+ * rendered from inside `ArrayMemoryProblemView`, which is itself a client
+ * component, and `complexity` arrives as part of the chrome object that
+ * cannot cross the RSC boundary anyway (see ProblemChrome). Nothing here uses
+ * a hook — it just no longer gets to be server-rendered independently.
  */
-export function ProblemHeader({ meta, className = "" }: ProblemHeaderProps) {
+export function ProblemHeader({
+  meta,
+  approaches,
+  complexity,
+  className = "",
+}: ProblemHeaderProps) {
   return (
     <div
       className={`flex flex-col gap-16 border-b border-border-hairline px-24 py-20 lg:px-32 lg:py-24 ${className}`}
@@ -52,8 +68,8 @@ export function ProblemHeader({ meta, className = "" }: ProblemHeaderProps) {
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-14">
-        <ApproachTabs />
-        <ComplexityReadout />
+        <ApproachTabs approaches={approaches} />
+        <ComplexityReadout complexity={complexity} />
       </div>
 
       <LanguageSelector />

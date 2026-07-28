@@ -22,8 +22,8 @@
  *      counts are unchanged from SP3: 9 at target 9, 25 at target 21.
  */
 
+import { createEmitter } from '../../../lib/frames.ts'
 import type {
-  FrameKind,
   ProblemTraces,
   SlotState,
   TestCase,
@@ -63,7 +63,12 @@ export const EXAMPLE_TARGET = 21
  * that means no repeated value that misses (a repeated value that HITS is
  * fine; it returns before the second push).
  */
-export const TEST_CASES: TestCase[] = [
+/** `TestCase.target` is optional in general (array-only problems exist), but
+ *  every Two Sum case has one — stated in the type so the tests can rely on
+ *  it and an authoring slip is a compile error, not a runtime throw. */
+type TwoSumTestCase = TestCase & { target: number }
+
+export const TEST_CASES: TwoSumTestCase[] = [
   {
     id: 'sample',
     label: 'The walkthrough',
@@ -162,81 +167,6 @@ const BRUTE_LINE = {
 } as const
 
 // ---------------------------------------------------------------------------
-// changed[] — derived by diffing, never hand-listed (SP3 Finding 2)
-// ---------------------------------------------------------------------------
-
-/**
- * Flattens to leaf paths. Arrays are compared whole rather than per index:
- * `scene.tiles` is one hint, not six, because the scene retargets every tile on
- * any change anyway. Same for `scene.slots`, `scene.link` and `scene.result`.
- */
-function collect(value: unknown, path: string, out: Map<string, string>): void {
-  if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
-    for (const [key, child] of Object.entries(value)) {
-      collect(child, path ? `${path}.${key}` : key, out)
-    }
-    return
-  }
-  out.set(path, JSON.stringify(value ?? null))
-}
-
-/**
- * Only `line`, `vars` and `scene` are diffed. `narration`, `why` and `kind`
- * change on nearly every frame, so flagging them carries no signal.
- *
- * Disappearances count: a var that existed on the previous frame and is gone on
- * this one is reported as changed, which is exactly what F6's AnimatePresence
- * fade-out needs. Frame 0's `changed` is always `[]` — there is nothing to
- * flash against.
- */
-function changedPaths(prev: TwoSumFrame | null, next: TwoSumFrame): string[] {
-  if (prev === null) return []
-
-  const before = new Map<string, string>()
-  const after = new Map<string, string>()
-  for (const root of ['line', 'vars', 'scene'] as const) {
-    collect(prev[root], root, before)
-    collect(next[root], root, after)
-  }
-
-  return [...new Set([...before.keys(), ...after.keys()])]
-    .filter((path) => before.get(path) !== after.get(path))
-    .sort()
-}
-
-/**
- * Numbers the frames and fills in `changed` by diffing against the frame it
- * just handed out. `snapshot` must return a fresh deep copy every call — a
- * frame that shares mutable state with the generator is not a snapshot.
- */
-function emitter(snapshot: () => TwoSumScene) {
-  let step = 0
-  let previous: TwoSumFrame | null = null
-
-  return (
-    line: number,
-    kind: FrameKind,
-    narration: string,
-    why: string,
-    vars: TwoSumFrame['vars'],
-  ): TwoSumFrame => {
-    const frame: TwoSumFrame = {
-      step: step++,
-      line,
-      kind,
-      narration,
-      why,
-      vars,
-      scene: snapshot(),
-      changed: [],
-    }
-    frame.changed = changedPaths(previous, frame)
-    previous = frame
-    return frame
-  }
-}
-
-// ---------------------------------------------------------------------------
 // Optimized — one pass, one hash map
 // ---------------------------------------------------------------------------
 
@@ -262,7 +192,7 @@ export function* twoSumOptimized(
   let result: [number, number] | null = null
   let lookups = 0
 
-  const emit = emitter(() => ({
+  const emit = createEmitter<TwoSumScene>(() => ({
     nums: [...nums],
     target,
     tiles: [...tiles],
@@ -401,7 +331,7 @@ export function* twoSumBrute(
   let result: [number, number] | null = null
   let comparisons = 0
 
-  const emit = emitter(() => ({
+  const emit = createEmitter<TwoSumScene>(() => ({
     nums: [...nums],
     target,
     tiles: [...tiles],
@@ -511,12 +441,37 @@ export const traceBrute = (nums: number[], target: number): TwoSumFrame[] => [
   ...twoSumBrute(nums, target),
 ]
 
-export const traces: ProblemTraces<TwoSumScene> = {
+/**
+ * Two Sum ships TWO approaches, not three.
+ *
+ * There is no sort-and-scan tab here on purpose: Two Sum has to return
+ * INDICES, and sorting destroys them. Recovering them means carrying
+ * (value, index) pairs through the sort, which costs O(n) space — so the
+ * "sorted is the cheap middle" story that earns the tab on Contains Duplicate
+ * simply isn't true here. Adding one would teach the wrong lesson.
+ */
+const TWO_SUM_APPROACHES = ['optimized', 'brute'] as const
+
+/**
+ * `TestCase.target` is optional because array-only problems exist (Contains
+ * Duplicate). Two Sum is not one of them, and a case authored without a
+ * target must fail the BUILD rather than quietly solve `target = 0`, which
+ * would generate a plausible-looking trace of the wrong problem.
+ */
+function requireTarget(input: TestCase): number {
+  if (input.target === undefined) {
+    throw new Error(`Two Sum case "${input.id}" has no target`)
+  }
+  return input.target
+}
+
+export const traces: ProblemTraces<TwoSumScene, (typeof TWO_SUM_APPROACHES)[number]> = {
   example: `nums = [${EXAMPLE_NUMS.join(', ')}], target = ${EXAMPLE_TARGET}`,
+  approaches: TWO_SUM_APPROACHES,
   listings: { optimized: OPTIMIZED_LISTING, brute: BRUTE_LISTING },
   cases: TEST_CASES,
   build: {
-    optimized: (input) => traceOptimized(input.nums, input.target),
-    brute: (input) => traceBrute(input.nums, input.target),
+    optimized: (input) => traceOptimized(input.nums, requireTarget(input)),
+    brute: (input) => traceBrute(input.nums, requireTarget(input)),
   },
 }

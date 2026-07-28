@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { SiteFooter, SiteHeader, SkipLink } from "@/components/chrome";
 import { ScrollScrubbedTrace } from "@/components/home";
-import { TwoSumFlatView } from "@/content/problems/two-sum/FlatView";
+import { TwoSumFlatView } from "@/content/problems/two-sum/TwoSumFlatView";
 import sampleOptimized from "@/content/problems/two-sum/frames.sample.optimized.json";
 import { CATALOG } from "@/content/catalog";
 import type { TwoSumFrame } from "@/lib/types";

@@ -2,20 +2,38 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { usePlayerState } from "@/components/player";
+import type { Approach } from "@/lib/types";
 
-const COMPLEXITY = {
-  brute: { time: "O(n²)", space: "O(1)" },
-  optimized: { time: "O(n)", space: "O(n)" },
-} as const;
+type ComplexityReadoutProps = {
+  /**
+   * Time/space per approach, from the problem's own chrome.
+   *
+   * Problem-specific rather than a shared table, even where two problems
+   * happen to agree: Contains Duplicate's sort-and-scan is O(n log n)/O(1),
+   * a figure nothing global could have supplied.
+   */
+  complexity: Partial<Record<Approach, { time: string; space: string }>>;
+};
 
 /**
  * F13 — cross-fades with the approach toggle (ApproachTabs). Fixed height so
  * nothing around it shifts mid-transition, same rationale as NarrationStrip's
  * own fixed-height narration line.
  */
-export function ComplexityReadout() {
+export function ComplexityReadout({ complexity }: ComplexityReadoutProps) {
   const { approach } = usePlayerState();
-  const { time, space } = COMPLEXITY[approach];
+  const entry = complexity[approach];
+
+  // An approach with no declared complexity renders the empty (fixed-height)
+  // box rather than collapsing, so the header row's height never depends on
+  // how complete a problem's chrome is.
+  if (!entry) {
+    return (
+      <div className="relative h-20 overflow-hidden font-mono text-mono-13 tracking-label-wide text-text-muted" />
+    );
+  }
+
+  const { time, space } = entry;
 
   return (
     <div className="relative h-20 overflow-hidden font-mono text-mono-13 tracking-label-wide text-text-muted">

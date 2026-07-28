@@ -5,12 +5,12 @@ import {
   type ArrayMemoryProblemViewProps,
 } from "@/components/problem";
 import { ProblemBrief } from "./ProblemBrief";
-import { TWO_SUM_CHROME } from "./chrome";
+import { CONTAINS_DUPLICATE_CHROME } from "./chrome";
 
 /**
- * Two Sum's learning view — a thin wrapper that supplies this problem's
- * chrome and brief to the shared one. Everything else on the page is common
- * to the whole array-plus-memory family.
+ * Contains Duplicate's learning view — a thin wrapper that supplies this
+ * problem's chrome and brief to the shared one. Everything else on the page is
+ * common to the whole array-plus-memory family.
  *
  * A CLIENT module because `ProblemChrome` holds functions, which cannot cross
  * the RSC boundary; the route passes only plain data and lets this supply the
@@ -22,7 +22,7 @@ export function ProblemView(
   return (
     <ArrayMemoryProblemView
       {...props}
-      chrome={TWO_SUM_CHROME}
+      chrome={CONTAINS_DUPLICATE_CHROME}
       brief={ProblemBrief}
     />
   );

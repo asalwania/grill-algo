@@ -1,0 +1,212 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "The numbers as they arrived, in no particular order.",
+    "why": "A duplicate can be anywhere in here, which is why brute force has to try every pair. But that is only true because the array is unordered — and that is something we can change.",
+    "vars": {
+      "n": 4,
+      "comparisons": 0
+    },
+    "scene": {
+      "nums": [
+        5,
+        5,
+        9,
+        2
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 2,
+    "kind": "store",
+    "narration": "Sorted. Now any repeat has to be sitting next to its twin.",
+    "why": "This is the trade: O(n log n) up front, in exchange for never needing to remember anything. Equal numbers cannot end up apart once the row is in order, so checking neighbours is enough.",
+    "vars": {
+      "n": 4,
+      "comparisons": 0,
+      "sorted": "[2, 5, 5, 9]"
+    },
+    "scene": {
+      "nums": [
+        2,
+        5,
+        5,
+        9
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.nums",
+      "scene.tiles",
+      "vars.sorted"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 5,
+    "kind": "compare",
+    "narration": "2 then 5. Different, so move on.",
+    "why": "One comparison per element, and never a backward glance — anything equal to this number would already have been the one before it.",
+    "vars": {
+      "n": 4,
+      "comparisons": 1,
+      "i": 1,
+      "previous": 2,
+      "current": 5,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        2,
+        5,
+        5,
+        9
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.found",
+      "vars.i",
+      "vars.previous",
+      "vars.sorted"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 5,
+    "kind": "match",
+    "narration": "5 then 5. The same number, twice in a row.",
+    "why": "Sorting turned \"is this value anywhere else in the array\" into \"is it immediately to my left\" — the same question, asked somewhere much cheaper.",
+    "vars": {
+      "n": 4,
+      "comparisons": 2,
+      "i": 2,
+      "previous": 5,
+      "current": 5,
+      "found": true
+    },
+    "scene": {
+      "nums": [
+        2,
+        5,
+        5,
+        9
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "active",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.found",
+      "vars.i",
+      "vars.previous"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 6,
+    "kind": "return",
+    "narration": "Return true. (Positions 1 and 2 of the SORTED row.)",
+    "why": "The answer is a yes/no, so losing track of where the numbers originally sat costs nothing. That is precisely the freedom Two Sum does not have — it has to report indices, so it can never sort.",
+    "vars": {
+      "n": 4,
+      "comparisons": 2,
+      "i": 2,
+      "previous": 5,
+      "current": 5,
+      "found": true,
+      "result": "true"
+    },
+    "scene": {
+      "nums": [
+        2,
+        5,
+        5,
+        9
+      ],
+      "tiles": [
+        "done",
+        "match",
+        "match",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        2
+      ],
+      "result": [
+        1,
+        2
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.result",
+      "scene.tiles",
+      "vars.result"
+    ]
+  }
+]

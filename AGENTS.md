@@ -12,8 +12,8 @@ Always update the `@specks/progress-tracker.md` progress tracker after any task 
 
 # PROJECT CONTEXT — read before responding.
 
-I'm building a DSA learning web app. Current scope is ONE problem (Two Sum),
-built end to end and deployed. Not an MVP of twelve.
+I'm building a DSA learning web app. Two problems are built end to end (Two Sum,
+Contains Duplicate). Grow it one WHOLE problem at a time — not an MVP of twelve.
 
 Architecture decisions already made — do not re-litigate these:
 
@@ -80,10 +80,34 @@ add no URL segment. Findings are written up in `docs/spikes/`.
 - **F1 — trace pipeline.** Every frame must change the scene. `pnpm test`
   enforces it, and it is why the staging is tile-lights (L5) → beam-forms (L6)
   → beam-fires (L8) rather than SP3's, whose complement frame moved only a
-  variable. Two consequences: `TwoSumScene.probe` is the **probed key**, not a
-  slot index (a miss has no slot to point at, and F11 has to render the miss),
-  and `link`'s second index is a slot index only when `slots` is non-empty —
-  in the brute trace it is a second tile index. Frame counts: optimized 25,
-  brute 20. Note the counts invert the complexity story at n = 6 (n²/2 only
-  overtakes 4n around n ≈ 9), so F13's O(n²)/O(n) readout has to carry that
-  message, not the step counter.
+  variable. Two consequences: `ArrayMemoryScene.probe` is the **probed key**,
+  not a slot index (a miss has no slot to point at, and F11 has to render the
+  miss), and `link`'s second index is a slot index only when `slots` is
+  non-empty — otherwise it is a second tile index. Two Sum's frame counts:
+  optimized 25, brute 20. Note the counts invert the complexity story at n = 6
+  (n²/2 only overtakes 4n around n ≈ 9), so F13's O(n²)/O(n) readout has to
+  carry that message, not the step counter. The same trap, worse, on Contains
+  Duplicate: its sorted trace is the SHORTEST of the three precisely because
+  the sort happens off-screen in one frame.
+
+- **G1 — the array-plus-memory family.** Settled 2026-07-28; see
+  `specs/progress-tracker.md`. The learning view is SHARED, not per-problem:
+  `components/scene/ArrayMemoryScene.tsx` (3D) and `components/problem/`
+  (flat view, scene panel, header, `ArrayMemoryProblemView`). Do not fork them
+  for a new problem. Four rules fall out and none should be re-litigated:
+  1. **The canvas is already problem-agnostic** — the hard rule above means it
+     reads only tile STATES and INDICES, never a value, key or target. It needs
+     no parameterization. The memory wall is keyed on whether the frames
+     populate `slots`, NOT on the approach's name.
+  2. **A problem's identity is its `ProblemChrome`** (`content/problems/<slug>/chrome.ts`)
+     plus its trace, solutions and brief. Chrome holds FUNCTIONS, so it cannot
+     cross the RSC boundary — it is always attached inside a `"use client"`
+     module, and the route passes only plain data. Passing it from a Server
+     Component fails the build, not lint.
+  3. **Approaches are per problem** (`ProblemTraces.approaches` →
+     `approaches.json`), in tab order, first = default. The `Approach` union is
+     what ANY problem could offer. Two Sum has no `sorted` tab on purpose:
+     sorting destroys the indices it must return.
+  4. **`scene.nums` is per frame, not per trace.** A sort-based approach
+     reorders it mid-run. Only its LENGTH is invariant. Never cache values off
+     `frames[0]`.

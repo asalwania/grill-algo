@@ -10,15 +10,15 @@ import type { ProblemBriefProps } from "@/components/problem";
  *
  * The prose is deliberately NOT the LeetCode statement: `meta.blurb` already
  * carries the formal one-liner in the header, and this is the version for
- * someone who has not met the problem before — no "indices", no "array", no
+ * someone who has not met the problem before — no "array", no "distinct", no
  * "you may assume". It lives in this file rather than in `content.mdx` because
  * it is chrome for the player (it frames what the animation is showing), not
  * the long-form article F17 will render below the split view.
  */
 const RULES = [
-  "Exactly one pair adds up to the target.",
-  "You can't use the same number twice — two different spots in the list.",
-  "Give back the two positions, in any order.",
+  "One repeat anywhere is enough — you don't have to find them all.",
+  "It has to be the same value in two different spots, not one spot counted twice.",
+  "Answer true or false. Nobody asks where the repeat was.",
 ];
 
 function SectionLabel({ children }: { children: ReactNode }) {
@@ -45,14 +45,15 @@ export function ProblemBrief({
       <div className="flex flex-col gap-10">
         <SectionLabel>THE QUESTION</SectionLabel>
         <p className="font-sans text-narration text-text-primary">
-          You get a list of numbers and one target number. Two of the numbers in
-          the list add up to that target — find them.
+          You get a list of numbers. Does the same number show up more than
+          once?
         </p>
         <p className="font-sans text-narration-sm text-text-muted">
-          The catch: you don&apos;t hand back the two numbers. You hand back{" "}
-          <span className="text-text-primary">where they sit</span> in the list —
-          counting from 0, so the first number is at position 0, the second at
-          position 1, and so on.
+          That last line is the interesting part. Because the answer is just{" "}
+          <span className="text-text-primary">yes or no</span> — not{" "}
+          <em>where</em> — you are allowed to rearrange the list to make the
+          question easier. That is a freedom Two Sum never has, and it is why
+          this problem gets a third approach that Two Sum can&apos;t.
         </p>
         <ul className="flex list-none flex-col gap-8">
           {RULES.map((rule) => (

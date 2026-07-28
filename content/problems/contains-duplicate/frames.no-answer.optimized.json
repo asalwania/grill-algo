@@ -1,0 +1,697 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "An empty set, and one pass to fill it.",
+    "why": "The question is only ever \"have I seen this before?\" — and a set answers exactly that, in one step, no matter how much it already holds.",
+    "vars": {
+      "n": 4,
+      "seen": "{}",
+      "lookups": 0
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Pick up 5.",
+    "why": "Each element is touched exactly once. There is no inner loop to fall into, because everything already seen is behind us in the set.",
+    "vars": {
+      "n": 4,
+      "seen": "{}",
+      "lookups": 0,
+      "i": 0,
+      "num": 5
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Have we seen 5? The set is empty, so no.",
+    "why": "One hash lookup, O(1). This single step stands in for the whole of brute force’s inner loop.",
+    "vars": {
+      "n": 4,
+      "seen": "{}",
+      "lookups": 1,
+      "i": 0,
+      "num": 5,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": 5,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.found",
+      "vars.lookups"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 9,
+    "kind": "store",
+    "narration": "New number. Remember 5.",
+    "why": "Unlike Two Sum there is nothing to look up later BY — we only ever ask whether a number is present, so the number itself is the whole entry.",
+    "vars": {
+      "n": 4,
+      "seen": "{ 5 }",
+      "lookups": 1,
+      "i": 0,
+      "num": 5,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 5,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": 5,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Pick up 2.",
+    "why": "Each element is touched exactly once. There is no inner loop to fall into, because everything already seen is behind us in the set.",
+    "vars": {
+      "n": 4,
+      "seen": "{ 5 }",
+      "lookups": 1,
+      "i": 1,
+      "num": 2
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 5,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.tiles",
+      "vars.found",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Have we seen 2? Not in the set.",
+    "why": "One hash lookup, O(1). This single step stands in for the whole of brute force’s inner loop.",
+    "vars": {
+      "n": 4,
+      "seen": "{ 5 }",
+      "lookups": 2,
+      "i": 1,
+      "num": 2,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 5,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": 2,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.found",
+      "vars.lookups"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 9,
+    "kind": "store",
+    "narration": "New number. Remember 2.",
+    "why": "Unlike Two Sum there is nothing to look up later BY — we only ever ask whether a number is present, so the number itself is the whole entry.",
+    "vars": {
+      "n": 4,
+      "seen": "{ 5, 2 }",
+      "lookups": 2,
+      "i": 1,
+      "num": 2,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 5,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": 2,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Pick up 8.",
+    "why": "Each element is touched exactly once. There is no inner loop to fall into, because everything already seen is behind us in the set.",
+    "vars": {
+      "n": 4,
+      "seen": "{ 5, 2 }",
+      "lookups": 2,
+      "i": 2,
+      "num": 8
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 5,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.tiles",
+      "vars.found",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Have we seen 8? Not in the set.",
+    "why": "One hash lookup, O(1). This single step stands in for the whole of brute force’s inner loop.",
+    "vars": {
+      "n": 4,
+      "seen": "{ 5, 2 }",
+      "lookups": 3,
+      "i": 2,
+      "num": 8,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 5,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": 8,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.found",
+      "vars.lookups"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 9,
+    "kind": "store",
+    "narration": "New number. Remember 8.",
+    "why": "Unlike Two Sum there is nothing to look up later BY — we only ever ask whether a number is present, so the number itself is the whole entry.",
+    "vars": {
+      "n": 4,
+      "seen": "{ 5, 2, 8 }",
+      "lookups": 3,
+      "i": 2,
+      "num": 8,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 5,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 8,
+          "value": 2,
+          "state": "filled"
+        }
+      ],
+      "probe": 8,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Pick up 1.",
+    "why": "Each element is touched exactly once. There is no inner loop to fall into, because everything already seen is behind us in the set.",
+    "vars": {
+      "n": 4,
+      "seen": "{ 5, 2, 8 }",
+      "lookups": 3,
+      "i": 3,
+      "num": 1
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 5,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 8,
+          "value": 2,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.tiles",
+      "vars.found",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Have we seen 1? Not in the set.",
+    "why": "One hash lookup, O(1). This single step stands in for the whole of brute force’s inner loop.",
+    "vars": {
+      "n": 4,
+      "seen": "{ 5, 2, 8 }",
+      "lookups": 4,
+      "i": 3,
+      "num": 1,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 5,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 8,
+          "value": 2,
+          "state": "filled"
+        }
+      ],
+      "probe": 1,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.found",
+      "vars.lookups"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 9,
+    "kind": "store",
+    "narration": "New number. Remember 1.",
+    "why": "Unlike Two Sum there is nothing to look up later BY — we only ever ask whether a number is present, so the number itself is the whole entry.",
+    "vars": {
+      "n": 4,
+      "seen": "{ 5, 2, 8, 1 }",
+      "lookups": 4,
+      "i": 3,
+      "num": 1,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 5,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 8,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        }
+      ],
+      "probe": 1,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 12,
+    "kind": "return",
+    "narration": "Every number was new. Return false.",
+    "why": "Proving the negative costs a full pass here, but only one: each number had to be checked against everything before it, and the set did all of those checks at once.",
+    "vars": {
+      "n": 4,
+      "seen": "{ 5, 2, 8, 1 }",
+      "lookups": 4,
+      "result": "false"
+    },
+    "scene": {
+      "nums": [
+        5,
+        2,
+        8,
+        1
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 5,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 8,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.found",
+      "vars.i",
+      "vars.num",
+      "vars.result"
+    ]
+  }
+]

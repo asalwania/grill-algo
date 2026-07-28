@@ -2,21 +2,30 @@
 
 import { useCallback, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { usePlayerState } from "@/components/player";
-import type { Approach, Language } from "@/lib/types";
+import type { Language } from "@/lib/types";
 import { ActiveLineBar } from "./ActiveLineBar";
 
 type CodePaneStackProps = {
-  /** Pre-highlighted CodePane output (server-rendered, build-time Shiki) for
-   *  every approach x language combination — F14's languages all ship in the
-   *  payload; only one is ever visible, picked by `state.approach`/`state.language`. */
-  panes: Record<Approach, Record<Language, ReactNode>>;
-  /** Canonical trace line -> this listing's line, per F14's Solution.lineMap. */
-  lineMaps: Record<Approach, Record<Language, Record<number, number>>>;
-  /** `frame.line` for every step, keyed by case id then approach — the only
+  /**
+   * Pre-highlighted CodePane output (server-rendered, build-time Shiki) for
+   * every language of the ACTIVE APPROACH — F14's languages all ship in the
+   * payload; only one is ever visible, picked by `state.language`.
+   *
+   * The approach axis is resolved by the caller rather than here. Approaches
+   * are per-problem (lib/types.ts), so indexing them needs to know the
+   * problem's default to fall back to; the problem view already does that
+   * once for the frame array, and doing it twice invites the two to disagree
+   * about which approach is showing.
+   */
+  panes: Record<Language, ReactNode>;
+  /** Canonical trace line -> this listing's line, per F14's Solution.lineMap.
+   *  Also already resolved to the active approach. */
+  lineMaps: Record<Language, Record<number, number>>;
+  /** `frame.line` for every step of the active case and approach — the only
    *  piece of the frame array this component actually needs, kept as plain
    *  numbers rather than full Frame objects so it stays decoupled from the
    *  scene's TScene shape. */
-  lines: Record<string, Record<Approach, number[]>>;
+  lines: number[];
   className?: string;
   style?: CSSProperties;
 };
@@ -41,15 +50,14 @@ export function CodePaneStack({
   className = "",
   style,
 }: CodePaneStackProps) {
-  const { approach, caseId, language, step } = usePlayerState();
+  const { language, step } = usePlayerState();
   const containerRef = useRef<HTMLDivElement>(null);
   const lastManualScrollAt = useRef(0);
   const programmaticScrollUntil = useRef(0);
 
-  const approachLines = lines[caseId][approach];
-  const canonicalLine = approachLines[Math.min(step, approachLines.length - 1)];
-  const activeLine = lineMaps[approach][language][canonicalLine] ?? 1;
-  const pane = panes[approach][language];
+  const canonicalLine = lines[Math.min(step, lines.length - 1)];
+  const activeLine = lineMaps[language][canonicalLine] ?? 1;
+  const pane = panes[language];
 
   useEffect(() => {
     const container = containerRef.current;

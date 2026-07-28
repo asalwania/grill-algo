@@ -1,0 +1,820 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "Nothing remembered, nothing sorted. Every pair, checked by hand.",
+    "why": "With no memory and no order, the only way to know a number is unique is to compare it against every other one. Watch the work accumulate.",
+    "vars": {
+      "n": 6,
+      "comparisons": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 2,
+    "kind": "compare",
+    "narration": "Anchor on 4, at index 0.",
+    "why": "The inner loop starts one step past the anchor and never looks back — every pair to the left has already been tried. That is why each pass is shorter than the last.",
+    "vars": {
+      "n": 6,
+      "comparisons": 0,
+      "i": 0,
+      "a": 4
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.tiles",
+      "vars.a",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 4,
+    "kind": "compare",
+    "narration": "4 against 1. Different.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the set spends a single frame where this spends an entire inner loop.",
+    "vars": {
+      "n": 6,
+      "comparisons": 1,
+      "i": 0,
+      "j": 1,
+      "a": 4,
+      "b": 1,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.found",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 4,
+    "kind": "compare",
+    "narration": "4 against 9. Different.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the set spends a single frame where this spends an entire inner loop.",
+    "vars": {
+      "n": 6,
+      "comparisons": 2,
+      "i": 0,
+      "j": 2,
+      "a": 4,
+      "b": 9,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 4,
+    "kind": "compare",
+    "narration": "4 against 7. Different.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the set spends a single frame where this spends an entire inner loop.",
+    "vars": {
+      "n": 6,
+      "comparisons": 3,
+      "i": 0,
+      "j": 3,
+      "a": 4,
+      "b": 7,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 4,
+    "kind": "compare",
+    "narration": "4 against 3. Different.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the set spends a single frame where this spends an entire inner loop.",
+    "vars": {
+      "n": 6,
+      "comparisons": 4,
+      "i": 0,
+      "j": 4,
+      "a": 4,
+      "b": 3,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "active",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        4
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 4,
+    "kind": "compare",
+    "narration": "4 against 9. Different.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the set spends a single frame where this spends an entire inner loop.",
+    "vars": {
+      "n": 6,
+      "comparisons": 5,
+      "i": 0,
+      "j": 5,
+      "a": 4,
+      "b": 9,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "active"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        5
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 2,
+    "kind": "compare",
+    "narration": "Anchor on 1, at index 1.",
+    "why": "The inner loop starts one step past the anchor and never looks back — every pair to the left has already been tried. That is why each pass is shorter than the last.",
+    "vars": {
+      "n": 6,
+      "comparisons": 5,
+      "i": 1,
+      "a": 1
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.a",
+      "vars.b",
+      "vars.found",
+      "vars.i",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 4,
+    "kind": "compare",
+    "narration": "1 against 9. Different.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the set spends a single frame where this spends an entire inner loop.",
+    "vars": {
+      "n": 6,
+      "comparisons": 6,
+      "i": 1,
+      "j": 2,
+      "a": 1,
+      "b": 9,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.found",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 4,
+    "kind": "compare",
+    "narration": "1 against 7. Different.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the set spends a single frame where this spends an entire inner loop.",
+    "vars": {
+      "n": 6,
+      "comparisons": 7,
+      "i": 1,
+      "j": 3,
+      "a": 1,
+      "b": 7,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 4,
+    "kind": "compare",
+    "narration": "1 against 3. Different.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the set spends a single frame where this spends an entire inner loop.",
+    "vars": {
+      "n": 6,
+      "comparisons": 8,
+      "i": 1,
+      "j": 4,
+      "a": 1,
+      "b": 3,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        4
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 4,
+    "kind": "compare",
+    "narration": "1 against 9. Different.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the set spends a single frame where this spends an entire inner loop.",
+    "vars": {
+      "n": 6,
+      "comparisons": 9,
+      "i": 1,
+      "j": 5,
+      "a": 1,
+      "b": 9,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "active"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        5
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 2,
+    "kind": "compare",
+    "narration": "Anchor on 9, at index 2.",
+    "why": "The inner loop starts one step past the anchor and never looks back — every pair to the left has already been tried. That is why each pass is shorter than the last.",
+    "vars": {
+      "n": 6,
+      "comparisons": 9,
+      "i": 2,
+      "a": 9
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.a",
+      "vars.b",
+      "vars.found",
+      "vars.i",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 4,
+    "kind": "compare",
+    "narration": "9 against 7. Different.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the set spends a single frame where this spends an entire inner loop.",
+    "vars": {
+      "n": 6,
+      "comparisons": 10,
+      "i": 2,
+      "j": 3,
+      "a": 9,
+      "b": 7,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.found",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 4,
+    "kind": "compare",
+    "narration": "9 against 3. Different.",
+    "why": "One comparison, one step. There is no lookup to hide the cost in — the set spends a single frame where this spends an entire inner loop.",
+    "vars": {
+      "n": 6,
+      "comparisons": 11,
+      "i": 2,
+      "j": 4,
+      "a": 9,
+      "b": 3,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "active",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        4
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 15,
+    "line": 4,
+    "kind": "match",
+    "narration": "9 against 9. The same number.",
+    "why": "Found by exhaustion rather than by memory — 12 comparisons to get here. On six numbers that is barely a difference. On six million it is the difference between an answer and a hung tab.",
+    "vars": {
+      "n": 6,
+      "comparisons": 12,
+      "i": 2,
+      "j": 5,
+      "a": 9,
+      "b": 9,
+      "found": true
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        5
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.b",
+      "vars.comparisons",
+      "vars.found",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 16,
+    "line": 5,
+    "kind": "return",
+    "narration": "Return true. Indices 2 and 5 hold the same value.",
+    "why": "The same answer the other two approaches reach — it was never in doubt. What differs is how much work it took to become certain of it.",
+    "vars": {
+      "n": 6,
+      "comparisons": 12,
+      "i": 2,
+      "j": 5,
+      "a": 9,
+      "b": 9,
+      "found": true,
+      "result": "true"
+    },
+    "scene": {
+      "nums": [
+        4,
+        1,
+        9,
+        7,
+        3,
+        9
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "match",
+        "idle",
+        "idle",
+        "match"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        5
+      ],
+      "result": [
+        2,
+        5
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.result",
+      "scene.tiles",
+      "vars.result"
+    ]
+  }
+]

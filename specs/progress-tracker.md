@@ -117,6 +117,16 @@ recorded in `specs/homepage-catalog.md`; do not re-litigate them here.
 | H3 | `/` cinematic homepage | Done | 2026-07-28 | Ajay | `app/page.tsx`, `components/home/ScrollScrubbedTrace.tsx` — see full entry below |
 | H4 | Shared chrome + metadata | Done | 2026-07-28 | Ajay | `components/chrome/` (`SiteHeader`, `SiteFooter`, `SkipLink`), title template in `app/layout.tsx`, `generateMetadata` on `/problems/[slug]` — see full entry below |
 
+## Phase 7 — Second problem
+
+Not in `main.md`, which scoped the build to Two Sum alone. Generalizing the
+single-problem machinery into a reusable family is recorded here.
+
+| ID | Task | Status | Date | Owner | Notes |
+| --- | --- | --- | --- | --- | --- |
+| G1 | Promote shared machinery | Done | 2026-07-28 | Ajay | `ArrayMemoryScene` type + component, `components/problem/`, per-problem `ProblemChrome`, per-problem approach sets — see full entry below |
+| G2 | Contains Duplicate | Done | 2026-07-28 | Ajay | `content/problems/contains-duplicate/`, three approaches incl. the first sort-based trace — see full entry below |
+
 ---
 
 ## Full entries
@@ -759,3 +769,149 @@ in this environment. Track height is now `340vh` for 25 frames; whether that
 scrub rate feels right, and whether the hero's two columns hold at 390×844
 (where the grid collapses and the hero card stacks under the copy), still need
 one real browser pass.
+
+### G1 — Promote shared machinery
+
+**Status:** Done
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+Prerequisite for a second problem. Chosen over forking
+`content/problems/two-sum/` (which would have duplicated ~1,700 lines of scene
+and view code) because the survey that preceded it found the duplication was
+almost entirely unnecessary.
+
+- **The 3D scene needed NO parameterization, and that is the finding.**
+  `scene.tsx` never read `scene.target` — all 40+ `target` hits in it were
+  `targetColor`/`targetY` damping vocabulary. AGENTS.md's hard rule ("the canvas
+  renders SHAPE AND MOTION only") had already made it problem-agnostic; nobody
+  had noticed because there was only ever one problem. It moved to
+  `components/scene/ArrayMemoryScene.tsx` essentially verbatim.
+- **The one real change to it: the wall is keyed on "do these frames use
+  memory", not on the approach's NAME.** Was `approach === "optimized" ? 1 : 0`;
+  is now `frames.some((f) => f.scene.slots.length > 0)`, mirrored into
+  `wallUpRef` by `FrameCursor`. This is what let a THIRD approach (`sorted`)
+  land with no new case anywhere in the file — it is memoryless, so it resolves
+  to 0 and shares brute force's staging for free. `Approach` is no longer
+  imported by the scene at all.
+- **`lib/types.ts`: `TwoSumScene` -> `ArrayMemoryScene`**, with `target`
+  optional and `TwoSumScene = ArrayMemoryScene & { target: number }` kept as the
+  narrowed alias. `Frame<T>` uses `T` covariantly, so `TwoSumFrame[]` is still
+  assignable to `ArrayMemoryFrame[]` and Two Sum's own trace needed no edit.
+- **`nums` is no longer constant across a trace**, and this is the subtle one.
+  The sorted approach reorders it mid-run. Two consumers cached it off
+  `frames[0]` and both were fixed: `ScenePanel` now passes `frame.scene.nums` to
+  `LabelLayer`, and `LabelLayer`'s prop doc says why. The scene itself was
+  already safe — it only ever reads `nums.length`, which sorting preserves, and
+  a test now pins that the length is invariant.
+- **Approaches are PER PROBLEM, not a fixed triple.** `ProblemTraces` gained
+  `approaches` and is generic over the approach set, so `traces.build.optimized`
+  stays non-optional for a problem that declared it. `scripts/build-traces.ts`
+  iterates that list and emits `approaches.json` (same reasoning as
+  `cases.json`: order is meaningful, a `readdir` would lose it);
+  `lib/content.ts` reads it. Everything downstream is `Partial` in the approach
+  axis.
+- **Two Sum deliberately does NOT get the sorted tab.** Sorting destroys the
+  indices it has to return, so recovering them costs O(n) space — the "sorted is
+  the cheap middle" story that earns the tab on Contains Duplicate is simply
+  false here, and shipping it would teach the wrong lesson. Recorded in its
+  `trace.ts` so it does not get "fixed" later.
+- **`ProblemChrome` (`components/problem/types.ts`) is where a problem's
+  identity now lives** — complexity table, memory heading, probe/answer/caption
+  formatters. It holds FUNCTIONS, which is load-bearing: functions cannot cross
+  the RSC boundary, so chrome is supplied by a problem's own CLIENT module
+  (`content/problems/<slug>/ProblemView.tsx`) and the route passes only plain
+  data. The build caught this the hard way — see the `TwoSumFlatView` note in G2.
+- **`CodePaneStack` now takes the ALREADY-RESOLVED approach** (`panes`,
+  `lineMaps`, `lines` for one approach) instead of the full tables. The approach
+  axis is `Partial`, so resolving it in two places would let the code pane and
+  the scene disagree about which approach is showing. One resolution site, in
+  `ArrayMemoryProblemView`.
+- **Two extractions, both because the rule matters more than the copy:**
+  `lib/frames.ts` (`createEmitter`/`changedPaths` — AGENTS.md's "`changed[]` is
+  DERIVED by diffing, never hand-written" is only worth having if it holds
+  everywhere) and `lib/solution-coverage.ts` (F14's lineMap guard as a suite any
+  problem mounts in one line).
+- **Fixed an inverted dependency on the way past:**
+  `components/scene/LabelLayer.tsx` imported its position types from
+  `content/problems/two-sum/scene`. They now live beside it.
+- **`ProblemHeader` is now a Client Component.** It uses no hooks, but it is
+  rendered from inside the client `ArrayMemoryProblemView` and takes
+  `complexity` off the chrome, so it no longer gets to be server-rendered
+  independently.
+
+Verified: `pnpm traces` regenerates Two Sum **byte-identically** (25/20, 9/4,
+13/7, 14/7 — the counts AGENTS.md pins), `tsc --noEmit`, `eslint` (clean except
+the pre-existing `design-reference/support.js` findings), `vitest run`,
+`next build`. Read the prerendered HTML: `/problems/two-sum` still renders
+exactly two approach tabs.
+
+### G2 — Contains Duplicate
+
+**Status:** Done
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+The second problem, and the first with three approaches.
+`content/problems/contains-duplicate/` holds only what is genuinely this
+problem: `meta.ts`, `trace.ts`, `chrome.ts`, `solutions/`, `ProblemBrief.tsx`, a
+four-line `ProblemView.tsx` and tests.
+
+- **Three approaches, best first:** `optimized` (hash set, O(n)/O(n)), `sorted`
+  (O(n log n)/O(1)), `brute` (O(n²)/O(1)). The middle one is the entire reason
+  this problem was worth building second — it is the smallest problem where
+  sorting is genuinely reasonable, *because the answer is a boolean and so the
+  original positions are disposable*. The brief says exactly that, and points at
+  Two Sum as the contrast.
+- **`result` is a PAIR OF INDICES on every approach even though the answer is a
+  boolean.** The pair is what the scene lights up; `result !== null` is the
+  answer, and `chrome.formatAnswer` turns it back into `true`/`false`. For
+  `sorted` those indices are positions in the SORTED array, which is what the
+  viewer is looking at by then — so the cross-approach test asserts on the
+  BOOLEAN, not the pair, and the "pair really is equal" test indexes against the
+  frame's own `nums` rather than the input.
+- **The sort is ONE frame, not an animated sort.** The lesson is what sorting
+  buys, not how a sort works — that is its own problem, with its own page. The
+  frame reorders `nums`, lights tile 0 and sets the cursor.
+- **Constraint discovered while writing the cases: no case may already be
+  sorted.** `[3, 3, 5, 7]` was the original `first-pair` input and it is in
+  order, so the sort frame reordered nothing and read as a dead step. It would
+  still have PASSED the scene-identity check (the frame also moves the cursor),
+  which is exactly why it now has its own test — `$id is not already sorted`.
+  Changed to `[5, 5, 9, 2]`.
+- **Frame counts (headline case `[4, 1, 9, 7, 3, 9]`): optimized 19, sorted 8,
+  brute 17.** The case was chosen so all three have a story: the set fills to
+  five entries before the repeat lands, brute force grinds three anchors, and
+  the sorted walk is SHORT precisely because the sort did its work off-screen —
+  a step counter cannot show O(n log n), so the narration carries it instead.
+  Same lesson AGENTS.md's F1 note records for Two Sum's inverted counts.
+- **`late-answer` is brute force at its LUCKIEST** (twins at both ends, so the
+  first anchor finds it) and the set at its worst. Deliberate: the comparison is
+  more honest for admitting a case where the bad approach wins.
+- **`TwoSumFlatView` came back, as a client wrapper.** The build failed with
+  "Functions cannot be passed directly to Client Components" — `app/page.tsx` is
+  a Server Component and was passing `TWO_SUM_CHROME` across the boundary. The
+  fix is a `"use client"` wrapper in `content/problems/two-sum/` that binds the
+  chrome on the client side. Related correction: `ScrollScrubbedTrace` had
+  briefly taken `chrome` as a prop "to stay generic", which was wrong — it
+  hardcodes `WATCHED_VARS = ["i", "num", "complement", "lookups"]`, i.e. Two
+  Sum's own variables. It imports the bound view directly again.
+- **The catalog lit up with zero edits.** `content/catalog.ts` was not touched:
+  H1 derives `status` from whether `content/problems/<slug>/` exists, so
+  `/problems` went from 149 SOON pills to 148 and gained a second featured card
+  on its own.
+
+Verified: `pnpm traces` (12 new frame files + two manifests), `tsc --noEmit`,
+`eslint`, `vitest run` (**378 passing, up from 140**), `next build` (clean;
+`/problems/contains-duplicate` prerenders via `generateStaticParams`). Read the
+prerendered HTML: title `217. Contains Duplicate — Execution Visualizer`, three
+approach tabs (`Optimized` / `Sort + Scan` / `Brute Force`) against Two Sum's
+two, and the catalog's 148/152 counts above.
+
+**Not verified: anything visual** — no browser in this environment, the same gap
+the whole H-series flagged. Two things specifically want a real pass: (1) the
+sorted approach in 3D, where the tiles are fixed positional boxes and only the
+DOM value labels swap on the reorder — correct, but it wants a look to confirm
+it reads as the array reordering rather than as a glitch; (2) the three-tab
+header row at 390×844, where `ApproachTabs` now has to fit one more pill beside
+`ComplexityReadout`.

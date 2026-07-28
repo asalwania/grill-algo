@@ -26,7 +26,7 @@ export function SiteHeader({ current }: { current?: "problems" }) {
           href="/"
           className="font-mono text-mono-13 tracking-label-widest text-text-muted transition-colors hover:text-text-primary"
         >
-          EXECUTION VISUALIZER
+          GRILL-ALGO
         </Link>
 
         <nav aria-label="Main">

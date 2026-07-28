@@ -1,0 +1,49 @@
+[
+  {
+    "id": "sample",
+    "label": "The walkthrough",
+    "nums": [
+      4,
+      1,
+      9,
+      7,
+      3,
+      9
+    ],
+    "note": "Five numbers get remembered before the sixth turns out to be a repeat."
+  },
+  {
+    "id": "first-pair",
+    "label": "Repeat straight away",
+    "nums": [
+      5,
+      5,
+      9,
+      2
+    ],
+    "note": "The first two numbers are the same — one lookup and it is over."
+  },
+  {
+    "id": "late-answer",
+    "label": "Twins at both ends",
+    "nums": [
+      22,
+      14,
+      18,
+      2,
+      22
+    ],
+    "note": "The repeat is the first and last number, which is brute force at its luckiest."
+  },
+  {
+    "id": "no-answer",
+    "label": "All different",
+    "nums": [
+      5,
+      2,
+      8,
+      1
+    ],
+    "note": "Nothing repeats, so every approach runs to the end and returns false."
+  }
+]

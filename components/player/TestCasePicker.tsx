@@ -6,10 +6,17 @@ import type { TestCase } from "@/lib/types";
 type TestCasePickerProps = {
   /** Every playable input, in author order. Straight from cases.json. */
   cases: TestCase[];
-  /** Pre-formatted answer per case id, e.g. `"[3, 5]"` or `"[]"`. Derived by
+  /** Pre-formatted answer per case id, e.g. `"[3, 5]"` or `"true"`. Derived by
    *  the caller from the shipped frames, never recomputed here — nothing in
    *  the browser solves anything (AGENTS.md). */
   answers: Record<string, string>;
+  /** Whether each answer is a positive result, for the pill's colour. Passed
+   *  rather than inferred from `answers`: "not found" reads as `[]` for one
+   *  problem and `false` for another, so no string comparison covers both. */
+  found: Record<string, boolean>;
+  /** One line naming the case's input — problem-specific, since only some
+   *  problems have a scalar input to name alongside the array. */
+  formatInput: (nums: number[], target: number | undefined) => string;
   className?: string;
 };
 
@@ -30,6 +37,8 @@ const CARD_INACTIVE =
 export function TestCasePicker({
   cases,
   answers,
+  found,
+  formatInput,
   className = "",
 }: TestCasePickerProps) {
   const { caseId } = usePlayerState();
@@ -62,9 +71,9 @@ export function TestCasePicker({
               </span>
               <span
                 className={`rounded-pill border px-10 py-4 font-mono text-mono-13 ${
-                  answers[input.id] === "[]"
-                    ? "border-border-hairline bg-surface-raised text-text-muted"
-                    : "border-signal-green-border bg-signal-green-fill text-signal-green-on"
+                  found[input.id]
+                    ? "border-signal-green-border bg-signal-green-fill text-signal-green-on"
+                    : "border-border-hairline bg-surface-raised text-text-muted"
                 }`}
               >
                 {answers[input.id] ?? "—"}
@@ -72,9 +81,7 @@ export function TestCasePicker({
             </span>
 
             <span className="font-mono text-mono-13 text-text-primary">
-              nums = [{input.nums.join(", ")}]
-              <span className="text-text-muted"> · </span>
-              target = {input.target}
+              {formatInput(input.nums, input.target)}
             </span>
 
             <span className="font-sans text-narration-sm text-text-muted">
