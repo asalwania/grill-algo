@@ -1,0 +1,1049 @@
+[
+  {
+    "step": 0,
+    "line": 3,
+    "kind": "init",
+    "narration": "One output string, empty. Each input string will be written as its length, a #, then the string itself.",
+    "why": "No character can be reserved as a separator, because every character is allowed inside the data. A length can be: it is written OUTSIDE the string it measures, and it says exactly how far to read.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"\"",
+      "decoded": "[]"
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take strs[0] = \"a\" — 1 character.",
+    "why": "The only thing the encoder needs to know about a string is how long it is. It never looks at what the characters are, which is why no character can break it.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"\"",
+      "decoded": "[]",
+      "i": 0,
+      "s": "\"a\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 5,
+    "kind": "store",
+    "narration": "Write \"1#a\" — the length, the marker, then the characters.",
+    "why": "The length and the data it describes are written together, so the decoder never has to hold anything between one piece and the next.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a\"",
+      "decoded": "[]",
+      "i": 0,
+      "piece": "\"1#a\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1#a"
+        }
+      ],
+      "probe": null,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.encoded",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 5,
+    "kind": "store",
+    "narration": "Write \"0#\" — length zero, and no characters follow it.",
+    "why": "The length and the data it describes are written together, so the decoder never has to hold anything between one piece and the next.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#\"",
+      "decoded": "[]",
+      "i": 1,
+      "piece": "\"0#\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0#"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.slots",
+      "vars.encoded",
+      "vars.i",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take strs[2] = \"bc\" — 2 characters.",
+    "why": "The only thing the encoder needs to know about a string is how long it is. It never looks at what the characters are, which is why no character can break it.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#\"",
+      "decoded": "[]",
+      "i": 2,
+      "s": "\"bc\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "active"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0#"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 5,
+    "kind": "store",
+    "narration": "Write \"2#bc\" — the length, the marker, then the characters.",
+    "why": "The length and the data it describes are written together, so the decoder never has to hold anything between one piece and the next.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#2#bc\"",
+      "decoded": "[]",
+      "i": 2,
+      "piece": "\"2#bc\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0#"
+        },
+        {
+          "key": 5,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#bc"
+        }
+      ],
+      "probe": null,
+      "link": [
+        1,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.encoded",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 7,
+    "kind": "return",
+    "narration": "Encoded: \"1#a0#2#bc\" — 9 characters holding all 3 characters of the input.",
+    "why": "The overhead is one marker plus the digits of a length, per string — 6 extra characters for 3 strings, and it does not depend on what the strings contain.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#2#bc\"",
+      "decoded": "[]",
+      "size": 9
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "active"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0#"
+        },
+        {
+          "key": 5,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#bc"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.piece",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 12,
+    "kind": "init",
+    "narration": "Now read it back. Nothing is recovered yet, and i starts at 0.",
+    "why": "The decoder gets one string and no other information. Everything it needs to split the string up again is inside the string itself.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#2#bc\"",
+      "decoded": "[]"
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0#"
+        },
+        {
+          "key": 5,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#bc"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 15,
+    "kind": "compare",
+    "narration": "i = 0. Run j forward until it lands on the next #.",
+    "why": "The scan looks for the marker in the LENGTH, never in the data — it can only ever run over digits, so a # inside a string is never reached by it.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#2#bc\"",
+      "decoded": "[]",
+      "i": 0,
+      "piece": "\"1#a\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "probed",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0#"
+        },
+        {
+          "key": 5,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#bc"
+        }
+      ],
+      "probe": 0,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 18,
+    "kind": "compare",
+    "narration": "The digits before it read 1. The next 1 character is one string.",
+    "why": "Every digit before the marker is part of the number — 1 is read as 1, not as its first digit. That is the whole reason the marker exists.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#2#bc\"",
+      "decoded": "[]",
+      "i": 0,
+      "length": 1
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "probed",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0#"
+        },
+        {
+          "key": 5,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#bc"
+        }
+      ],
+      "probe": 0,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.length",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 21,
+    "kind": "match",
+    "narration": "Take 1 character: \"a\". i moves to 3.",
+    "why": "The characters are copied out without being inspected. Whatever they are — a #, a digit, nothing at all — the count already said where they stop.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#2#bc\"",
+      "decoded": "[\"a\"]",
+      "i": 0,
+      "s": "\"a\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0#"
+        },
+        {
+          "key": 5,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#bc"
+        }
+      ],
+      "probe": 0,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.decoded",
+      "vars.length",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 15,
+    "kind": "compare",
+    "narration": "i = 3. Run j forward until it lands on the next #.",
+    "why": "The scan looks for the marker in the LENGTH, never in the data — it can only ever run over digits, so a # inside a string is never reached by it.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#2#bc\"",
+      "decoded": "[\"a\"]",
+      "i": 3,
+      "piece": "\"0#\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "probed",
+          "keyLabel": "0#"
+        },
+        {
+          "key": 5,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#bc"
+        }
+      ],
+      "probe": 3,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 21,
+    "kind": "match",
+    "narration": "Take no characters at all: \"\". i moves to 5.",
+    "why": "The characters are copied out without being inspected. Whatever they are — a #, a digit, nothing at all — the count already said where they stop.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#2#bc\"",
+      "decoded": "[\"a\", \"\"]",
+      "i": 3,
+      "s": "\"\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit",
+          "keyLabel": "0#"
+        },
+        {
+          "key": 5,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#bc"
+        }
+      ],
+      "probe": 3,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "vars.decoded",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 15,
+    "kind": "compare",
+    "narration": "i = 5. Run j forward until it lands on the next #.",
+    "why": "The scan looks for the marker in the LENGTH, never in the data — it can only ever run over digits, so a # inside a string is never reached by it.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#2#bc\"",
+      "decoded": "[\"a\", \"\"]",
+      "i": 5,
+      "piece": "\"2#bc\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit",
+          "keyLabel": "0#"
+        },
+        {
+          "key": 5,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2#bc"
+        }
+      ],
+      "probe": 5,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 18,
+    "kind": "compare",
+    "narration": "The digits before it read 2. The next 2 characters are one string.",
+    "why": "Every digit before the marker is part of the number — 2 is read as 2, not as its first digit. That is the whole reason the marker exists.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#2#bc\"",
+      "decoded": "[\"a\", \"\"]",
+      "i": 5,
+      "length": 2
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit",
+          "keyLabel": "0#"
+        },
+        {
+          "key": 5,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2#bc"
+        }
+      ],
+      "probe": 5,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.length",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 15,
+    "line": 21,
+    "kind": "match",
+    "narration": "Take 2 characters: \"bc\". i moves to 9.",
+    "why": "The characters are copied out without being inspected. Whatever they are — a #, a digit, nothing at all — the count already said where they stop.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#2#bc\"",
+      "decoded": "[\"a\", \"\", \"bc\"]",
+      "i": 5,
+      "s": "\"bc\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit",
+          "keyLabel": "0#"
+        },
+        {
+          "key": 5,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#bc"
+        }
+      ],
+      "probe": 5,
+      "link": [
+        1,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.decoded",
+      "vars.length",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 16,
+    "line": 24,
+    "kind": "return",
+    "narration": "Decoded: [\"a\", \"\", \"bc\"] — the list we started from.",
+    "why": "One pass to write 3 pieces and one to read them back, each character touched once in each direction. Nothing was searched for and nothing was escaped.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "encoded": "\"1#a0#2#bc\"",
+      "decoded": "[\"a\", \"\", \"bc\"]",
+      "result": "[\"a\", \"\", \"bc\"]"
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1#a"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit",
+          "keyLabel": "0#"
+        },
+        {
+          "key": 5,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#bc"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        2
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.result",
+      "vars.i",
+      "vars.result",
+      "vars.s"
+    ]
+  }
+]

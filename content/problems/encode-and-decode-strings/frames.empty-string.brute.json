@@ -1,0 +1,1317 @@
+[
+  {
+    "step": 0,
+    "line": 4,
+    "kind": "init",
+    "narration": "An empty list of sizes. First pass: measure every string, and write nothing yet.",
+    "why": "The sizes have to share one section of the output, so none of them can be written until all of them are known. That is the second pass this approach pays for.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[]",
+      "header": "\"\"",
+      "decoded": "[]"
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Take strs[0] = \"a\".",
+    "why": "Same observation as the optimized tab: only the length matters. What differs is where that length is allowed to go.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[]",
+      "header": "\"\"",
+      "decoded": "[]",
+      "i": 0,
+      "s": "\"a\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 6,
+    "kind": "store",
+    "narration": "Record 1. sizes = [1].",
+    "why": "The size is remembered, not written — it belongs in a header that does not exist yet, so it has to be carried until the loop ends.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1]",
+      "header": "\"1,\"",
+      "decoded": "[]",
+      "i": 0,
+      "size": 1
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1,"
+        }
+      ],
+      "probe": null,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.header",
+      "vars.s",
+      "vars.size",
+      "vars.sizes"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 6,
+    "kind": "store",
+    "narration": "Record 0. sizes = [1, 0].",
+    "why": "The size is remembered, not written — it belongs in a header that does not exist yet, so it has to be carried until the loop ends.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0]",
+      "header": "\"1,0,\"",
+      "decoded": "[]",
+      "i": 1,
+      "size": 0
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0,"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.slots",
+      "vars.header",
+      "vars.i",
+      "vars.size",
+      "vars.sizes"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Take strs[2] = \"bc\".",
+    "why": "Same observation as the optimized tab: only the length matters. What differs is where that length is allowed to go.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0]",
+      "header": "\"1,0,\"",
+      "decoded": "[]",
+      "i": 2,
+      "s": "\"bc\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "active"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0,"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.s",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 6,
+    "kind": "store",
+    "narration": "Record 2. sizes = [1, 0, 2].",
+    "why": "The size is remembered, not written — it belongs in a header that does not exist yet, so it has to be carried until the loop ends.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[]",
+      "i": 2,
+      "size": 2
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": null,
+      "link": [
+        1,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.header",
+      "vars.s",
+      "vars.size",
+      "vars.sizes"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 10,
+    "kind": "store",
+    "narration": "Second pass: the sizes, comma-separated — \"1,0,2,\".",
+    "why": "Now a SECOND delimiter is needed, because the sizes have to be told apart from each other. It is only safe because digits are the one thing in the output whose alphabet we control.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[]"
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 12,
+    "kind": "store",
+    "narration": "Then a # to close the header, and every string appended in order: \"abc\".",
+    "why": "The characters go in raw, with no boundaries between them at all. The header is the only thing that knows where one string ends — lose it and the payload is unreadable.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[]"
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "active"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 13,
+    "kind": "return",
+    "narration": "Encoded: \"1,0,2,#abc\" — 10 characters.",
+    "why": "The same information as the optimized tab, in the same O(m + n), one character longer: this scheme spends a comma per string AND a # once, where the other spends one # per string.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[]",
+      "size": 10
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 20,
+    "kind": "init",
+    "narration": "Now read it back. First loop: everything before the # is the size header.",
+    "why": "Two loops, and the first has to finish before the second can start — the payload cannot be split until every size is known.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[]"
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 26,
+    "kind": "compare",
+    "narration": "Read to the next comma: 1. sizes = [1].",
+    "why": "Nothing is recovered yet. This whole loop reads bookkeeping, and the strings it describes are still an undifferentiated run of characters.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[]",
+      "i": 0,
+      "size": 1
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "probed",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": 0,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 26,
+    "kind": "compare",
+    "narration": "Read to the next comma: 0. sizes = [1, 0].",
+    "why": "Nothing is recovered yet. This whole loop reads bookkeeping, and the strings it describes are still an undifferentiated run of characters.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[]",
+      "i": 2,
+      "size": 0
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "probed",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "probed",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": 2,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 26,
+    "kind": "compare",
+    "narration": "Read to the next comma: 2. sizes = [1, 0, 2].",
+    "why": "Nothing is recovered yet. This whole loop reads bookkeeping, and the strings it describes are still an undifferentiated run of characters.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[]",
+      "i": 4,
+      "size": 2
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "probed",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "probed",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": 4,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 29,
+    "kind": "store",
+    "narration": "The # ends the header. The payload starts at index 7.",
+    "why": "Second loop. Only now can a single character be attributed to a single string.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[]",
+      "i": 7
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "probed",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "probed",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.i",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 31,
+    "kind": "compare",
+    "narration": "sizes[0] is 1. Take that many characters from the payload.",
+    "why": "The size and the characters it measures were written at opposite ends of the output, so reading one means having kept the other.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[]",
+      "i": 0,
+      "size": 1
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "probed",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "probed",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": 0,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.i",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 15,
+    "line": 32,
+    "kind": "match",
+    "narration": "Recovered \"a\". res = [\"a\"].",
+    "why": "i steps forward by exactly the recorded size — the characters themselves are never inspected, which is what makes a # or a digit inside the data harmless here too.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[\"a\"]",
+      "i": 0,
+      "s": "\"a\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "probed",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": 0,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.decoded",
+      "vars.s",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 16,
+    "line": 31,
+    "kind": "compare",
+    "narration": "sizes[1] is 0. Take that many characters from the payload.",
+    "why": "The size and the characters it measures were written at opposite ends of the output, so reading one means having kept the other.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[\"a\"]",
+      "i": 1,
+      "size": 0
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "probed",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": 2,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "vars.i",
+      "vars.s",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 17,
+    "line": 32,
+    "kind": "match",
+    "narration": "Recovered \"\". res = [\"a\", \"\"].",
+    "why": "i steps forward by exactly the recorded size — the characters themselves are never inspected, which is what makes a # or a digit inside the data harmless here too.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[\"a\", \"\"]",
+      "i": 1,
+      "s": "\"\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "hit",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": 2,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "vars.decoded",
+      "vars.s",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 18,
+    "line": 31,
+    "kind": "compare",
+    "narration": "sizes[2] is 2. Take that many characters from the payload.",
+    "why": "The size and the characters it measures were written at opposite ends of the output, so reading one means having kept the other.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[\"a\", \"\"]",
+      "i": 2,
+      "size": 2
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "active",
+        "active"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "hit",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": 4,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.i",
+      "vars.s",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 19,
+    "line": 32,
+    "kind": "match",
+    "narration": "Recovered \"bc\". res = [\"a\", \"\", \"bc\"].",
+    "why": "i steps forward by exactly the recorded size — the characters themselves are never inspected, which is what makes a # or a digit inside the data harmless here too.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[\"a\", \"\", \"bc\"]",
+      "i": 2,
+      "s": "\"bc\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "hit",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": 4,
+      "link": [
+        1,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.decoded",
+      "vars.s",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 20,
+    "line": 34,
+    "kind": "return",
+    "narration": "Decoded: [\"a\", \"\", \"bc\"] — the list we started from.",
+    "why": "The same answer, reached with two passes to encode and two loops to decode instead of one each. Complexity is identical; the cost is everything you have to keep in your head between the halves.",
+    "vars": {
+      "n": 3,
+      "chars": 3,
+      "sizes": "[1, 0, 2]",
+      "header": "\"1,0,2,\"",
+      "decoded": "[\"a\", \"\", \"bc\"]",
+      "result": "[\"a\", \"\", \"bc\"]"
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "target": 3,
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "hit",
+          "keyLabel": "1,"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "hit",
+          "keyLabel": "0,"
+        },
+        {
+          "key": 4,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2,"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        2
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.result",
+      "vars.i",
+      "vars.result",
+      "vars.s"
+    ]
+  }
+]

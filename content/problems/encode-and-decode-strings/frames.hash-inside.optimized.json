@@ -1,0 +1,2258 @@
+[
+  {
+    "step": 0,
+    "line": 3,
+    "kind": "init",
+    "narration": "One output string, empty. Each input string will be written as its length, a #, then the string itself.",
+    "why": "No character can be reserved as a separator, because every character is allowed inside the data. A length can be: it is written OUTSIDE the string it measures, and it says exactly how far to read.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"\"",
+      "decoded": "[]"
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take strs[0] = \"we\" — 2 characters.",
+    "why": "The only thing the encoder needs to know about a string is how long it is. It never looks at what the characters are, which is why no character can break it.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"\"",
+      "decoded": "[]",
+      "i": 0,
+      "s": "\"we\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 5,
+    "kind": "store",
+    "narration": "Write \"2#we\" — the length, the marker, then the characters.",
+    "why": "The length and the data it describes are written together, so the decoder never has to hold anything between one piece and the next.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we\"",
+      "decoded": "[]",
+      "i": 0,
+      "piece": "\"2#we\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#we"
+        }
+      ],
+      "probe": null,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.encoded",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take strs[1] = \"said\" — 4 characters.",
+    "why": "The only thing the encoder needs to know about a string is how long it is. It never looks at what the characters are, which is why no character can break it.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we\"",
+      "decoded": "[]",
+      "i": 1,
+      "s": "\"said\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "active",
+        "active",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#we"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 5,
+    "kind": "store",
+    "narration": "Write \"4#said\" — the length, the marker, then the characters.",
+    "why": "The length and the data it describes are written together, so the decoder never has to hold anything between one piece and the next.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said\"",
+      "decoded": "[]",
+      "i": 1,
+      "piece": "\"4#said\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#said"
+        }
+      ],
+      "probe": null,
+      "link": [
+        2,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.encoded",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take strs[2] = \"#5\" — 2 characters.",
+    "why": "The only thing the encoder needs to know about a string is how long it is. It never looks at what the characters are, which is why no character can break it.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said\"",
+      "decoded": "[]",
+      "i": 2,
+      "s": "\"#5\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 6,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#said"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 5,
+    "kind": "store",
+    "narration": "Write \"2##5\" — the length, the marker, then the characters.",
+    "why": "The length and the data it describes are written together, so the decoder never has to hold anything between one piece and the next.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##5\"",
+      "decoded": "[]",
+      "i": 2,
+      "piece": "\"2##5\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 6,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2##5"
+        }
+      ],
+      "probe": null,
+      "link": [
+        6,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.encoded",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take strs[3] = \"yes#\" — 4 characters.",
+    "why": "The only thing the encoder needs to know about a string is how long it is. It never looks at what the characters are, which is why no character can break it.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##5\"",
+      "decoded": "[]",
+      "i": 3,
+      "s": "\"yes#\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "active",
+        "active",
+        "active"
+      ],
+      "cursor": 8,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2##5"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 5,
+    "kind": "store",
+    "narration": "Write \"4#yes#\" — the length, the marker, then the characters.",
+    "why": "The length and the data it describes are written together, so the decoder never has to hold anything between one piece and the next.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[]",
+      "i": 3,
+      "piece": "\"4#yes#\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 8,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": null,
+      "link": [
+        8,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.encoded",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 7,
+    "kind": "return",
+    "narration": "Encoded: \"2#we4#said2##54#yes#\" — 20 characters holding all 12 characters of the input.",
+    "why": "The overhead is one marker plus the digits of a length, per string — 8 extra characters for 4 strings, and it does not depend on what the strings contain.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[]",
+      "size": 20
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.piece",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 12,
+    "kind": "init",
+    "narration": "Now read it back. Nothing is recovered yet, and i starts at 0.",
+    "why": "The decoder gets one string and no other information. Everything it needs to split the string up again is inside the string itself.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[]"
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 15,
+    "kind": "compare",
+    "narration": "i = 0. Run j forward until it lands on the next #.",
+    "why": "The scan looks for the marker in the LENGTH, never in the data — it can only ever run over digits, so a # inside a string is never reached by it.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[]",
+      "i": 0,
+      "piece": "\"2#we\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": 0,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 18,
+    "kind": "compare",
+    "narration": "The digits before it read 2. The next 2 characters are one string.",
+    "why": "Every digit before the marker is part of the number — 2 is read as 2, not as its first digit. That is the whole reason the marker exists.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[]",
+      "i": 0,
+      "length": 2
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": 0,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.length",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 21,
+    "kind": "match",
+    "narration": "Take 2 characters: \"we\". i moves to 4.",
+    "why": "The characters are copied out without being inspected. Whatever they are — a #, a digit, nothing at all — the count already said where they stop.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[\"we\"]",
+      "i": 0,
+      "s": "\"we\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": 0,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.decoded",
+      "vars.length",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 15,
+    "kind": "compare",
+    "narration": "i = 4. Run j forward until it lands on the next #.",
+    "why": "The scan looks for the marker in the LENGTH, never in the data — it can only ever run over digits, so a # inside a string is never reached by it.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[\"we\"]",
+      "i": 4,
+      "piece": "\"4#said\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "probed",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": 4,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 15,
+    "line": 18,
+    "kind": "compare",
+    "narration": "The digits before it read 4. The next 4 characters are one string.",
+    "why": "Every digit before the marker is part of the number — 4 is read as 4, not as its first digit. That is the whole reason the marker exists.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[\"we\"]",
+      "i": 4,
+      "length": 4
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "probed",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": 4,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.length",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 16,
+    "line": 21,
+    "kind": "match",
+    "narration": "Take 4 characters: \"said\". i moves to 10.",
+    "why": "The characters are copied out without being inspected. Whatever they are — a #, a digit, nothing at all — the count already said where they stop.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[\"we\", \"said\"]",
+      "i": 4,
+      "s": "\"said\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "filled",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": 4,
+      "link": [
+        2,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.decoded",
+      "vars.length",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 17,
+    "line": 15,
+    "kind": "compare",
+    "narration": "i = 10. Run j forward until it lands on the next #.",
+    "why": "The scan looks for the marker in the LENGTH, never in the data — it can only ever run over digits, so a # inside a string is never reached by it.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[\"we\", \"said\"]",
+      "i": 10,
+      "piece": "\"2##5\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": 10,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 18,
+    "line": 18,
+    "kind": "compare",
+    "narration": "The digits before it read 2. The next 2 characters are one string.",
+    "why": "Every digit before the marker is part of the number — 2 is read as 2, not as its first digit. That is the whole reason the marker exists.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[\"we\", \"said\"]",
+      "i": 10,
+      "length": 2
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 6,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "probed",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": 10,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.length",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 19,
+    "line": 21,
+    "kind": "match",
+    "narration": "Take 2 characters: \"#5\". i moves to 14.",
+    "why": "The characters are copied out without being inspected. Whatever they are — a #, a digit, nothing at all — the count already said where they stop.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[\"we\", \"said\", \"#5\"]",
+      "i": 10,
+      "s": "\"#5\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 6,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": 10,
+      "link": [
+        6,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.decoded",
+      "vars.length",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 20,
+    "line": 15,
+    "kind": "compare",
+    "narration": "i = 14. Run j forward until it lands on the next #.",
+    "why": "The scan looks for the marker in the LENGTH, never in the data — it can only ever run over digits, so a # inside a string is never reached by it.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[\"we\", \"said\", \"#5\"]",
+      "i": 14,
+      "piece": "\"4#yes#\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "probed",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": 14,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 21,
+    "line": 18,
+    "kind": "compare",
+    "narration": "The digits before it read 4. The next 4 characters are one string.",
+    "why": "Every digit before the marker is part of the number — 4 is read as 4, not as its first digit. That is the whole reason the marker exists.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[\"we\", \"said\", \"#5\"]",
+      "i": 14,
+      "length": 4
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 8,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "probed",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": 14,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.length",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 22,
+    "line": 21,
+    "kind": "match",
+    "narration": "Take 4 characters: \"yes#\". i moves to 20.",
+    "why": "The characters are copied out without being inspected. Whatever they are — a #, a digit, nothing at all — the count already said where they stop.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[\"we\", \"said\", \"#5\", \"yes#\"]",
+      "i": 14,
+      "s": "\"yes#\""
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": 8,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": 14,
+      "link": [
+        8,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.decoded",
+      "vars.length",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 23,
+    "line": 24,
+    "kind": "return",
+    "narration": "Decoded: [\"we\", \"said\", \"#5\", \"yes#\"] — the list we started from.",
+    "why": "One pass to write 4 pieces and one to read them back, each character touched once in each direction. Nothing was searched for and nothing was escaped.",
+    "vars": {
+      "n": 4,
+      "chars": 12,
+      "encoded": "\"2#we4#said2##54#yes#\"",
+      "decoded": "[\"we\", \"said\", \"#5\", \"yes#\"]",
+      "result": "[\"we\", \"said\", \"#5\", \"yes#\"]"
+    },
+    "scene": {
+      "nums": [
+        119,
+        101,
+        115,
+        97,
+        105,
+        100,
+        35,
+        53,
+        121,
+        101,
+        115,
+        35
+      ],
+      "target": 4,
+      "labels": [
+        "w",
+        "e",
+        "s",
+        "a",
+        "i",
+        "d",
+        "#",
+        "5",
+        "y",
+        "e",
+        "s",
+        "#"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2#we"
+        },
+        {
+          "key": 4,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#said"
+        },
+        {
+          "key": 10,
+          "value": 2,
+          "state": "hit",
+          "keyLabel": "2##5"
+        },
+        {
+          "key": 14,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#yes#"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        11
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.result",
+      "vars.i",
+      "vars.result",
+      "vars.s"
+    ]
+  }
+]

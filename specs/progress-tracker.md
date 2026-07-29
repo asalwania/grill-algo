@@ -133,6 +133,7 @@ single-problem machinery into a reusable family is recorded here.
 | G3 | Valid Anagram | Done | 2026-07-28 | Ajay | `content/problems/valid-anagram/`, three approaches, first string problem (char codes in `nums`, `labels`/`keyLabel`, `target` as boundary index). Shipped in `8bed439` without a row; logged here retroactively |
 | G4 | Group Anagrams | Done | 2026-07-28 | Ajay | `content/problems/group-anagrams/`, three approaches, first problem whose answer is a partition — see full entry below |
 | G5 | Top K Frequent Elements | Done | 2026-07-28 | Ajay | `content/problems/top-k-frequent-elements/`, three approaches, first problem to use `scene.target` as a genuine parameter (k) — see full entry below |
+| G6 | Encode and Decode Strings | Done | 2026-07-29 | Ajay | `content/problems/encode-and-decode-strings/`, two approaches, paper trace. First problem whose trace is a ROUND TRIP and whose two approaches share a complexity — see full entry below |
 
 ---
 
@@ -1071,6 +1072,103 @@ array below it does not move at all — that is the only frame in any problem so
 far where the memory structure animates and the tiles don't, and it has to read
 as "ranked", not as a glitch; (2) whether `O(k·n²)`, `COUNTS — value → times
 seen` and `top k: 5 elements` fit their rows at 390×844.
+
+### G6 — Encode and Decode Strings
+
+**Status:** Done
+**Date:** 2026-07-29
+**Owner:** Ajay
+
+Built to `specs/add-a-problem.md`. Eleven files in
+`content/problems/encode-and-decode-strings/` plus the two one-line edits to
+`app/problems/[slug]/page.tsx`. Nothing shared changed — no scene, no player,
+no layout, no `components/problem/`, no `components/paper/`, no new type.
+
+Five decisions a future session should not re-open:
+
+- **The tile row is the PAYLOAD, not the encoded string** — every character of
+  every input string, concatenated, one tile per character. This looks like the
+  wrong choice (the encoded string is what the problem is about) and it is
+  forced: `ScenePanel` is keyed on `caseId` only, so it does NOT remount when
+  the approach changes, and `ArrayTiles`/`MemoryWall` size their per-index ref
+  arrays once. The two approaches produce encodings of **different lengths**
+  (`4#neet…` is 23 characters, `4,4,4,3,#neet…` is 24), so an encoded-string row
+  would index past the end of `positions.current` and throw inside `useFrame`
+  on the first approach switch. The payload is the one row both approaches
+  share. Everything about the encoding lives in the DOM instead — the wall, the
+  probe pill and `vars.encoded` — which is where AGENTS.md wants it anyway.
+- **The trace is the ROUND TRIP.** First problem whose listing holds two
+  methods and whose trace runs both: encode fills the wall and darkens the
+  tiles as characters are consumed, decode blanks the row and brings them back
+  green. An encoder nobody decodes proves nothing, and the phase change is one
+  frame (`paint('idle')`) rather than a second trace.
+- **`slot.key` is the piece's OFFSET in the encoded string**, which is
+  literally the decoder's `i`. It has to be a number and it has to be unique
+  (both renderers key React on it), and the obvious candidates fail: the length
+  collides (`4, 4, 4, 3`) and the array index says nothing. The offset is
+  unique even for two adjacent empty strings, and it makes `formatProbe` read
+  `reading from i = 6` — a real position rather than an opaque key. A decode
+  probe can never MISS here, because every piece it reads was written by the
+  encoder; that is the guarantee the scheme rests on, not an oversight.
+- **Both approaches are O(m + n), and the tabs say so.** `brute` is
+  `content/problems/…`'s first approach that is not asymptotically worse — the
+  header-of-sizes encoding is the first thing most people write, and it costs
+  two encode passes, two decode loops, and a `sizes` list alive across the gap.
+  The frame counter carries that message the way F13's readout carries Two
+  Sum's: **brute is the longer trace on every case**, and `trace.test.ts`
+  asserts it per case rather than trusting it. The "Brute Force" tab label is
+  the shared one from `ApproachTabs` and is a slight misnomer here; renaming it
+  would mean editing a union and three label maps for one problem, which
+  `add-a-problem.md` §0 explicitly rules out.
+- **A zero-length string collapses a beat.** Encode normally stages
+  tiles-light then piece-written; decode stages read-position, length-parsed,
+  characters-taken. A string of length zero has no tiles, so the beats that
+  would only have moved tiles are not emitted — a frame that moves nothing is a
+  wasted step (F1), and the empty string genuinely does take no characters.
+  This is why `empty-string` frame counts are shorter than `sample`'s despite
+  the same number of strings.
+
+**`TestCase.nums` is packed with the problem's own encoding**, and that is the
+point rather than a shortcut: `nums` is `number[]`, the input is a list of
+strings, and the length-prefixed encoding is lossless for *any* list — `#` in
+the data, digits, empty strings, the empty list. Group Anagrams' base-27
+packing could not have carried `#` or an empty word. `chrome.ts` and `paper.ts`
+duplicate the five-line decoder rather than importing `./trace`, the precedent
+`decodeWord` set. There is no `target` on a case at all; the scene derives its
+own `target` (the number of strings) from the list.
+
+No `sorted` tab: decode has to hand the strings back in their original order,
+so reordering the list destroys the answer — the same reason Two Sum ships two.
+
+Headline frame counts (`strs = ["neet", "code", "love", "you"]`):
+**optimized 24, brute 27**, pinned in `trace.test.ts`.
+
+The paper sheet's three extra cases are `[]`, `[""]` and `["", ""]`. They are
+chosen the way SP4b requires — per problem, not copied — and they are unusually
+load-bearing here: all three have **no characters at all**, so the tile row is
+empty and the canvas structurally cannot show any of them, and they are exactly
+the three a broken encoder collapses into each other. `PaperCase.expected`
+carries the ENCODED string as well as the decoded list (`"0#0#" → ["", ""]`),
+because writing the encoding out by hand is the part that is actually a claim.
+The red aside pins the trap: `i` does not advance by `len`, it advances past the
+digits, past the `#`, and *then* by `len`; `paper.test.ts` asserts that on every
+row of every case, and separately that a two-digit prefix is read whole.
+
+Verified this session: `pnpm traces` (8 new frame files + two manifests),
+`npx tsc --noEmit` clean, `vitest run` **1521 passing** (up from 1233), `eslint`
+clean apart from the pre-existing `design-reference/support.js` errors, and
+`pnpm build` green with `/problems/encode-and-decode-strings` prerendered —
+which also proves `writeSheet()` runs, since `readPaper` executes it at build
+time.
+
+**Not verified: anything visual.** Three things want a real pass: (1) the
+sample's **15 tiles**, the widest array row shipped so far, and whether
+single-character labels like `#` still read at that pitch; (2) the wall rows,
+whose `keyLabel` is a whole encoded piece (`13#abcdefghijklm`) rather than a
+short key — the longest slot text in any problem, and the likeliest thing to
+overflow the pill; (3) the three whole-row repaints in `brute`'s encode
+(`header` → `payload` → `encoded`), which should read as three distinct steps
+and not as flicker.
 
 ### - — `/problems` frozen chrome (desktop)
 

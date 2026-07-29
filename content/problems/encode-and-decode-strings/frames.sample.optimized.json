@@ -1,0 +1,2474 @@
+[
+  {
+    "step": 0,
+    "line": 3,
+    "kind": "init",
+    "narration": "One output string, empty. Each input string will be written as its length, a #, then the string itself.",
+    "why": "No character can be reserved as a separator, because every character is allowed inside the data. A length can be: it is written OUTSIDE the string it measures, and it says exactly how far to read.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"\"",
+      "decoded": "[]"
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take strs[0] = \"neet\" — 4 characters.",
+    "why": "The only thing the encoder needs to know about a string is how long it is. It never looks at what the characters are, which is why no character can break it.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"\"",
+      "decoded": "[]",
+      "i": 0,
+      "s": "\"neet\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "active",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 5,
+    "kind": "store",
+    "narration": "Write \"4#neet\" — the length, the marker, then the characters.",
+    "why": "The length and the data it describes are written together, so the decoder never has to hold anything between one piece and the next.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet\"",
+      "decoded": "[]",
+      "i": 0,
+      "piece": "\"4#neet\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#neet"
+        }
+      ],
+      "probe": null,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.encoded",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take strs[1] = \"code\" — 4 characters.",
+    "why": "The only thing the encoder needs to know about a string is how long it is. It never looks at what the characters are, which is why no character can break it.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet\"",
+      "decoded": "[]",
+      "i": 1,
+      "s": "\"code\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "active",
+        "active",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 4,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#neet"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 5,
+    "kind": "store",
+    "narration": "Write \"4#code\" — the length, the marker, then the characters.",
+    "why": "The length and the data it describes are written together, so the decoder never has to hold anything between one piece and the next.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code\"",
+      "decoded": "[]",
+      "i": 1,
+      "piece": "\"4#code\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 4,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#code"
+        }
+      ],
+      "probe": null,
+      "link": [
+        4,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.encoded",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take strs[2] = \"love\" — 4 characters.",
+    "why": "The only thing the encoder needs to know about a string is how long it is. It never looks at what the characters are, which is why no character can break it.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code\"",
+      "decoded": "[]",
+      "i": 2,
+      "s": "\"love\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "active",
+        "active",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 8,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#code"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 5,
+    "kind": "store",
+    "narration": "Write \"4#love\" — the length, the marker, then the characters.",
+    "why": "The length and the data it describes are written together, so the decoder never has to hold anything between one piece and the next.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love\"",
+      "decoded": "[]",
+      "i": 2,
+      "piece": "\"4#love\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 8,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#love"
+        }
+      ],
+      "probe": null,
+      "link": [
+        8,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.encoded",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 4,
+    "kind": "compare",
+    "narration": "Take strs[3] = \"you\" — 3 characters.",
+    "why": "The only thing the encoder needs to know about a string is how long it is. It never looks at what the characters are, which is why no character can break it.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love\"",
+      "decoded": "[]",
+      "i": 3,
+      "s": "\"you\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "active",
+        "active"
+      ],
+      "cursor": 12,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#love"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 5,
+    "kind": "store",
+    "narration": "Write \"3#you\" — the length, the marker, then the characters.",
+    "why": "The length and the data it describes are written together, so the decoder never has to hold anything between one piece and the next.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[]",
+      "i": 3,
+      "piece": "\"3#you\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 12,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": null,
+      "link": [
+        12,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.encoded",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 7,
+    "kind": "return",
+    "narration": "Encoded: \"4#neet4#code4#love3#you\" — 23 characters holding all 15 characters of the input.",
+    "why": "The overhead is one marker plus the digits of a length, per string — 8 extra characters for 4 strings, and it does not depend on what the strings contain.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[]",
+      "size": 23
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active",
+        "active"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.piece",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 12,
+    "kind": "init",
+    "narration": "Now read it back. Nothing is recovered yet, and i starts at 0.",
+    "why": "The decoder gets one string and no other information. Everything it needs to split the string up again is inside the string itself.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[]"
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.size"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 15,
+    "kind": "compare",
+    "narration": "i = 0. Run j forward until it lands on the next #.",
+    "why": "The scan looks for the marker in the LENGTH, never in the data — it can only ever run over digits, so a # inside a string is never reached by it.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[]",
+      "i": 0,
+      "piece": "\"4#neet\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "probed",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": 0,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 18,
+    "kind": "compare",
+    "narration": "The digits before it read 4. The next 4 characters are one string.",
+    "why": "Every digit before the marker is part of the number — 4 is read as 4, not as its first digit. That is the whole reason the marker exists.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[]",
+      "i": 0,
+      "length": 4
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "probed",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": 0,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.length",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 21,
+    "kind": "match",
+    "narration": "Take 4 characters: \"neet\". i moves to 6.",
+    "why": "The characters are copied out without being inspected. Whatever they are — a #, a digit, nothing at all — the count already said where they stop.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[\"neet\"]",
+      "i": 0,
+      "s": "\"neet\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": 0,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.decoded",
+      "vars.length",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 15,
+    "kind": "compare",
+    "narration": "i = 6. Run j forward until it lands on the next #.",
+    "why": "The scan looks for the marker in the LENGTH, never in the data — it can only ever run over digits, so a # inside a string is never reached by it.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[\"neet\"]",
+      "i": 6,
+      "piece": "\"4#code\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "probed",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": 6,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 15,
+    "line": 18,
+    "kind": "compare",
+    "narration": "The digits before it read 4. The next 4 characters are one string.",
+    "why": "Every digit before the marker is part of the number — 4 is read as 4, not as its first digit. That is the whole reason the marker exists.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[\"neet\"]",
+      "i": 6,
+      "length": 4
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 4,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "probed",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": 6,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.length",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 16,
+    "line": 21,
+    "kind": "match",
+    "narration": "Take 4 characters: \"code\". i moves to 12.",
+    "why": "The characters are copied out without being inspected. Whatever they are — a #, a digit, nothing at all — the count already said where they stop.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[\"neet\", \"code\"]",
+      "i": 6,
+      "s": "\"code\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 4,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "filled",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": 6,
+      "link": [
+        4,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.decoded",
+      "vars.length",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 17,
+    "line": 15,
+    "kind": "compare",
+    "narration": "i = 12. Run j forward until it lands on the next #.",
+    "why": "The scan looks for the marker in the LENGTH, never in the data — it can only ever run over digits, so a # inside a string is never reached by it.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[\"neet\", \"code\"]",
+      "i": 12,
+      "piece": "\"4#love\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "probed",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": 12,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 18,
+    "line": 18,
+    "kind": "compare",
+    "narration": "The digits before it read 4. The next 4 characters are one string.",
+    "why": "Every digit before the marker is part of the number — 4 is read as 4, not as its first digit. That is the whole reason the marker exists.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[\"neet\", \"code\"]",
+      "i": 12,
+      "length": 4
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 8,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "probed",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": 12,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.length",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 19,
+    "line": 21,
+    "kind": "match",
+    "narration": "Take 4 characters: \"love\". i moves to 18.",
+    "why": "The characters are copied out without being inspected. Whatever they are — a #, a digit, nothing at all — the count already said where they stop.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[\"neet\", \"code\", \"love\"]",
+      "i": 12,
+      "s": "\"love\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 8,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "filled",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": 12,
+      "link": [
+        8,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.decoded",
+      "vars.length",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 20,
+    "line": 15,
+    "kind": "compare",
+    "narration": "i = 18. Run j forward until it lands on the next #.",
+    "why": "The scan looks for the marker in the LENGTH, never in the data — it can only ever run over digits, so a # inside a string is never reached by it.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[\"neet\", \"code\", \"love\"]",
+      "i": 18,
+      "piece": "\"3#you\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "probed",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": 18,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.slots",
+      "vars.i",
+      "vars.piece",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 21,
+    "line": 18,
+    "kind": "compare",
+    "narration": "The digits before it read 3. The next 3 characters are one string.",
+    "why": "Every digit before the marker is part of the number — 3 is read as 3, not as its first digit. That is the whole reason the marker exists.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[\"neet\", \"code\", \"love\"]",
+      "i": 18,
+      "length": 3
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 12,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "probed",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": 18,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.length",
+      "vars.piece"
+    ]
+  },
+  {
+    "step": 22,
+    "line": 21,
+    "kind": "match",
+    "narration": "Take 3 characters: \"you\". i moves to 23.",
+    "why": "The characters are copied out without being inspected. Whatever they are — a #, a digit, nothing at all — the count already said where they stop.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[\"neet\", \"code\", \"love\", \"you\"]",
+      "i": 18,
+      "s": "\"you\""
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": 12,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "hit",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": 18,
+      "link": [
+        12,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.decoded",
+      "vars.length",
+      "vars.s"
+    ]
+  },
+  {
+    "step": 23,
+    "line": 24,
+    "kind": "return",
+    "narration": "Decoded: [\"neet\", \"code\", \"love\", \"you\"] — the list we started from.",
+    "why": "One pass to write 4 pieces and one to read them back, each character touched once in each direction. Nothing was searched for and nothing was escaped.",
+    "vars": {
+      "n": 4,
+      "chars": 15,
+      "encoded": "\"4#neet4#code4#love3#you\"",
+      "decoded": "[\"neet\", \"code\", \"love\", \"you\"]",
+      "result": "[\"neet\", \"code\", \"love\", \"you\"]"
+    },
+    "scene": {
+      "nums": [
+        110,
+        101,
+        101,
+        116,
+        99,
+        111,
+        100,
+        101,
+        108,
+        111,
+        118,
+        101,
+        121,
+        111,
+        117
+      ],
+      "target": 4,
+      "labels": [
+        "n",
+        "e",
+        "e",
+        "t",
+        "c",
+        "o",
+        "d",
+        "e",
+        "l",
+        "o",
+        "v",
+        "e",
+        "y",
+        "o",
+        "u"
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#neet"
+        },
+        {
+          "key": 6,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#code"
+        },
+        {
+          "key": 12,
+          "value": 4,
+          "state": "hit",
+          "keyLabel": "4#love"
+        },
+        {
+          "key": 18,
+          "value": 3,
+          "state": "hit",
+          "keyLabel": "3#you"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        14
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.result",
+      "vars.i",
+      "vars.result",
+      "vars.s"
+    ]
+  }
+]
