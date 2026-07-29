@@ -19,6 +19,7 @@ import type {
   Approach,
   ArrayMemoryFrame,
   Language,
+  PaperStroke,
   ProblemMeta,
   TestCase,
 } from "@/lib/types";
@@ -48,6 +49,9 @@ export type ArrayMemoryProblemViewProps = {
   /** The problem in plain words, plus the input picker. Problem-specific
    *  prose, so it is a component rather than a string. */
   brief: ComponentType<ProblemBriefProps>;
+  /** The handwritten dry run, or null for a problem with no `paper.ts`. Plain
+   *  data, so unlike `chrome` it arrives straight from the route. */
+  paper?: PaperStroke[] | null;
 };
 
 /**
@@ -70,6 +74,7 @@ function ProblemViewLayout({
   lines,
   chrome,
   brief: Brief,
+  paper,
   answers,
   found,
 }: ArrayMemoryProblemViewProps & {
@@ -123,6 +128,7 @@ function ProblemViewLayout({
         meta={meta}
         approaches={approaches}
         complexity={chrome.complexity}
+        paper={paper}
         className="lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2"
       />
 

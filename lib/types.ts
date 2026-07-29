@@ -303,3 +303,64 @@ export type ProblemTraces<
   /** Runs the generator for one case. */
   build: Record<TApproach, (input: TestCase) => Frame<TScene>[]>
 }
+
+/* ---------------------------------------------------------------------------
+ * Paper trace (SP4)
+ * ------------------------------------------------------------------------ */
+
+/**
+ * An authored test case, as you would write it down before touching the code.
+ *
+ * `expected` is HAND-AUTHORED, and that is the one deliberate exception to the
+ * never-hand-write-an-answer rule. A test case whose expected value came from
+ * running the code proves nothing — it asserts the code equals itself. On
+ * paper, this column is your reading of the QUESTION, produced before and
+ * independently of the loop. The problem's own `paper.test.ts` is what keeps
+ * it honest: it runs the real algorithm over every case and refuses to let the
+ * two disagree.
+ */
+export type PaperCase = {
+  nums: number[]
+  /** Hand-derived from the problem statement. Never from running the code. */
+  expected: string
+  /** The category it covers — the part beginners cannot generate unprompted. */
+  tag: string
+  /**
+   * The one-line argument for a case you are NOT going to table. Authored for
+   * the same reason `expected` is: it is a claim about WHY, and generating it
+   * would be circular. The tick beside it in the sheet is earned by the run.
+   */
+  reasoning: string
+}
+
+/** Which pen a stroke is written with. Red is for the coaching, not the work. */
+export type Pen = 'ink' | 'red'
+
+/**
+ * One thing the hand writes, in the order the hand writes it.
+ *
+ * ## Why this is not a `Frame`
+ *
+ * A `Frame` is a full state snapshot plus change hints, because the 3D scene
+ * has to seek and reverse-step and replaying deltas into a scene is where that
+ * gets painful. Paper has no such problem: **ink is append-only**. So the model
+ * is an ordered list of strokes, and "step k" means strokes 0..k are inked.
+ * Seek is a slice, reverse is a shorter slice, and there is no `changed[]` to
+ * derive and no F1 "every frame must change the scene" rule to enforce.
+ *
+ * Do not unify the two. They answer different questions.
+ *
+ * Every stroke carries pre-rendered strings rather than raw numbers: this is
+ * paper, so the formatting IS the content. `{ 4, 1 }` is what gets written
+ * down, not `Set(2)`. That also makes a stroke plain JSON, so the whole sheet
+ * crosses the RSC boundary as data — the generator never enters the browser
+ * bundle, exactly like the shipped frames.
+ */
+export type PaperStroke =
+  | { id: string; kind: 'title'; text: string; sub: string }
+  | { id: string; kind: 'section'; step: number; text: string; hint: string }
+  | { id: string; kind: 'case'; input: string; expected: string; tag: string }
+  | { id: string; kind: 'grid'; caption: string; columns: string[] }
+  | { id: string; kind: 'row'; cells: string[]; hit: boolean }
+  | { id: string; kind: 'verdict'; text: string; ok: boolean }
+  | { id: string; kind: 'aside'; text: string; pen: Pen }

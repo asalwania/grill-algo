@@ -126,6 +126,10 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
       panes={panes}
       lineMaps={lineMaps}
       lines={lines}
+      // Plain data, unlike `chrome` — the generator ran here, at build time,
+      // and what crosses is JSON. `null` for a problem with no paper.ts, and
+      // the view simply does not offer the button.
+      paper={problem.paper}
     />
   );
 }

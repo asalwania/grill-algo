@@ -4,7 +4,8 @@ import Link from "next/link";
 
 import { ApproachTabs, LanguageSelector } from "@/components/player";
 import { ComplexityReadout } from "@/components/panels";
-import type { Approach, ProblemMeta } from "@/lib/types";
+import { PaperTraceDialog } from "@/components/paper";
+import type { Approach, PaperStroke, ProblemMeta } from "@/lib/types";
 import type { ProblemChrome } from "./types";
 
 type ProblemHeaderProps = {
@@ -13,6 +14,11 @@ type ProblemHeaderProps = {
    *  never the full union (lib/types.ts). */
   approaches: Approach[];
   complexity: ProblemChrome["complexity"];
+  /** The handwritten dry run, when the problem ships one. The trigger sits
+   *  here rather than beside the test-case picker because paper-vs-screen is a
+   *  MODE, like the approach tabs and the language selector it lines up with —
+   *  not an action on the selected case. */
+  paper?: PaperStroke[] | null;
   className?: string;
 };
 
@@ -35,6 +41,7 @@ export function ProblemHeader({
   meta,
   approaches,
   complexity,
+  paper,
   className = "",
 }: ProblemHeaderProps) {
   return (
@@ -72,7 +79,12 @@ export function ProblemHeader({
         <ComplexityReadout complexity={complexity} />
       </div>
 
-      <LanguageSelector />
+      <div className="flex flex-wrap items-center justify-between gap-14">
+        <LanguageSelector />
+        {paper && paper.length > 0 && (
+          <PaperTraceDialog strokes={paper} title={meta.title} />
+        )}
+      </div>
     </div>
   );
 }

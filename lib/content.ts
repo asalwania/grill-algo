@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { readdir, readFile } from 'node:fs/promises'
+import { access, readdir, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 
 import { resolveCatalog } from './catalog'
@@ -8,6 +8,7 @@ import type {
   Approach,
   CatalogProblem,
   Frame,
+  PaperStroke,
   ProblemMeta,
   Solution,
   TestCase,
@@ -24,6 +25,7 @@ const PROBLEMS_DIR = join(process.cwd(), 'content', 'problems')
  *   frames.<case>.<approach>.json -> Frame[],    emitted by scripts/build-traces.ts
  *   solutions/index.ts            -> export const solutions: Partial<Record<Approach, Solution[]>>
  *   content.mdx                   -> prose, returned here as raw source
+ *   paper.ts                      -> export function* writeSheet(): PaperStroke (OPTIONAL)
  */
 export type Problem<TScene = unknown> = {
   meta: ProblemMeta
@@ -46,6 +48,15 @@ export type Problem<TScene = unknown> = {
   frames: Record<string, Partial<Record<Approach, Frame<TScene>[]>>>
   solutions: Partial<Record<Approach, Solution[]>>
   mdx: string
+  /**
+   * The handwritten dry run, or `null` for a problem that has not written one.
+   *
+   * Optional because a paper trace is authored per problem — the case list and
+   * the loop are both problem-specific — and four of the five built problems
+   * have not got one yet. A problem opts in purely by adding `paper.ts`; the
+   * view hides the button when this is null.
+   */
+  paper: PaperStroke[] | null
 }
 
 export async function getProblemSlugs(): Promise<string[]> {
@@ -122,6 +133,30 @@ async function readFrames<TScene>(
   >
 }
 
+/**
+ * Runs the problem's paper generator, if it has one.
+ *
+ * Existence is checked with `access` rather than by catching the import,
+ * because a bare try/catch would also swallow a real error inside a paper.ts
+ * that DOES exist and report it to the page as "this problem has no paper
+ * trace" — the most confusing possible failure. Absent means absent; broken
+ * still throws.
+ *
+ * This runs at build time (the route is statically generated), so the
+ * generator never reaches the browser — same guarantee as the frame JSON,
+ * reached without a build script, because strokes are cheap enough to produce
+ * during the render and have no other consumer.
+ */
+async function readPaper(dir: string, slug: string): Promise<PaperStroke[] | null> {
+  try {
+    await access(join(dir, 'paper.ts'))
+  } catch {
+    return null
+  }
+  const mod = await import(`../content/problems/${slug}/paper`)
+  return [...(mod.writeSheet() as Generator<PaperStroke>)]
+}
+
 export async function getProblem<TScene = unknown>(
   slug: string,
 ): Promise<Problem<TScene>> {
@@ -132,11 +167,12 @@ export async function getProblem<TScene = unknown>(
     readCases(dir),
     readApproaches(dir),
   ])
-  const [meta, frames, solutionsMod, mdx] = await Promise.all([
+  const [meta, frames, solutionsMod, mdx, paper] = await Promise.all([
     getProblemMeta(slug),
     readFrames<TScene>(dir, cases, approaches),
     import(`../content/problems/${slug}/solutions/index`),
     readFile(join(dir, 'content.mdx'), 'utf8'),
+    readPaper(dir, slug),
   ])
 
   return {
@@ -146,5 +182,6 @@ export async function getProblem<TScene = unknown>(
     frames,
     solutions: solutionsMod.solutions as Partial<Record<Approach, Solution[]>>,
     mdx,
+    paper,
   }
 }

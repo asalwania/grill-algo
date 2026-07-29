@@ -111,3 +111,29 @@ add no URL segment. Findings are written up in `docs/spikes/`.
   4. **`scene.nums` is per frame, not per trace.** A sort-based approach
      reorders it mid-run. Only its LENGTH is invariant. Never cache values off
      `frames[0]`.
+
+- **SP4 — [Running test cases on paper](docs/spikes/SP4-paper-trace.md).**
+  `/problems/contains-duplicate` has a "RUN IT ON PAPER" button that opens a
+  handwritten dry run — the case list, one traced table, and a one-line
+  argument for every case that does not earn a table. **There is no SP4 route**;
+  the spike was deleted when the feature landed. Four settled points:
+  1. **Paper is append-only, so the model is `PaperStroke[]`, not `Frame[]`.**
+     Snapshots exist because the 3D scene must seek and reverse; ink never
+     disappears, so "step k" is a slice. No `changed[]`, no F1 rule to enforce.
+     Do NOT unify the two models.
+  2. **`PaperCase.expected` is HAND-AUTHORED**, the one deliberate exception to
+     never-hand-write-an-answer. A case whose expected value came from running
+     the code proves nothing. The problem's `paper.test.ts` runs the real
+     algorithm over every case and refuses to let them disagree — that test is
+     load-bearing, not a formality.
+  3. **Shared ink, per-problem sheet**, the same split as G1: `components/paper/`
+     knows how a pen looks and nothing else; `content/problems/<slug>/paper.ts`
+     holds the authored cases, the columns and the loop. Unlike `ProblemChrome`,
+     strokes are plain JSON, so they cross the RSC boundary as ordinary props.
+     A problem opts in purely by having the file — `lib/content.ts` returns
+     `null` otherwise and the button is not rendered.
+  4. **It is a `<dialog>` over the page, not a panel in it.** The learning view
+     is `lg:h-screen lg:overflow-hidden` and nothing below the fold exists.
+     `showModal()` also buys the top layer over the WebGL canvas, a focus trap
+     and Escape. Known gap: the sheet traces the OPTIMIZED approach only, and
+     the approach tabs do not change it.

@@ -71,6 +71,7 @@ with `path:line` where it helps a reader jump straight to the code.>
 | SP1 | Context across the R3F Canvas boundary | Done | 2026-07-27 | Ajay | Settled — see `docs/spikes/SP1-context-across-canvas.md`; no `useContextBridge` needed |
 | SP2 | Shiki active-line bar | Done | 2026-07-27 | Ajay | Settled — see `docs/spikes/SP2-shiki-active-line-bar.md`; runtime verification still outstanding per `AGENTS.md` |
 | SP3 | Generator produces usable frames | Done | 2026-07-27 | Ajay | Settled — see `docs/spikes/SP3-generator-frames.md`; no route by design |
+| SP4 | Running test cases on paper | Done | 2026-07-29 | Ajay | Ad-hoc, not in `main.md`. Shipped onto Contains Duplicate; spike route deleted — see `docs/spikes/SP4-paper-trace.md`; **nothing visual verified** |
 
 ## Phase 3 — Setup
 
@@ -1217,3 +1218,98 @@ the four NeetCode hrefs present in the prerendered HTML. **Not verified: the
 four NeetCode slugs actually resolve** — the SPA shell defeats an automated
 check — **and nothing visual**, in particular whether the tooltip is legible
 against the card at the narrow end of the grid.
+
+### SP4 — Running test cases on paper
+
+**Status:** In progress
+**Date:** 2026-07-29
+**Owner:** Ajay
+
+An ad-hoc experiment with no `main.md` section: a spike route at
+`/paper-trace` that animates the Contains Duplicate dry run being *handwritten*
+— the case list, one traced table, and the one-line arguments for the cases
+that do not earn a table. It exists because every problem in the app teaches
+you to watch an algorithm run and none teach you to run one yourself, which is
+the only option at a whiteboard.
+
+Three things a future session should not re-derive; the reasoning is in
+`docs/spikes/SP4-paper-trace.md`.
+
+- **Paper is append-only, so the model is `PaperStroke[]`, not `Frame[]`.**
+  Snapshots exist because the 3D scene must seek and reverse; ink never
+  disappears, so "step k" is a slice and there is no `changed[]` to derive and
+  no F1 rule to enforce. Do not unify these two models.
+- **`CASES[].expected` is hand-authored, and that is deliberate.** It is the
+  one place in the codebase that breaks the never-hand-write-an-answer rule,
+  because a test case whose expected value came from running the code proves
+  nothing. `runOnPaper` computes the real answer, `paper.test.ts` refuses to
+  let the two disagree, and `resultOf` drains the same generator rather than
+  keeping a second copy of the algorithm. Generating that column would teach
+  the exact habit that makes hand-testing worthless.
+- **The `seen BEFORE` / `seen AFTER` split is the lesson, not padding.** One
+  merged column and a hand-run can no longer tell whether it checked before it
+  inserted. The test pins it: the current value is in `seen BEFORE` iff the row
+  is the hit.
+
+Four of the seven cases are the same arrays as the problem's `cases.json`; the
+other three — empty, single element, negatives — are the ones the 3D view
+structurally cannot show, because a scene needs tiles to light up. That
+asymmetry is the argument for graduating this from a spike.
+
+No dependency was added. `Caveat` is a `next/font/google` family loaded **in
+the route**, not the root layout, so the project's only handwriting face cannot
+leak out of the spike.
+
+Verified: `vitest run "app/(SP4)"` green (18), `tsc --noEmit` clean, `eslint`
+clean for the touched files. **Not verified: anything visual** — whether the
+writing lands on the ruled lines at `--rule: 34px`, whether the table's five
+columns fit before `truncate` eats cells, whether the clip wipe reads as a pen
+or as a wipe, plus the `prefers-reduced-motion` branch and mobile entirely.
+
+### SP4 (cont.) — paper trace shipped onto Contains Duplicate
+
+**Status:** Done
+**Date:** 2026-07-29
+**Owner:** Ajay
+
+The spike graduated in the same session it was written. `app/(SP4)/paper-trace/`
+is **deleted** — there is one implementation, at real paths, and the doc is the
+record of where the shape came from. Reasoning lives in
+`docs/spikes/SP4-paper-trace.md` and the durable rules are now in `AGENTS.md`'s
+spike list; only what is not in either is repeated here.
+
+- **Where the button went, and why not next to the picker.** `ProblemHeader`,
+  on a row with `LanguageSelector`. Paper-vs-screen is a MODE, like the
+  approach tabs and language selector it lines up with — not an action on the
+  selected case. Beside `TestCasePicker` was tempting (both show a case list)
+  and is wrong for a second reason: the picker's cases are the ones with frame
+  files, and paper's deliberately are NOT the same set.
+- **`readPaper` uses `access`, not try/catch round the import.** A bare catch
+  would swallow a real error inside a `paper.ts` that exists and report it as
+  "this problem has no paper trace" — the most confusing possible failure.
+- **`Caveat` is in the root layout but NOT in `globals.css`'s `@theme`.** So
+  there is no `font-hand` utility and nothing outside `components/paper/` can
+  reach for a handwritten face. That was the point of scoping it to the spike
+  route; the theme omission is how the same guarantee survives the move.
+- **The paper case list deliberately diverges from `cases.json`.** Four arrays
+  are shared; three — `[]`, `[7]`, `[-3, 0, -3]` — exist only on paper, because
+  a scene needs tiles to light up and those have almost none. `paper.test.ts`
+  asserts BOTH halves: every shipped case appears, and so do the three that
+  cannot. If those three ever vanish, the paper view is just the 3D view with
+  worse graphics, and that test is what says so.
+
+Known gap, deferred not forgotten: **the sheet traces the optimized approach
+only** and the approach tabs do not change it. `sorted` is the interesting case
+and does not fit the same table — its work happens inside a sort a hand-run
+cannot honestly step through, the same trap F1 hit where the sorted trace is
+the SHORTEST of the three. Doing it properly needs a per-approach `runOnPaper`
+and probably a different answer for what a row even is.
+
+Verified: `pnpm test` green (1149, of which 22 are this feature). **Not
+verified: anything visual, and the dialog's behaviour entirely** — `showModal()`,
+the focus trap, Escape, the backdrop click, whether the overlay clears the R3F
+canvas and the fixed mobile footer, whether the writing lands on the ruled
+lines, whether the five columns fit before `truncate` bites, mobile, and
+`prefers-reduced-motion`. Also unaddressed: `PaperSheet` is imported eagerly by
+`ProblemHeader`, so all five problem pages pay for it including the four with
+no paper trace; `next/dynamic` on the dialog body is the fix.

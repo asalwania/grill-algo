@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { Caveat, Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
@@ -24,6 +24,17 @@ const codeMono = JetBrains_Mono({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-mono-family",
+});
+
+/* The paper trace's hand, and NOTHING else — it is deliberately absent from
+   globals.css's @theme, so there is no `font-hand` utility and no way to
+   reach for it by accident. `components/paper/` names the CSS variable
+   directly, which is the only place a handwritten face belongs. */
+const paperHand = Caveat({
+  weight: ["400", "600"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-hand",
 });
 
 /**
@@ -58,7 +69,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${displaySerif.variable} ${bodySans.variable} ${codeMono.variable}`}
+      className={`${displaySerif.variable} ${bodySans.variable} ${codeMono.variable} ${paperHand.variable}`}
     >
       <body>{children}</body>
     </html>
