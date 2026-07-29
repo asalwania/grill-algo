@@ -321,6 +321,12 @@ export type ProblemTraces<
  */
 export type PaperCase = {
   nums: number[]
+  /**
+   * The problem's scalar input, if it has one, packed exactly as `TestCase`
+   * packs it: Two Sum's target, Top K's k, Valid Anagram's boundary index.
+   * Omitted by a problem whose array is the whole input.
+   */
+  target?: number
   /** Hand-derived from the problem statement. Never from running the code. */
   expected: string
   /** The category it covers — the part beginners cannot generate unprompted. */
@@ -360,7 +366,17 @@ export type PaperStroke =
   | { id: string; kind: 'title'; text: string; sub: string }
   | { id: string; kind: 'section'; step: number; text: string; hint: string }
   | { id: string; kind: 'case'; input: string; expected: string; tag: string }
-  | { id: string; kind: 'grid'; caption: string; columns: string[] }
+  /**
+   * A table's caption and its column headings. Every `row` after it belongs to
+   * it, until the next `grid` — a problem with two phases worth tabling (Top K
+   * counts, then reads buckets) writes two.
+   *
+   * `widths` are CSS grid tracks, one per column, and are how a sheet keeps an
+   * `i` column narrow and a `seen` column wide. Prefer `fr` over pixels: the
+   * sheet is one column of a dialog and has to survive a phone. Omit it and
+   * every column shares the width equally.
+   */
+  | { id: string; kind: 'grid'; caption: string; columns: string[]; widths?: string[] }
   | { id: string; kind: 'row'; cells: string[]; hit: boolean }
   | { id: string; kind: 'verdict'; text: string; ok: boolean }
   | { id: string; kind: 'aside'; text: string; pen: Pen }

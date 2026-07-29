@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useMemo, useReducer, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 import type { PaperStroke } from "@/lib/types";
@@ -39,6 +39,32 @@ function penMs(stroke: PaperStroke): number {
       // warnings do not flash past.
       return Math.min(2800, Math.max(900, stroke.text.length * 26));
   }
+}
+
+/**
+ * The grid tracks a table is ruled with.
+ *
+ * A `row` carries cells and nothing else, so it cannot rule itself — the
+ * columns belong to the `grid` stroke above it. `templatesFor` walks the sheet
+ * once and hands every stroke the template of the most recent grid, which is
+ * also what lets one sheet table two different phases (Top K counts its values,
+ * then reads its buckets) without either component knowing that happened.
+ *
+ * Equal columns when a grid names no widths: readable for any column count,
+ * and the fallback a problem gets for free.
+ */
+function templatesFor(strokes: PaperStroke[]): string[] {
+  let current = "";
+  return strokes.map((stroke) => {
+    if (stroke.kind === "grid") {
+      const n = stroke.columns.length;
+      current =
+        stroke.widths?.length === n
+          ? stroke.widths.join(" ")
+          : `repeat(${n}, minmax(0, 1fr))`;
+    }
+    return current;
+  });
 }
 
 type State = { inked: number; playing: boolean; speed: number };
@@ -91,6 +117,7 @@ export function PaperSheet({
   );
   const reduced = useReducedMotion();
   const tipRef = useRef<HTMLDivElement>(null);
+  const templates = useMemo(() => templatesFor(strokes), [strokes]);
 
   const next = strokes[state.inked];
 
@@ -154,7 +181,7 @@ export function PaperSheet({
               reduced={!!reduced}
               ms={penMs(stroke) / state.speed}
             >
-              <Stroke stroke={stroke} />
+              <Stroke stroke={stroke} template={templates[i]} />
             </Ink>
           ))}
           <div ref={tipRef} className="h-[var(--rule)]" aria-hidden="true" />
@@ -208,7 +235,15 @@ function Ink({
 
 const RULE = "leading-[var(--rule)]";
 
-function Stroke({ stroke }: { stroke: PaperStroke }) {
+function Stroke({
+  stroke,
+  template,
+}: {
+  stroke: PaperStroke;
+  /** Grid tracks of the table this stroke belongs to. Ignored by every kind
+   *  that is not part of one. */
+  template: string;
+}) {
   switch (stroke.kind) {
     case "title":
       return (
@@ -237,14 +272,16 @@ function Stroke({ stroke }: { stroke: PaperStroke }) {
     case "case":
       return (
         <div
-          className={`${RULE} grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-12 text-[21px] sm:grid-cols-[200px_22px_58px_minmax(0,1fr)]`}
+          className={`${RULE} grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-12 text-[21px] sm:grid-cols-[minmax(0,1.3fr)_22px_minmax(0,1.1fr)_minmax(0,0.9fr)]`}
         >
           <span className="tabular-nums">{stroke.input}</span>
           <span className="hidden opacity-55 sm:inline" aria-hidden="true">
             →
           </span>
+          {/* Only a boolean answer earns the green pen; every other problem's
+              answer is a value, and colouring it would imply a verdict. */}
           <span
-            className="hidden sm:inline"
+            className="hidden text-[19px] sm:inline"
             style={{ color: stroke.expected === "true" ? "#1f7a4d" : "#26324d" }}
           >
             {stroke.expected}
@@ -264,12 +301,12 @@ function Stroke({ stroke }: { stroke: PaperStroke }) {
           <div className={`${RULE} text-[18px] opacity-70`}>
             {stroke.caption}
           </div>
-          <Row cells={stroke.columns} head />
+          <Row cells={stroke.columns} template={template} head />
         </div>
       );
 
     case "row":
-      return <Row cells={stroke.cells} hit={stroke.hit} />;
+      return <Row cells={stroke.cells} template={template} hit={stroke.hit} />;
 
     case "verdict":
       return (
@@ -311,17 +348,20 @@ function Stroke({ stroke }: { stroke: PaperStroke }) {
 /** One line of the table. `head` draws the column names and the double rule. */
 function Row({
   cells,
+  template,
   head = false,
   hit = false,
 }: {
   cells: string[];
+  template: string;
   head?: boolean;
   hit?: boolean;
 }) {
   return (
     <div
-      className="grid grid-cols-[30px_66px_minmax(0,1.5fr)_66px_minmax(0,1.6fr)] items-center sm:grid-cols-[34px_74px_minmax(0,1.5fr)_74px_minmax(0,1.6fr)]"
+      className="grid items-center"
       style={{
+        gridTemplateColumns: template,
         borderBottom: head ? "2px solid #26324d" : "1px solid rgba(38,50,77,.2)",
         color: hit ? "#c4483e" : undefined,
       }}

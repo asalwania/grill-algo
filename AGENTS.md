@@ -113,10 +113,12 @@ add no URL segment. Findings are written up in `docs/spikes/`.
      `frames[0]`.
 
 - **SP4 — [Running test cases on paper](docs/spikes/SP4-paper-trace.md).**
-  `/problems/contains-duplicate` has a "RUN IT ON PAPER" button that opens a
-  handwritten dry run — the case list, one traced table, and a one-line
-  argument for every case that does not earn a table. **There is no SP4 route**;
-  the spike was deleted when the feature landed. Four settled points:
+  Every built problem has a "RUN IT ON PAPER" button that opens a handwritten
+  dry run — the case list, one traced table, and a one-line argument for every
+  case that does not earn a table. **There is no SP4 route**; the spike was
+  deleted when the feature landed. Rolled out to all five problems 2026-07-29,
+  and `specs/add-a-problem.md` §10 is now the recipe — a new problem ships a
+  sheet or it is not done. Four settled points:
   1. **Paper is append-only, so the model is `PaperStroke[]`, not `Frame[]`.**
      Snapshots exist because the 3D scene must seek and reverse; ink never
      disappears, so "step k" is a slice. No `changed[]`, no F1 rule to enforce.
@@ -131,7 +133,13 @@ add no URL segment. Findings are written up in `docs/spikes/`.
      holds the authored cases, the columns and the loop. Unlike `ProblemChrome`,
      strokes are plain JSON, so they cross the RSC boundary as ordinary props.
      A problem opts in purely by having the file — `lib/content.ts` returns
-     `null` otherwise and the button is not rendered.
+     `null` otherwise and the button is not rendered, which is silent by design
+     and the one way to ship a problem without a sheet by accident.
+     The ink is parameterised by DATA, never by slug: a table's `grid` stroke
+     carries its own `columns` and optional `widths`, and a `row` is ruled by
+     the nearest `grid` above it — which is also how Top K gets two tables
+     (count, then read the buckets back) out of a component that knows about
+     neither.
   4. **It is a `<dialog>` over the page, not a panel in it.** The learning view
      is `lg:h-screen lg:overflow-hidden` and nothing below the fold exists.
      `showModal()` also buys the top layer over the WebGL canvas, a focus trap

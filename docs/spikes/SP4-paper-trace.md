@@ -1,8 +1,11 @@
 # SP4 — Running test cases on paper
 
-**Status:** Resolved, and **shipped** onto `/problems/contains-duplicate`.
+**Status:** Resolved, and **shipped** onto every built problem.
 **Nothing visual verified** (see "What has NOT been verified").
-**Date:** 2026-07-29.
+**Date:** 2026-07-29. Landed on Contains Duplicate first; rolled out to Two
+Sum, Valid Anagram, Group Anagrams and Top K the same day, at which point the
+recipe moved into [specs/add-a-problem.md](../../specs/add-a-problem.md) §10
+and the sheet stopped being optional in practice.
 
 **There is no spike route.** `app/(SP4)/paper-trace/` existed for one session
 and was deleted the moment the feature landed, so there is exactly one
@@ -11,8 +14,8 @@ implementation. The code is at its real paths:
 | file | role |
 | --- | --- |
 | [lib/types.ts](../../lib/types.ts) | `PaperStroke`, `PaperCase`, `Pen` |
-| [content/problems/contains-duplicate/paper.ts](../../content/problems/contains-duplicate/paper.ts) | the problem's authored cases + its generator |
-| [content/problems/contains-duplicate/paper.test.ts](../../content/problems/contains-duplicate/paper.test.ts) | what keeps the authored answers honest |
+| [content/problems/contains-duplicate/paper.ts](../../content/problems/contains-duplicate/paper.ts) | the problem's authored cases + its generator (one per problem) |
+| [content/problems/contains-duplicate/paper.test.ts](../../content/problems/contains-duplicate/paper.test.ts) | what keeps the authored answers honest (one per problem) |
 | [components/paper/PaperSheet.tsx](../../components/paper/PaperSheet.tsx) | shared ink — knows how a pen looks, nothing else |
 | [components/paper/PaperTraceDialog.tsx](../../components/paper/PaperTraceDialog.tsx) | the trigger and the overlay |
 | [lib/content.ts](../../lib/content.ts) | `readPaper` — a problem opts in by having the file |
@@ -112,8 +115,11 @@ with frame files, and paper's deliberately are not the same set — see below.)
 ### 5. A problem opts in by having the file
 
 `lib/content.ts`'s `readPaper` checks for `paper.ts` with `access` and returns
-`null` when it is missing; the header renders no button. Four of the five built
-problems have no paper trace and need no change to stay that way.
+`null` when it is missing; the header renders no button. That is what let the
+feature land on one problem and spread to the other four without touching the
+route, the header or the loader — but it cuts both ways, and it is now the one
+way to ship a problem with no sheet and have nothing complain. `add-a-problem`
+§10 closes that by making `paper.ts` part of the recipe rather than an option.
 
 The existence check is `access`, **not** a try/catch round the import. A bare
 catch would also swallow a real error inside a `paper.ts` that *does* exist and
@@ -180,11 +186,35 @@ asymmetry is the argument for the feature existing next to the canvas at all,
 and `paper.test.ts` asserts both halves of it: every shipped case appears, and
 so do the three that cannot.
 
+Every problem repeats the 4 + 3 shape with its own three. Two Sum adds equal
+values, negatives and the two-element minimum; Valid Anagram adds two empty
+strings, a one-letter pair and *same letter set, wrong counts*; Group Anagrams
+adds the empty list, the empty string as a word and two identical words; Top K
+adds a single element, negatives and a genuine tie.
+
+### What the rollout changed in the shared ink
+
+Contains Duplicate's five columns were hardcoded into `PaperSheet`'s `Row` and
+its 5-track grid. Generalising cost about ten lines and no new concept:
+
+- the `grid` stroke gained an optional **`widths`** — CSS grid tracks, one per
+  column, authored per problem in `fr` so a table survives a phone. Absent, the
+  columns share the width equally, which is a usable default at any count.
+- `templatesFor` walks the sheet once and rules each `row` with the **nearest
+  preceding `grid`**. That is what lets Top K draw **two** tables — count every
+  value, then read the buckets back down the frequency axis — from a component
+  that still knows nothing about either. Its `runOnPaper` simply yields the
+  second `grid` mid-run.
+
+One table remains the default. A second is earned only when a problem is
+genuinely two passes that teach different things.
+
 ## Open: one approach, not three
 
-`paper.ts` traces the **optimized** approach only. Contains Duplicate ships
-three, and the header's approach tabs do not change what the sheet shows — a
-real inconsistency, not an oversight to rediscover.
+Every `paper.ts` traces the **optimized** approach only. Four of the five
+problems ship three approaches, and the header's approach tabs do not change
+what the sheet shows — a real inconsistency, not an oversight to rediscover.
+The rollout did not close it and deliberately did not try.
 
 It is deferred rather than done because the sorted approach is the interesting
 case and it does not fit the same table: its work happens in a sort that a
@@ -195,20 +225,25 @@ different answer for `sorted` about what a row even is.
 
 ## What has NOT been verified
 
-- **Anything visual.** `pnpm test` is green (1149, of which 22 are this
-  feature's), `tsc --noEmit` is clean and `eslint` is clean for the touched
-  files — but the sheet has not been looked at in a browser. Specifically
-  unchecked: whether the writing lands on the ruled lines at `--rule: 34px`,
-  whether the five columns fit before `truncate` starts eating cells, and
-  whether the wipe reads as a pen or as a wipe.
+- **Anything visual.** `pnpm test` is green (1233 after the rollout, of which
+  ~120 are this feature's across five problems), `tsc --noEmit` is clean and
+  `next build` statically generates all five pages — but no sheet has been
+  looked at in a browser. Specifically unchecked: whether the writing lands on
+  the ruled lines at `--rule: 34px`, whether the wipe reads as a pen or as a
+  wipe, and — now more pressing — whether **six** columns (Two Sum) fit before
+  `truncate` starts eating cells, and whether Group Anagrams' long partition
+  strings wrap sanely in the case list.
 - **The dialog's behaviour.** `showModal()`, the focus trap, Escape, the
   backdrop click, and whether the overlay really does clear the R3F canvas and
   the fixed mobile footer — all reasoned about, none observed.
 - **`prefers-reduced-motion`.** The branch exists (strokes appear without the
   wipe) and has not been exercised.
 - **Mobile.** The case rows collapse to two columns below `sm`, dropping the
-  `→ expected` pair. The table does not collapse at all and will be tight even
-  at the reduced column widths.
-- **Bundle cost.** `PaperSheet` is imported eagerly by `ProblemHeader`, so
-  every problem page pays for it including the four with no paper trace.
-  `next/dynamic` on the dialog body is the obvious fix and was not done.
+  `→ expected` pair. The table does not collapse at all, and now that widths
+  are `fr` rather than pixels it will be tight rather than overflowing — which
+  is the better failure but is still unobserved.
+- **Bundle cost.** `PaperSheet` is imported eagerly by `ProblemHeader`. Every
+  problem now has a sheet, so nobody pays for nothing any more — but the
+  strokes themselves are inlined into each page's payload, and Group Anagrams'
+  and Top K's are the largest. `next/dynamic` on the dialog body is still the
+  obvious fix and is still not done.

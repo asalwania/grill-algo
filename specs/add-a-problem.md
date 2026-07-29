@@ -6,7 +6,7 @@ Contains Duplicate first — they are the same thing twice, and this file is
 their common shape. Read `AGENTS.md` only if you think you need to break a
 rule below.
 
-**What you write:** 9 files in `content/problems/<slug>/`, plus 2 one-line
+**What you write:** 11 files in `content/problems/<slug>/`, plus 2 one-line
 edits outside it. **What you do NOT write:** anything 3D, anything 2D, any
 player, any layout, any highlighting. The learning view is SHARED and already
 built. A problem is *data plus labels*, nothing else.
@@ -86,6 +86,8 @@ content/problems/<slug>/
   trace.ts            THE FILE THAT MATTERS — listings, cases, generators
   trace.test.ts       copy the template, change 3 lines
   chrome.ts           labels + formatters
+  paper.ts            THE OTHER FILE THAT MATTERS — the handwritten dry run
+  paper.test.ts       what keeps the hand-authored answers honest
   ProblemBrief.tsx    plain-words statement + the case picker
   ProblemView.tsx     4-line wrapper (copy verbatim, change 2 names)
   content.mdx         create EMPTY. The loader reads it; a missing file throws.
@@ -478,7 +480,142 @@ and adapt. It must contain, at minimum:
 
 ---
 
-## 10. Register the route
+## 10. `paper.ts` + `paper.test.ts` — "RUN IT ON PAPER"
+
+Every problem ships a handwritten dry run. It is the second thing you author
+(the first is `trace.ts`) and the second thing that has a test whose whole job
+is to catch you lying. A problem opts in **purely by having the file** —
+`lib/content.ts` returns `null` otherwise and the header button is not
+rendered — so forgetting it fails nothing. Do not forget it.
+
+### 10a. What this is NOT
+
+It is not the animated trace with worse graphics, and it must not be built out
+of `Frame`s. Read the `PaperStroke` doc in `lib/types.ts` before you start:
+
+- **Ink is append-only**, so the model is an ordered `PaperStroke[]` and "step
+  k" is a slice. No snapshots, no `changed[]`, no §1 rule-1 to satisfy. Do not
+  unify the two models.
+- **Every stroke carries pre-rendered strings.** On paper the formatting IS the
+  content: `{ 4, 1 }`, not `Set(2)`. That is also what makes a stroke plain
+  JSON, so the sheet crosses the RSC boundary as ordinary props — unlike
+  `ProblemChrome`, no `"use client"` is involved anywhere.
+- **`components/paper/` is shared and knows how a pen looks, nothing else.** Do
+  not touch it. It already handles any column count and any number of tables.
+
+### 10b. The three-section sheet
+
+`writeSheet()` yields the whole page in writing order, and the structure is the
+lesson, not decoration. Copy it:
+
+1. **List the cases** — one line each, input → expected. Plus the red aside:
+   expected comes from the QUESTION, not from your code.
+2. **Run ONE case in a table** — the walkthrough, `CASES[0]`, the only one long
+   enough to earn a table. Ends in a `verdict`.
+3. **Argue the rest in one line each** — `${input} → ${reasoning} → ${answer} ✓`.
+   This is the part people skip and the part that saves the interview.
+
+### 10c. Ship seven cases
+
+```ts
+export const CASES: PaperCase[] = [ /* … */ ]
+export const WALKTHROUGH = CASES[0]
+```
+
+**The first four are the same inputs as `cases.json`**, packed identically
+(including `target`) — paper and screen must dry-run the same inputs, and the
+test asserts it. **The last three are the ones the canvas cannot sell**: empty
+input, single element, negatives, the empty string, two equal values, a
+genuine tie. Pick whichever three your problem actually has. That asymmetry is
+the entire argument for this feature existing next to the 3D view, and the test
+pins the three by value so they cannot quietly vanish.
+
+`PaperCase.nums` is `number[]` and `PaperCase.target` is the same scalar
+`TestCase.target` holds — so a string problem packs char codes and a word
+problem packs base-27 exactly as its `trace.ts` does. Duplicate the five-line
+decoder rather than importing `./trace`; `chrome.ts` already sets that
+precedent and it keeps the module cheap.
+
+**`expected` and `reasoning` are HAND-AUTHORED.** This is the one deliberate
+exception to never-hand-write-an-answer, and the reason the feature is worth
+anything: a case whose expected value came from running the code asserts only
+that the code equals itself.
+
+### 10d. One generator, drained two ways
+
+```ts
+export function* runOnPaper(nums: number[], k: number): Generator<PaperStroke, string, void> {
+  // … really runs the algorithm, yielding a 'row' per pass …
+  return answer          // the RETURN value is the answer
+}
+
+export function resultOf(nums: number[], k: number): string {
+  const run = runOnPaper(nums, k)
+  let step = run.next()
+  while (!step.done) step = run.next()
+  return step.value
+}
+```
+
+The rows and the verdict come from the **same run**, so they can never
+disagree. Never keep a second copy of the algorithm for `resultOf` — that copy
+is what drifts.
+
+An early exit yields fewer rows, and that is correct: the sheet should show the
+loop stopping. A guard that fires before the loop yields none at all.
+
+### 10e. Columns
+
+```ts
+export const COLUMNS = ['i', 'nums[i]', 'seen BEFORE', 'seen it?', 'seen AFTER / action'] as const
+export const WIDTHS  = ['minmax(0,0.5fr)', 'minmax(0,1fr)', 'minmax(0,2fr)', 'minmax(0,1fr)', 'minmax(0,2.2fr)']
+```
+
+A column for every value that changes, plus one for the decision. Nothing else.
+
+- **Split BEFORE and AFTER** for whatever the loop reads-then-writes. It is the
+  single most common way a hand-run goes wrong: with one merged column the
+  writer cannot tell whether they checked against a structure that already
+  contained the current element, every later row inherits the error, and the
+  dry run "passes" against a real bug. Two Sum's `[3, 2, 4]` returning `[0, 0]`
+  is exactly this. **Assert the trap directly in `paper.test.ts`.**
+- `widths` are CSS grid tracks, one per column, passed on the `grid` stroke.
+  Use `fr`, not pixels — the sheet has to survive a phone. Omit them and every
+  column shares the width equally.
+
+**One table is the default.** A second is legitimate only when the problem is
+genuinely two passes that teach different things (Top K counts, then reads
+buckets). Then `runOnPaper` yields the second `grid` stroke itself, mid-run;
+the shared ink rules every `row` with the most recent `grid` above it and needs
+no telling.
+
+### 10f. `paper.test.ts`
+
+Copy [contains-duplicate/paper.test.ts](../content/problems/contains-duplicate/paper.test.ts)
+and adapt. It must contain, at minimum:
+
+- **`resultOf(case)` equals every authored `expected`.** The load-bearing one.
+  This is what stops a wrong answer being written down and shipped.
+- **A second, independent solve** — trivially, by a different method — that the
+  answers also agree with (`new Set(nums).size !== nums.length`, sorted-letters
+  comparison, a nested-loop pair search).
+- The first four cases match `cases.json` (compare `nums` **and** `target`),
+  and the extra three are present by value.
+- The trap from §10e, asserted directly on the inputs that would expose it.
+- Every row: `cells.length === COLUMNS.length`, no blank cell, and `widths`
+  the same length as `columns` on every grid.
+- The sheet: one `case` stroke per case, the grid before the first row, exactly
+  one `verdict` and it is `ok`, an aside containing every untabled case's
+  `reasoning`, `JSON.parse(JSON.stringify(strokes))` round-trips, and every
+  `id` unique.
+
+If the answer's ORDER is free (Top K), an exact-string check is not enough on
+its own — also assert the returned set is genuinely valid, or the test would
+pass for an algorithm returning the wrong values in a convenient order.
+
+---
+
+## 11. Register the route
 
 `app/problems/[slug]/page.tsx` — two lines:
 
@@ -497,7 +634,7 @@ the scene, not the player, not the layout.
 
 ---
 
-## 11. Build and verify, in this order
+## 12. Build and verify, in this order
 
 ```
 pnpm traces        # writes cases.json, approaches.json, 4 x N frame files
@@ -512,16 +649,22 @@ pnpm build
 2-frame trace, a 400-frame trace) means the staging is wrong.
 
 `pnpm build` runs `pnpm traces` first via `prebuild`, so a stale frame file
-cannot ship.
+cannot ship. It also runs `paper.ts` — `readPaper` executes `writeSheet()` at
+build time for every problem that has the file — so a sheet that throws fails
+the build rather than the page.
+
+Then open `/problems/<slug>` and **click RUN IT ON PAPER**. If the button is
+not there, `paper.ts` is missing or misnamed. Nothing else in the pipeline will
+tell you.
 
 ---
 
-## 12. Log it
+## 13. Log it
 
 Append one row to Phase 7 in [specs/progress-tracker.md](progress-tracker.md):
 
 ```
-| G<n> | <Title> | Done | YYYY-MM-DD | <owner> | `content/problems/<slug>/`, <n> approaches |
+| G<n> | <Title> | Done | YYYY-MM-DD | <owner> | `content/problems/<slug>/`, <n> approaches, paper trace |
 ```
 
 Add a full entry below the table **only** if something deviated from this
@@ -554,6 +697,9 @@ Everything else is unchanged.
 | Scene renders `NaN` transforms after switching case | a generator changed `nums.length` mid-trace |
 | Duplicate React key warning in the flat view | two slots pushed with the same `key` |
 | `Incomplete data for case … / approach …` at render | `approaches.json`, frame files and `solutions/index.ts` disagree — rerun `pnpm traces` |
+| No RUN IT ON PAPER button, and nothing failed | `paper.ts` missing or misnamed — opting in IS having the file, so its absence is silent by design |
+| Paper table cells spill outside the ruled columns | a row's `cells.length` disagrees with its grid's `columns.length` |
+| Paper test: *"authored expectations"* fails | good — that is the feature working. Fix the `expected` you wrote, do NOT paste in what the code returned |
 
 ## Appendix C — things you must not do
 
@@ -564,6 +710,12 @@ Everything else is unchanged.
 - Do not render any text, value, index or variable name inside the canvas.
   Every word and number lives in the DOM.
 - Do not hand-write frame JSON or a `changed[]` array.
+- Do not touch `components/paper/`. It knows how a pen looks and nothing about
+  any problem; it already handles any column count and any number of tables.
+- Do not derive `PaperCase.expected` by running the code. That is the one place
+  a hand-written answer is the whole point (§10c).
+- Do not build the paper sheet out of `Frame`s, or give `PaperStroke` a
+  `changed[]`. Ink is append-only; the two models answer different questions.
 - Do not add a dependency. Ask first.
 - Do not edit `content/catalog.ts`.
 - Do not put continuous or interpolated values into React state or Context —

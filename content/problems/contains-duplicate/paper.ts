@@ -99,6 +99,16 @@ export const COLUMNS = [
   'seen AFTER / action',
 ] as const
 
+/** Grid tracks, one per column. `fr` throughout so the table stays ruled at
+ *  the same proportions on a phone as on the full sheet. */
+export const WIDTHS = [
+  'minmax(0,0.5fr)',
+  'minmax(0,1fr)',
+  'minmax(0,2fr)',
+  'minmax(0,1fr)',
+  'minmax(0,2.2fr)',
+]
+
 /** `{ }` when empty, `{ 4, 1 }` otherwise — written the way a hand writes it. */
 function penSet(values: Iterable<number>): string {
   const items = [...values]
@@ -218,6 +228,7 @@ export function* writeSheet(): Generator<PaperStroke, void, void> {
     kind: 'grid',
     caption: `nums = ${penArray(WALKTHROUGH.nums)}     seen = { }     expected: ${WALKTHROUGH.expected}`,
     columns: [...COLUMNS],
+    widths: WIDTHS,
   }
 
   const run = runOnPaper(WALKTHROUGH.nums)

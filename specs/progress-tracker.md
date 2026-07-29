@@ -72,6 +72,7 @@ with `path:line` where it helps a reader jump straight to the code.>
 | SP2 | Shiki active-line bar | Done | 2026-07-27 | Ajay | Settled — see `docs/spikes/SP2-shiki-active-line-bar.md`; runtime verification still outstanding per `AGENTS.md` |
 | SP3 | Generator produces usable frames | Done | 2026-07-27 | Ajay | Settled — see `docs/spikes/SP3-generator-frames.md`; no route by design |
 | SP4 | Running test cases on paper | Done | 2026-07-29 | Ajay | Ad-hoc, not in `main.md`. Shipped onto Contains Duplicate; spike route deleted — see `docs/spikes/SP4-paper-trace.md`; **nothing visual verified** |
+| SP4b | Paper trace on the other four problems | Done | 2026-07-29 | Ajay | Two Sum, Valid Anagram, Group Anagrams, Top K; shared ink generalized to any column count and any number of tables; recipe folded into `specs/add-a-problem.md` §10 — see full entry below |
 
 ## Phase 3 — Setup
 
@@ -1313,3 +1314,84 @@ lines, whether the five columns fit before `truncate` bites, mobile, and
 `prefers-reduced-motion`. Also unaddressed: `PaperSheet` is imported eagerly by
 `ProblemHeader`, so all five problem pages pay for it including the four with
 no paper trace; `next/dynamic` on the dialog body is the fix.
+
+---
+
+### SP4b — Paper trace on the other four problems
+
+**Status:** Done
+**Date:** 2026-07-29
+**Owner:** Ajay
+
+Two Sum, Valid Anagram, Group Anagrams and Top K Frequent Elements each got a
+`paper.ts` + `paper.test.ts`. Every built problem now has a RUN IT ON PAPER
+button. Nothing in the route, the header or `lib/content.ts` changed — the
+opt-in-by-having-the-file design (SP4 point 5) meant two new files per problem
+and no plumbing, which is the strongest evidence that design was right.
+
+**The shared ink was NOT problem-agnostic and now is.** `PaperSheet`'s `Row`
+had Contains Duplicate's five columns hardcoded as a Tailwind grid template.
+Two changes, ~10 lines, no new concept:
+
+- The `grid` stroke carries an optional `widths: string[]` — CSS grid tracks,
+  one per column, authored per problem. **In `fr`, not pixels**: the sheet is
+  one column of a dialog and has to survive a phone. Absent, the columns share
+  the width equally, which is a usable default at any count.
+- `templatesFor` walks the sheet once and rules each `row` with the nearest
+  preceding `grid`. That is the whole mechanism behind **Top K's two tables**,
+  and `components/paper/` still knows nothing about any problem.
+
+`PaperCase` gained `target?: number`, holding the same scalar `TestCase.target`
+does — Two Sum's target, Top K's k, Valid Anagram's boundary index.
+
+Decisions a future session should not re-open:
+
+- **One table is the default; Top K earns two.** Counting the values and
+  reading the buckets back down the frequency axis are two passes that teach
+  different things, and the second is the reason the solution beats a sort.
+  Its `runOnPaper` yields the second `grid` itself, mid-run. No other problem
+  should get a second table without that argument.
+- **The empty rows at the top of Top K's take table stay.** The loop starts at
+  `freq = nums.length` and counts down, so it visits empty buckets first. That
+  is not noise to trim — it is why the scan is O(n), and the sheet says so in
+  red.
+- **Each problem's three extra cases are chosen, not copied.** The four-from-
+  `cases.json` plus three-only-on-paper shape is fixed; the three are per
+  problem. Two Sum: equal values, negatives, the two-element minimum. Valid
+  Anagram: two empty strings, a one-letter pair, *same letter set wrong
+  counts*. Group Anagrams: the empty list, the empty string as a word, two
+  identical words. Top K: a single element, negatives, a genuine tie. Each
+  `paper.test.ts` pins its own three by value.
+- **Top K's answer order is free, so an exact-string test is not enough.** Its
+  `paper.test.ts` also counts independently and asserts the returned set really
+  is a valid top k — otherwise the test would pass for an algorithm returning
+  the wrong values in a convenient order. The sheet says out loud, in red, that
+  several answers are correct.
+- **Two Sum's red aside is the sharpest one in the codebase**, and its test
+  pins the trap directly: store `nums[i]` before looking up `need` and
+  `[3, 2, 4]` with target 6 returns `[0, 0]` — one element used twice, the most
+  common wrong answer to the problem, and invisible in a table with one merged
+  `seen` column.
+- **Word and string problems duplicate their five-line decoder** rather than
+  importing `./trace`, the precedent `chrome.ts` already set. Pulling three
+  generators and three code listings in behind a `decodeWord` is not worth it.
+
+`specs/add-a-problem.md` grew a **§10** covering all of the above, sections 10
+onwards renumbered, the file count went 9 → 11, and Appendices B and C gained
+paper rows. A new problem now ships a sheet as part of the recipe rather than
+as an option — which closes the one real risk in the opt-in design, that
+forgetting `paper.ts` fails nothing.
+
+The **optimized-approach-only gap is unchanged** and was deliberately not
+touched: five sheets all trace the optimized approach, and the approach tabs
+still do not change them. Widening the rollout made that inconsistency five
+times more visible without making it any easier to fix — `sorted` still does
+its work inside a sort a hand-run cannot honestly step through.
+
+Verified: `pnpm test` green (1233, of which ~120 are this feature across five
+problems), `tsc --noEmit` clean, `next build` statically generates all five
+problem pages — which is a real check, because `readPaper` executes every
+`writeSheet()` at build time, so a sheet that throws fails the build. **Still
+not verified: anything visual.** Newly at risk and unobserved: Two Sum's SIX
+columns before `truncate` bites, Top K's two tables sharing one sheet, and
+Group Anagrams' long partition strings wrapping in the case list.

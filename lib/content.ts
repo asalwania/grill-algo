@@ -52,9 +52,10 @@ export type Problem<TScene = unknown> = {
    * The handwritten dry run, or `null` for a problem that has not written one.
    *
    * Optional because a paper trace is authored per problem — the case list and
-   * the loop are both problem-specific — and four of the five built problems
-   * have not got one yet. A problem opts in purely by adding `paper.ts`; the
-   * view hides the button when this is null.
+   * the loop are both problem-specific. Every problem built so far ships one,
+   * but the option to land a problem without one stays: a problem opts in
+   * purely by adding `paper.ts`, and the view hides the button when this is
+   * null.
    */
   paper: PaperStroke[] | null
 }
