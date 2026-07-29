@@ -102,7 +102,7 @@ with `path:line` where it helps a reader jump straight to the code.>
 | - | Desktop readability + highlighter fixes | Done | 2026-07-27 | Ajay | Fixed blank/scattered scene and invisible active-line bar on the desktop breakpoint — see full entry below |
 | F16 | Performance and reduced motion | In progress | 2026-07-28 | Ajay | 2D/3D render-mode toggle + flat view shipped (`components/player/RenderModeToggle.tsx`, `content/problems/two-sum/FlatView.tsx`); reduced-motion tier, IntersectionObserver and localStorage override still open — see full entry below |
 | F17 | Content | - | | | |
-| F18 | SEO and shipping | - | | | |
+| F18 | SEO and shipping | In progress | 2026-07-28 | Ajay | Deploy-readiness only: `lib/site.ts`, `metadataBase`, `app/robots.ts`, `engines.node`. Canonical URLs, OG image route, JSON-LD, `sitemap.ts` and the keyboard pass are all still open — see full entry below |
 | - | Plain-words brief + playable test cases | Done | 2026-07-28 | Ajay | `content/problems/two-sum/ProblemBrief.tsx`, `components/player/TestCasePicker.tsx`; traces now generated per case — see full entry below |
 
 ## Phase 6 — Homepage + catalog
@@ -1106,3 +1106,114 @@ scrolls on its own inside a grid area of fixed height.
 Verified: `tsc --noEmit` clean and `pnpm build` green with `/problems` still
 prerendered static. **Not verified: anything visual** — the rail-overflow case
 in particular wants a look at a short (~700px) viewport.
+
+### F18 (part 1) — Deploy readiness
+
+**Status:** In progress
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+Prompted by wanting a public URL to pull screenshots from. This is ONLY the
+subset of F18 that blocks a first deploy — the rest of the prompt (canonical
+URLs, the OG image route, JSON-LD, `sitemap.ts`, the full keyboard pass,
+Lighthouse numbers) is untouched and the row stays In progress.
+
+- **`lib/site.ts` derives the origin, and prefers
+  `VERCEL_PROJECT_PRODUCTION_URL` over `VERCEL_URL`.** The latter is the
+  per-deployment hostname and changes on every push, so canonical URLs built on
+  it would differ between two deployments of identical content. Falls back to
+  localhost so `pnpm build` needs no env.
+- **`metadataBase` is a deploy concern, not an SEO one**, which is why it landed
+  here rather than waiting for the rest of F18: without it Next resolves every
+  relative metadata URL against `localhost:3000` and warns at build.
+- **`app/robots.ts` disallows `/tokens`, `/context-canvas` and
+  `/code-highlight`.** All three are in the production build — the first is P2's
+  swatch sheet, the other two are SP1's and SP2's spike routes, which AGENTS.md
+  keeps deliberately. Not deleting them and not excluding them from the build:
+  they are the record. Crawlers are the only audience that needed excluding.
+- **`engines.node` is `>=22.18.0` because `prebuild` runs TypeScript directly.**
+  `node scripts/build-traces.ts` relies on native type stripping (22.18+ /
+  23.6+). Nothing pins that today, so a host defaulting to Node 20 would fail
+  the build at the first prebuild line. Committed trace JSON means the failure
+  would be confusing rather than fatal — the frames are already on disk — so the
+  pin is what makes the requirement explicit.
+- **`packageManager` is deliberately NOT pinned.** `pnpm-lock.yaml` is
+  lockfileVersion 9.0 and hosts detect pnpm from it; pinning a version I have
+  not verified against the local install trades a working default for a
+  guessable break.
+
+**Not done, and not attempted: the deploy itself.** No `vercel` or `gh` CLI is
+installed and this session is non-interactive, so authenticating with a host was
+not possible from here. The repo is deploy-ready; connecting it is a manual
+step.
+
+**Known rough edge, unrelated to deploy:** `components/chrome/SiteFooter.tsx`
+has its problem-count line commented out, leaving `Link` and `CATALOG` imported
+but unused. `next build` does not run ESLint, so this passes the build and fails
+`pnpm lint`.
+
+### - — Per-card LeetCode / NeetCode icon links
+
+**Status:** Done (data incomplete — see below)
+**Date:** 2026-07-28
+**Owner:** Ajay
+
+`ProblemCard`'s single `LeetCode ↗` text link is now two icon links with
+hover/focus tooltips: LeetCode, and NeetCode where we know the slug.
+
+Four things a future session should not re-derive:
+
+- **`neetcodeSlug` is authored, not derived, and that breaks the file's own
+  rule on purpose.** `content/catalog.ts` otherwise refuses to store what it can
+  compute — 150 stored URLs is 150 chances to typo one. But NeetCode RENAMES the
+  problems it hosts (Contains Duplicate is `duplicate-integer`, Two Sum is
+  `two-integer-sum`, Group Anagrams is `anagram-groups`), and nothing in a row
+  predicts the new name. So `neetcodeUrl()` returns `string | null` and never
+  falls back to `slug`: a fallback would emit a confident dead link on every
+  unfilled row. `lib/catalog.test.ts` pins that with `valid-sudoku`, the row
+  where the two names DO agree and would tempt someone into adding one.
+- **Only 5 of 150 rows have a slug** — the four built problems, plus Valid
+  Anagram (`is-anagram`, added 2026-07-28 from the practice URL). The rest
+  render no NeetCode link at all. This is the incomplete half of the task and it
+  is plain data entry: open the neetcode.io practice page, copy the last URL
+  segment, add `neetcodeSlug`. Nothing else has to change — **except** that
+  `resolveCatalog`'s "only for rows that authored a slug" test used to name
+  `valid-anagram` as its unfilled example and went red the moment that row got
+  filled in. It now picks the first unfilled row out of `CATALOG` instead, so
+  the next round of data entry can't break it the same way.
+- **`pnpm verify:catalog` deliberately does NOT check the NeetCode URLs.**
+  neetcode.io is a client-rendered SPA and answers 200 with the same shell for
+  any path, so a fetch check there would report success for a typo. The LeetCode
+  half of that script still works because leetcode.com really does 404.
+- **The tooltip is CSS, not state**, on a NAMED group (`group/icon`). The
+  unnamed `group` is already taken by the `ready` card's hover border, and an
+  unnamed nested group would fire the tooltip on card hover. `relative z-10`
+  survives from the old text link and is still load-bearing: the title's
+  stretched `::after` swallows the click otherwise.
+
+The accessible name carries the problem title (`"Two Sum on NeetCode (opens on
+neetcode.io)"`), not just the site — 150 cards is up to 300 anchors, and
+"LeetCode, link" ×150 is useless in a screen reader's link list.
+
+Both glyphs are the real logos, as PNGs in `public/` (`leetcode-logo.png`,
+`neetcode-logo.png`), rendered through `next/image` at a fixed 17px square with
+`object-contain` — a stray aspect ratio must not be able to bump the pill row's
+height. The earlier inline SVGs (a simple-icons LeetCode path and a hand-drawn
+NeetCode approximation) are gone.
+
+The cost of raster-and-full-colour: the marks CANNOT take `currentColor`, so
+hover no longer recolours the glyph. That is why the hover affordance sits on
+the anchor's border and fill instead. Two open consequences a future session
+should look at rather than re-derive: (1) `leetcode-logo.png` is black + orange
+on transparent, and the black arc has very little contrast against
+`surface-glass` over `surface-canvas` — a white-on-transparent variant of the
+logo is the fix, not a CSS `invert`, which would turn the orange blue;
+(2) `neetcode-logo.png` is a 249 KB source for a 17px icon, which `next/image`
+resizes in production but ships whole to `public/`.
+
+Verified: `pnpm test` green (1127), `tsc --noEmit` clean, `eslint` clean for the
+touched files, `pnpm build` green with `/problems` still prerendered static and
+the four NeetCode hrefs present in the prerendered HTML. **Not verified: the
+four NeetCode slugs actually resolve** — the SPA shell defeats an automated
+check — **and nothing visual**, in particular whether the tooltip is legible
+against the card at the narrow end of the grid.

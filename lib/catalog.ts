@@ -1,10 +1,10 @@
-import { CATALOG, leetcodeUrl } from '../content/catalog'
+import { CATALOG, leetcodeUrl, neetcodeUrl } from '../content/catalog'
 import { CATEGORIES } from './types'
 import type { Category, CatalogProblem } from './types'
 
 // Re-exported so app code and tests have one import site for catalog helpers;
 // it is defined in content/catalog.ts so the Node-run verify script can use it.
-export { leetcodeUrl }
+export { leetcodeUrl, neetcodeUrl }
 
 /**
  * Catalog resolution, kept deliberately pure and free of `server-only`.
@@ -30,6 +30,7 @@ export function resolveCatalog(builtSlugs: Iterable<string>): CatalogProblem[] {
     ...entry,
     status: built.has(entry.slug) ? ('ready' as const) : ('soon' as const),
     leetcodeUrl: leetcodeUrl(entry),
+    neetcodeUrl: neetcodeUrl(entry),
     meta: null,
   }))
 }

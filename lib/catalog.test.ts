@@ -6,6 +6,7 @@ import {
   categoryId,
   groupByCategory,
   leetcodeUrl,
+  neetcodeUrl,
   readyProblems,
   resolveCatalog,
 } from './catalog'
@@ -111,7 +112,62 @@ describe('leetcodeUrl', () => {
   })
 })
 
+describe('neetcodeUrl', () => {
+  it('builds the URL from an authored neetcodeSlug', () => {
+    expect(
+      neetcodeUrl({ ...CATALOG[0], neetcodeSlug: 'two-integer-sum' }),
+    ).toBe('https://neetcode.io/problems/two-integer-sum')
+  })
+
+  it('returns null rather than guessing from the slug', () => {
+    expect(
+      neetcodeUrl({
+        ...CATALOG[0],
+        slug: 'valid-anagram',
+        neetcodeSlug: undefined,
+      }),
+    ).toBeNull()
+  })
+
+  it('never derives from slug even when the two would match', () => {
+    // The guard that matters: NeetCode renames its problems, so a fallback to
+    // `slug` would emit a confident dead link for all 140-odd unfilled rows,
+    // and `valid-sudoku` — where the two names DO agree — is exactly the row
+    // that would tempt someone into adding one.
+    expect(
+      neetcodeUrl({
+        ...CATALOG[0],
+        slug: 'valid-sudoku',
+        neetcodeSlug: undefined,
+      }),
+    ).toBeNull()
+  })
+
+  it('authored slugs are kebab-case', () => {
+    for (const entry of CATALOG) {
+      if (entry.neetcodeSlug === undefined) continue
+      expect(entry.neetcodeSlug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/)
+    }
+  })
+})
+
 describe('resolveCatalog', () => {
+  it('carries a NeetCode URL only for rows that authored a slug', () => {
+    const resolved = resolveCatalog([])
+    const twoSum = resolved.find((row) => row.slug === 'two-sum')
+
+    // Picked from the data, not named: filling in a row's `neetcodeSlug` is
+    // ordinary data entry, and it must not be able to break this test by
+    // happening to land on whichever row was hard-coded as the example.
+    const unfilledSlug = CATALOG.find((e) => e.neetcodeSlug === undefined)?.slug
+    const unfilled = resolved.find((row) => row.slug === unfilledSlug)
+
+    expect(twoSum?.neetcodeUrl).toBe(
+      'https://neetcode.io/problems/two-integer-sum',
+    )
+    expect(unfilled?.neetcodeUrl).toBeNull()
+  })
+
   it('marks a row ready only when its content directory exists', () => {
     const resolved = resolveCatalog(['two-sum'])
     const twoSum = resolved.find((row) => row.slug === 'two-sum')

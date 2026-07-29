@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 /* Instrument Serif is NOT a variable font — weight is required.
@@ -30,11 +31,17 @@ const codeMono = JetBrains_Mono({
  * `lg:h-screen`, so shared chrome is mounted per-page instead. See
  * components/chrome/SiteHeader.tsx.
  *
- * F18 still owns canonical URLs, the OG image route, JSON-LD, sitemap and
- * robots; this is only the title template and a real default description,
- * which every page under it needs before any of that is worth doing.
+ * F18 still owns canonical URLs, the OG image route and JSON-LD; this is the
+ * title template, a real default description, and `metadataBase`.
+ *
+ * `metadataBase` is here rather than in F18 because it is a DEPLOY concern, not
+ * an SEO one: without it Next resolves every relative metadata URL against
+ * localhost and warns at build time. See lib/site.ts for how the origin is
+ * derived — it is never hard-coded, so previews and production both self-
+ * describe correctly.
  */
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Execution Visualizer — Watch algorithms think.",
     template: "%s — Execution Visualizer",

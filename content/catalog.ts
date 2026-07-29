@@ -13,6 +13,20 @@ export function leetcodeUrl(entry: CatalogEntry): string {
 }
 
 /**
+ * NeetCode's practice page for a row, or null when we don't know its slug.
+ *
+ * Not derived, and deliberately NOT falling back to `entry.slug`: NeetCode
+ * renames the problems it hosts, so a fallback would emit a confident-looking
+ * dead link for every unfilled row. Null renders no link at all, which is the
+ * honest answer until someone fills `neetcodeSlug` in.
+ */
+export function neetcodeUrl(entry: CatalogEntry): string | null {
+  return entry.neetcodeSlug
+    ? `https://neetcode.io/problems/${entry.neetcodeSlug}`
+    : null
+}
+
+/**
  * The NeetCode 150, in NeetCode's own order.
  *
  * This is the ONLY source of catalog rows. It is deliberately not derived from
@@ -25,6 +39,13 @@ export function leetcodeUrl(entry: CatalogEntry): string {
  *   - `leetcodeUrl` — derived from `slug` (or `leetcodeSlug`). Storing 150
  *                  near-identical URLs is 150 chances to typo one.
  *
+ * `neetcodeSlug` is the exception to that "never store what you can derive"
+ * rule, because NeetCode renames the problems it hosts and nothing here
+ * predicts the new name. It is filled in ONLY where it has been checked against
+ * neetcode.io by hand; rows without it render no NeetCode link, which is
+ * correct-and-missing rather than confident-and-broken. Filling in the rest is
+ * ordinary data entry — open the practice page and copy the last URL segment.
+ *
  * Order within a category is NeetCode's teaching order, so it is meaningful and
  * must not be sorted. `lib/catalog.test.ts` asserts each category appears as
  * one contiguous run, which is what catches a row filed under the wrong
@@ -34,12 +55,12 @@ export function leetcodeUrl(entry: CatalogEntry): string {
  */
 export const CATALOG: CatalogEntry[] = [
   // --- Arrays & Hashing (9) ------------------------------------------------
-  { slug: 'contains-duplicate', number: 217, title: 'Contains Duplicate', difficulty: 'Easy', category: 'Arrays & Hashing' },
-  { slug: 'valid-anagram', number: 242, title: 'Valid Anagram', difficulty: 'Easy', category: 'Arrays & Hashing' },
-  { slug: 'two-sum', number: 1, title: 'Two Sum', difficulty: 'Easy', category: 'Arrays & Hashing' },
-  { slug: 'group-anagrams', number: 49, title: 'Group Anagrams', difficulty: 'Medium', category: 'Arrays & Hashing' },
-  { slug: 'top-k-frequent-elements', number: 347, title: 'Top K Frequent Elements', difficulty: 'Medium', category: 'Arrays & Hashing' },
-  { slug: 'encode-and-decode-strings', number: 271, title: 'Encode and Decode Strings', difficulty: 'Medium', category: 'Arrays & Hashing' },
+  { slug: 'contains-duplicate', number: 217, title: 'Contains Duplicate', difficulty: 'Easy', category: 'Arrays & Hashing', neetcodeSlug: 'duplicate-integer' },
+  { slug: 'valid-anagram', number: 242, title: 'Valid Anagram', difficulty: 'Easy', category: 'Arrays & Hashing', neetcodeSlug: 'is-anagram' },
+  { slug: 'two-sum', number: 1, title: 'Two Sum', difficulty: 'Easy', category: 'Arrays & Hashing', neetcodeSlug: 'two-integer-sum' },
+  { slug: 'group-anagrams', number: 49, title: 'Group Anagrams', difficulty: 'Medium', category: 'Arrays & Hashing', neetcodeSlug: 'anagram-groups' },
+  { slug: 'top-k-frequent-elements', number: 347, title: 'Top K Frequent Elements', difficulty: 'Medium', category: 'Arrays & Hashing', neetcodeSlug: 'top-k-elements-in-list' },
+  { slug: 'encode-and-decode-strings', number: 271, title: 'Encode and Decode Strings', difficulty: 'Medium', category: 'Arrays & Hashing', neetcodeSlug: 'string-encode-and-decode' },
   { slug: 'product-of-array-except-self', number: 238, title: 'Product of Array Except Self', difficulty: 'Medium', category: 'Arrays & Hashing' },
   { slug: 'valid-sudoku', number: 36, title: 'Valid Sudoku', difficulty: 'Medium', category: 'Arrays & Hashing' },
   { slug: 'longest-consecutive-sequence', number: 128, title: 'Longest Consecutive Sequence', difficulty: 'Medium', category: 'Arrays & Hashing' },

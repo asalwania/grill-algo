@@ -2,6 +2,9 @@
   "name": "grill-algo",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22.18.0"
+  },
   "scripts": {
     "dev": "next dev",
     "traces": "node scripts/build-traces.ts",

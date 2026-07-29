@@ -205,6 +205,15 @@ export type CatalogEntry = {
    * stored URLs is 150 chances to typo one.
    */
   leetcodeSlug?: string
+  /**
+   * NeetCode's own URL slug, which is NOT derivable from anything else here:
+   * NeetCode renames problems on its practice pages (Contains Duplicate is
+   * `duplicate-integer`, Two Sum is `two-integer-sum`). So unlike
+   * `leetcodeSlug`, this is not an override of a derived value — it is the
+   * only source of the NeetCode URL, and a row without it simply has no
+   * NeetCode link. That is why `CatalogProblem.neetcodeUrl` is nullable.
+   */
+  neetcodeSlug?: string
 }
 
 /** A catalog row resolved against what has actually been built. */
@@ -216,6 +225,8 @@ export type CatalogProblem = CatalogEntry & {
    */
   status: 'ready' | 'soon'
   leetcodeUrl: string
+  /** Null when the row has no `neetcodeSlug` — the card then renders no NeetCode link. */
+  neetcodeUrl: string | null
   /** Non-null iff `status` is 'ready'. Carries the blurb and pattern pill. */
   meta: ProblemMeta | null
 }
