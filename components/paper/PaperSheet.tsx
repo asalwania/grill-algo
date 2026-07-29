@@ -142,49 +142,53 @@ export function PaperSheet({
   const done = state.inked >= total;
 
   return (
-    <div className={`flex flex-col items-center gap-20 ${className}`}>
-      <PaperControls
-        state={state}
-        total={total}
-        done={done}
-        dispatch={dispatch}
-        label={next ? next.kind : "done"}
-      />
+    <div className={`flex flex-col ${className}`}>
+      <div className="sticky top-0 z-10 bg-white px-20 py-12">
+        <PaperControls
+          state={state}
+          total={total}
+          done={done}
+          dispatch={dispatch}
+          label={next ? next.kind : "done"}
+        />
+      </div>
 
-      <div
-        className="relative w-full max-w-[900px] rotate-[-0.25deg] rounded-[3px] px-24 pb-48 pt-40 shadow-[0_28px_80px_rgba(0,0,0,0.55)] sm:px-56"
-        style={{
-          // The pitch everything else is a multiple of.
-          ["--rule" as string]: "34px",
-          fontFamily: "var(--font-hand), ui-rounded, cursive",
-          color: "#26324d",
-          backgroundColor: "#f6f2e7",
-          backgroundImage: [
-            // ruled lines
-            "repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--rule) - 1px), rgba(64,104,158,0.17) calc(var(--rule) - 1px), rgba(64,104,158,0.17) var(--rule))",
-            // the double margin rule, in red like a real pad
-            "linear-gradient(to right, transparent 0 62px, rgba(196,72,62,0.34) 62px 63px, transparent 63px 66px, rgba(196,72,62,0.34) 66px 67px, transparent 67px)",
-            // paper tone — a little warmth off the top corner
-            "radial-gradient(120% 80% at 12% 0%, rgba(255,255,255,0.6), transparent 60%)",
-          ].join(","),
-          backgroundPosition: "0 6px, 0 0, 0 0",
-        }}
-      >
-        <div className="pl-16 sm:pl-24">
-          {strokes.slice(0, state.inked).map((stroke, i) => (
-            <Ink
-              key={stroke.id}
-              // Only the stroke currently being laid down animates. Everything
-              // above it is already dry, so a re-render must not re-write the
-              // whole page.
-              fresh={i === state.inked - 1}
-              reduced={!!reduced}
-              ms={penMs(stroke) / state.speed}
-            >
-              <Stroke stroke={stroke} template={templates[i]} />
-            </Ink>
-          ))}
-          <div ref={tipRef} className="h-[var(--rule)]" aria-hidden="true" />
+      <div className="flex flex-col items-center gap-20">
+        <div
+          className="relative w-full max-w-[900px] rotate-[-0.25deg] rounded-[3px] px-24 pb-48 pt-40 shadow-[0_28px_80px_rgba(0,0,0,0.55)] sm:px-56"
+          style={{
+            // The pitch everything else is a multiple of.
+            ["--rule" as string]: "34px",
+            fontFamily: "var(--font-hand), ui-rounded, cursive",
+            color: "#26324d",
+            backgroundColor: "#f6f2e7",
+            backgroundImage: [
+              // ruled lines
+              "repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--rule) - 1px), rgba(64,104,158,0.17) calc(var(--rule) - 1px), rgba(64,104,158,0.17) var(--rule))",
+              // the double margin rule, in red like a real pad
+              "linear-gradient(to right, transparent 0 62px, rgba(196,72,62,0.34) 62px 63px, transparent 63px 66px, rgba(196,72,62,0.34) 66px 67px, transparent 67px)",
+              // paper tone — a little warmth off the top corner
+              "radial-gradient(120% 80% at 12% 0%, rgba(255,255,255,0.6), transparent 60%)",
+            ].join(","),
+            backgroundPosition: "0 6px, 0 0, 0 0",
+          }}
+        >
+          <div className="pl-16 sm:pl-24">
+            {strokes.slice(0, state.inked).map((stroke, i) => (
+              <Ink
+                key={stroke.id}
+                // Only the stroke currently being laid down animates. Everything
+                // above it is already dry, so a re-render must not re-write the
+                // whole page.
+                fresh={i === state.inked - 1}
+                reduced={!!reduced}
+                ms={penMs(stroke) / state.speed}
+              >
+                <Stroke stroke={stroke} template={templates[i]} />
+              </Ink>
+            ))}
+            <div ref={tipRef} className="h-[var(--rule)]" aria-hidden="true" />
+          </div>
         </div>
       </div>
     </div>
@@ -282,7 +286,9 @@ function Stroke({
               answer is a value, and colouring it would imply a verdict. */}
           <span
             className="hidden text-[19px] sm:inline"
-            style={{ color: stroke.expected === "true" ? "#1f7a4d" : "#26324d" }}
+            style={{
+              color: stroke.expected === "true" ? "#1f7a4d" : "#26324d",
+            }}
           >
             {stroke.expected}
           </span>
@@ -325,7 +331,9 @@ function Stroke({
           >
             {stroke.text}
           </span>
-          <span className="ml-12">{stroke.ok ? "✓ matches" : "✗ MISMATCH"}</span>
+          <span className="ml-12">
+            {stroke.ok ? "✓ matches" : "✗ MISMATCH"}
+          </span>
         </div>
       );
 
@@ -362,7 +370,9 @@ function Row({
       className="grid items-center"
       style={{
         gridTemplateColumns: template,
-        borderBottom: head ? "2px solid #26324d" : "1px solid rgba(38,50,77,.2)",
+        borderBottom: head
+          ? "2px solid #26324d"
+          : "1px solid rgba(38,50,77,.2)",
         color: hit ? "#c4483e" : undefined,
       }}
     >
@@ -445,7 +455,7 @@ function PaperControls({
 
       <span
         aria-live="polite"
-        className="font-mono text-mono-13 text-text-muted-dim tabular-nums"
+        className={BTN + " pointer-events-none select-none text-text-primary"}
       >
         {state.inked} / {total} · {done ? "done" : label}
       </span>
