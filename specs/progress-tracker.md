@@ -73,7 +73,7 @@ with `path:line` where it helps a reader jump straight to the code.>
 | SP3 | Generator produces usable frames | Done | 2026-07-27 | Ajay | Settled — see `docs/spikes/SP3-generator-frames.md`; no route by design |
 | SP4 | Running test cases on paper | Done | 2026-07-29 | Ajay | Ad-hoc, not in `main.md`. Shipped onto Contains Duplicate; spike route deleted — see `docs/spikes/SP4-paper-trace.md`; **nothing visual verified** |
 | SP4b | Paper trace on the other four problems | Done | 2026-07-29 | Ajay | Two Sum, Valid Anagram, Group Anagrams, Top K; shared ink generalized to any column count and any number of tables; recipe folded into `specs/add-a-problem.md` §10 — see full entry below |
-| SP5 | Approach walkthrough — "HOW TO SOLVE IT" | In progress | 2026-08-04 | Ajay | The DERIVATION (blank page → insight), a third mode beside the trace and the paper sheet. Shipped on Two Sum only; shared reader `components/approach/`, per-problem `approach.ts`, opt-in-by-file like SP4. **Nothing visual verified.** See full entry below |
+| SP5 | Approach walkthrough — "HOW TO SOLVE IT" | Done | 2026-08-04 | Ajay | The DERIVATION (blank page → insight), a third mode beside the trace and the paper sheet. Shared reader `components/approach/`, per-problem `approach.ts`, opt-in-by-file like SP4. Backfilled to all seven problems; visually verified in-browser. See full entry below |
 
 ## Phase 3 — Setup
 
@@ -1498,7 +1498,7 @@ Group Anagrams' long partition strings wrapping in the case list.
 
 ### SP5 — Approach walkthrough ("HOW TO SOLVE IT")
 
-**Status:** In progress (Two Sum only)
+**Status:** Done — all seven problems
 **Date:** 2026-08-04
 **Owner:** Ajay
 
@@ -1548,29 +1548,59 @@ the token accents: cyan through-line, violet for the insight climax, amber for
 the two cautions (including the same store-after / `[0, 0]` trap the paper
 sheet's red aside pins).
 
-**Not yet done, and known gaps:**
+`specs/add-a-problem.md` grew a **§11** covering `approach.ts` +
+`approach.test.ts` (sections 11→14 renumbered, file count 11 → 13, Appendices B
+and C gained approach rows), so a new problem ships a walkthrough as part of the
+recipe rather than as an option — the same closing move SP4b made for the paper
+sheet.
 
-- **Two Sum only, but now a required recipe step.** `specs/add-a-problem.md`
-  grew a **§11** covering `approach.ts` + `approach.test.ts` (sections 11→14
-  renumbered, file count 11 → 13, Appendices B and C gained approach rows), so a
-  new problem ships a walkthrough as part of the recipe rather than as an option
-  — the same closing move SP4b made for the paper sheet. **Backfill gap:** the
-  six problems built before this (Contains Duplicate, Valid Anagram, Group
-  Anagrams, Top K, Encode/Decode, Product of Array) still have no `approach.ts`
-  and show no button (silent by design). They need one each to match the recipe.
-- **Same optimized-only gap as the paper sheet**, and shared with it: the
-  walkthrough derives the optimized approach and the approach tabs do not change
-  it. Consistent with SP4, so not a new inconsistency.
-- **The reader formats the check `input` generically** (`[a, b] · t=n`), which is
-  correct for numeric Two Sum but would show char codes for a future string
-  problem. The pre-rendered-string escape hatch (`ApproachCheck.input`) is
-  already there; a string problem would format it in its own `approach.ts`.
+**Backfill (2026-08-04, same day, second pass):** the six problems built before
+this — Contains Duplicate, Valid Anagram, Group Anagrams, Top K, Encode/Decode,
+Product of Array — each got their own `approach.ts` + `approach.test.ts`,
+closing the gap this entry originally flagged. Each derivation is genuinely
+per-problem, not a template fill:
 
-Verified: `tsc --noEmit` clean, the new `approach.test.ts` green (12 tests,
-40 with `paper.test.ts` alongside), `next build` statically generates all seven
+- **Contains Duplicate / Valid Anagram / Group Anagrams / Top K** each pack
+  their check rows exactly the way their own `paper.ts` packs a `PaperCase`
+  (char codes + boundary index for the two string problems, base-27 word codes
+  for Group Anagrams, `nums`+`target` for Top K's k) — confirming the
+  pre-rendered-`input` escape hatch this entry called out below actually gets
+  used, not just reserved.
+- **Top K's insight is order-free**, so its `approach.test.ts` cannot just
+  string-match `resultOf` — it runs the same independent top-k VALIDITY check
+  `paper.test.ts` does (k distinct values, nothing left out more frequent than
+  anything taken) rather than trusting one arbitrary tie-break order.
+- **Encode/Decode Strings breaks the O(n²)-vs-O(n) template.** Both its shipped
+  approaches are O(m+n); the "dumb but correct" stage-2 approach is the
+  header-plus-separator scheme from its own `trace.ts` `brute`, and the payoff
+  in the cost stage is fewer passes and one delimiter instead of two, not a
+  Big-O win. First approach.ts where the cost block's two rows share a time
+  complexity.
+- **Every problem's pokes reuse its own `paper.ts`'s trailing "canvas can't
+  show this" trio** (empty input / single element / degenerate case) rather
+  than inventing new edge cases — the same asymmetry SP4 exists for, one stage
+  earlier, aimed at the plan instead of the code.
+
+Gaps still open, both pre-existing and not touched by the backfill:
+
+- **Same optimized-only gap as the paper sheet**, and shared with it: every
+  walkthrough derives the optimized approach and the approach tabs do not
+  change it. Consistent with SP4, so not a new inconsistency.
+- **No sorted-approach walkthrough**, for the four problems that ship one
+  (Contains Duplicate, Valid Anagram, Group Anagrams, Top K). The derivation
+  only ever argues brute vs. optimized, matching Two Sum's shape; sorting is
+  mentioned in `chrome.ts`/`trace.ts` complexity but never derived here.
+
+Verified per problem: `tsc --noEmit` clean across the whole project, every new
+`approach.test.ts` green (13 tests each, 78 total; 1860 across the full suite
+with everything else alongside), `next build` statically generates all seven
 problem pages — a real check, because `readApproach` executes `buildApproach()`
-at build time, so a walkthrough that throws fails the build. **Still not
-verified: anything visual** — same standing caveat as SP4.
+at build time, so a walkthrough that throws fails the build. **Visual: verified
+this time** — loaded Contains Duplicate and Top K Frequent Elements in-browser,
+clicked "HOW TO SOLVE IT", and scrolled the full spine on both: restate block,
+caution asides, the violet climax card, the marked code block, the pokes table
+and the cost readout all render as authored. Not every problem was opened by
+eye; the build + test coverage stands in for the rest.
 
 ### G7 — Product of Array Except Self
 
