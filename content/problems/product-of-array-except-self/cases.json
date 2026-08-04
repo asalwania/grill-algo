@@ -1,0 +1,46 @@
+[
+  {
+    "id": "sample",
+    "label": "The walkthrough",
+    "nums": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "note": "Four numbers, no zeros — the prefix and suffix products read cleanly."
+  },
+  {
+    "id": "single-zero",
+    "label": "One zero changes everything",
+    "nums": [
+      4,
+      0,
+      2,
+      3
+    ],
+    "note": "Only the zero’s own slot is non-zero. Division could never recover this."
+  },
+  {
+    "id": "two-zeros",
+    "label": "Two zeros, all zeros",
+    "nums": [
+      0,
+      5,
+      0,
+      3
+    ],
+    "note": "Every position still multiplies in at least one zero, so the whole answer is zero."
+  },
+  {
+    "id": "negatives",
+    "label": "Signs carry through",
+    "nums": [
+      -2,
+      3,
+      -4,
+      5
+    ],
+    "note": "Negatives just multiply through — the sign of each answer is the parity of the negatives around it."
+  }
+]

@@ -1,0 +1,1101 @@
+[
+  {
+    "step": 0,
+    "line": 3,
+    "kind": "init",
+    "narration": "An empty answer array, and a running product that starts at 1.",
+    "why": "Division is out — the problem forbids it, and a single zero would break it anyway. So the product is BUILT, in two sweeps: one from the left, one from the right.",
+    "vars": {
+      "n": 4,
+      "answer": "[·, ·, ·, ·]",
+      "prefix": 1,
+      "suffix": 1
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 6,
+    "kind": "compare",
+    "narration": "Position 0. Everything to its left multiplies to 1.",
+    "why": "answer[i] is the product of every element except nums[i]. Its left half is exactly the running product built from positions before i — and it is already in hand.",
+    "vars": {
+      "n": 4,
+      "answer": "[·, ·, ·, ·]",
+      "i": 0,
+      "prefix": 1
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.suffix"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 7,
+    "kind": "store",
+    "narration": "Write 1 into answer[0]. Then fold nums[0] = 0 in — prefix becomes 0.",
+    "why": "The value stored EXCLUDES nums[i]: it is folded in only after the write, so it counts toward every position to the right and never toward this one.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, ·, ·, ·]",
+      "i": 0,
+      "prefix": 1,
+      "num": 0
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.answer",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 6,
+    "kind": "compare",
+    "narration": "Position 1. Everything to its left multiplies to 0.",
+    "why": "answer[i] is the product of every element except nums[i]. Its left half is exactly the running product built from positions before i — and it is already in hand.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, ·, ·, ·]",
+      "i": 1,
+      "prefix": 0
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.num",
+      "vars.prefix"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 7,
+    "kind": "store",
+    "narration": "Write 0 into answer[1]. Then fold nums[1] = 5 in — prefix becomes 0.",
+    "why": "The value stored EXCLUDES nums[i]: it is folded in only after the write, so it counts toward every position to the right and never toward this one.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, ·, ·]",
+      "i": 1,
+      "prefix": 0,
+      "num": 5
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        1,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.answer",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 6,
+    "kind": "compare",
+    "narration": "Position 2. Everything to its left multiplies to 0.",
+    "why": "answer[i] is the product of every element except nums[i]. Its left half is exactly the running product built from positions before i — and it is already in hand.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, ·, ·]",
+      "i": 2,
+      "prefix": 0
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 7,
+    "kind": "store",
+    "narration": "Write 0 into answer[2]. Then fold nums[2] = 0 in — prefix becomes 0.",
+    "why": "The value stored EXCLUDES nums[i]: it is folded in only after the write, so it counts toward every position to the right and never toward this one.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, 0, ·]",
+      "i": 2,
+      "prefix": 0,
+      "num": 0
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        2,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.answer",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 6,
+    "kind": "compare",
+    "narration": "Position 3. Everything to its left multiplies to 0.",
+    "why": "answer[i] is the product of every element except nums[i]. Its left half is exactly the running product built from positions before i — and it is already in hand.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, 0, ·]",
+      "i": 3,
+      "prefix": 0
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 7,
+    "kind": "store",
+    "narration": "Write 0 into answer[3]. Then fold nums[3] = 3 in — prefix becomes 0.",
+    "why": "The value stored EXCLUDES nums[i]: it is folded in only after the write, so it counts toward every position to the right and never toward this one.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, 0, 0]",
+      "i": 3,
+      "prefix": 0,
+      "num": 3
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        3,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.answer",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 11,
+    "kind": "init",
+    "narration": "Every left product is in place. Now sweep right to left, multiplying each cell by the product of everything to its right.",
+    "why": "The right product is built the same way the left one was — one running value, folded in one element at a time. That is why no second array of suffixes is needed: O(1) extra space beyond the answer itself.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, 0, 0]",
+      "prefix": 0,
+      "suffix": 1
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.num",
+      "vars.suffix"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 12,
+    "kind": "compare",
+    "narration": "answer[3] holds 0 — the product to its left. To its right, everything multiplies to 1.",
+    "why": "The left half was written in the first pass. Multiplying by the right half now completes the product-of-all-others for this position.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, 0, 0]",
+      "i": 3,
+      "suffix": 1
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "probed"
+        }
+      ],
+      "probe": null,
+      "link": [
+        3,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.i",
+      "vars.prefix"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 13,
+    "kind": "store",
+    "narration": "answer[3] = 0. Then fold nums[3] = 3 into the right product — suffix becomes 3.",
+    "why": "Same ordering as the left pass: the cell is multiplied by the right product BEFORE nums[i] is folded in, so this position never multiplies by itself.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, 0, 0]",
+      "i": 3,
+      "suffix": 1,
+      "num": 3
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit"
+        }
+      ],
+      "probe": null,
+      "link": [
+        3,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 12,
+    "kind": "compare",
+    "narration": "answer[2] holds 0 — the product to its left. To its right, everything multiplies to 3.",
+    "why": "The left half was written in the first pass. Multiplying by the right half now completes the product-of-all-others for this position.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, 0, 0]",
+      "i": 2,
+      "suffix": 3
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "active",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "probed"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit"
+        }
+      ],
+      "probe": null,
+      "link": [
+        2,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.i",
+      "vars.num",
+      "vars.suffix"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 13,
+    "kind": "store",
+    "narration": "answer[2] = 0. Then fold nums[2] = 0 into the right product — suffix becomes 0.",
+    "why": "Same ordering as the left pass: the cell is multiplied by the right product BEFORE nums[i] is folded in, so this position never multiplies by itself.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, 0, 0]",
+      "i": 2,
+      "suffix": 3,
+      "num": 0
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "hit"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit"
+        }
+      ],
+      "probe": null,
+      "link": [
+        2,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 12,
+    "kind": "compare",
+    "narration": "answer[1] holds 0 — the product to its left. To its right, everything multiplies to 0.",
+    "why": "The left half was written in the first pass. Multiplying by the right half now completes the product-of-all-others for this position.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, 0, 0]",
+      "i": 1,
+      "suffix": 0
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "active",
+        "done",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "probed"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "hit"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit"
+        }
+      ],
+      "probe": null,
+      "link": [
+        1,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.i",
+      "vars.num",
+      "vars.suffix"
+    ]
+  },
+  {
+    "step": 15,
+    "line": 13,
+    "kind": "store",
+    "narration": "answer[1] = 0. Then fold nums[1] = 5 into the right product — suffix becomes 0.",
+    "why": "Same ordering as the left pass: the cell is multiplied by the right product BEFORE nums[i] is folded in, so this position never multiplies by itself.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, 0, 0]",
+      "i": 1,
+      "suffix": 0,
+      "num": 5
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "hit"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "hit"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit"
+        }
+      ],
+      "probe": null,
+      "link": [
+        1,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 16,
+    "line": 12,
+    "kind": "compare",
+    "narration": "answer[0] holds 1 — the product to its left. To its right, everything multiplies to 0.",
+    "why": "The left half was written in the first pass. Multiplying by the right half now completes the product-of-all-others for this position.",
+    "vars": {
+      "n": 4,
+      "answer": "[1, 0, 0, 0]",
+      "i": 0,
+      "suffix": 0
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "active",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 1,
+          "state": "probed"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "hit"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "hit"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit"
+        }
+      ],
+      "probe": null,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 17,
+    "line": 13,
+    "kind": "store",
+    "narration": "answer[0] = 0. Then fold nums[0] = 0 into the right product — suffix becomes 0.",
+    "why": "Same ordering as the left pass: the cell is multiplied by the right product BEFORE nums[i] is folded in, so this position never multiplies by itself.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 0, 0, 0]",
+      "i": 0,
+      "suffix": 0,
+      "num": 0
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "hit"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "hit"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "hit"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit"
+        }
+      ],
+      "probe": null,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.slots",
+      "scene.tiles",
+      "vars.answer",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 18,
+    "line": 17,
+    "kind": "return",
+    "narration": "answer = [0, 0, 0, 0] — each position holds the product of all the others.",
+    "why": "Two passes over the array, no division, one array of output. Every answer[i] is its left product times its right product, and neither ever included nums[i].",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 0, 0, 0]",
+      "result": "[0, 0, 0, 0]"
+    },
+    "scene": {
+      "nums": [
+        0,
+        5,
+        0,
+        3
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "hit"
+        },
+        {
+          "key": 1,
+          "value": 0,
+          "state": "hit"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "hit"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "hit"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        3
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.result",
+      "scene.tiles",
+      "vars.i",
+      "vars.num",
+      "vars.result",
+      "vars.suffix"
+    ]
+  }
+]

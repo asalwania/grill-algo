@@ -73,6 +73,7 @@ with `path:line` where it helps a reader jump straight to the code.>
 | SP3 | Generator produces usable frames | Done | 2026-07-27 | Ajay | Settled — see `docs/spikes/SP3-generator-frames.md`; no route by design |
 | SP4 | Running test cases on paper | Done | 2026-07-29 | Ajay | Ad-hoc, not in `main.md`. Shipped onto Contains Duplicate; spike route deleted — see `docs/spikes/SP4-paper-trace.md`; **nothing visual verified** |
 | SP4b | Paper trace on the other four problems | Done | 2026-07-29 | Ajay | Two Sum, Valid Anagram, Group Anagrams, Top K; shared ink generalized to any column count and any number of tables; recipe folded into `specs/add-a-problem.md` §10 — see full entry below |
+| SP5 | Approach walkthrough — "HOW TO SOLVE IT" | In progress | 2026-08-04 | Ajay | The DERIVATION (blank page → insight), a third mode beside the trace and the paper sheet. Shipped on Two Sum only; shared reader `components/approach/`, per-problem `approach.ts`, opt-in-by-file like SP4. **Nothing visual verified.** See full entry below |
 
 ## Phase 3 — Setup
 
@@ -134,6 +135,7 @@ single-problem machinery into a reusable family is recorded here.
 | G4 | Group Anagrams | Done | 2026-07-28 | Ajay | `content/problems/group-anagrams/`, three approaches, first problem whose answer is a partition — see full entry below |
 | G5 | Top K Frequent Elements | Done | 2026-07-28 | Ajay | `content/problems/top-k-frequent-elements/`, three approaches, first problem to use `scene.target` as a genuine parameter (k) — see full entry below |
 | G6 | Encode and Decode Strings | Done | 2026-07-29 | Ajay | `content/problems/encode-and-decode-strings/`, two approaches, paper trace. First problem whose trace is a ROUND TRIP and whose two approaches share a complexity — see full entry below |
+| G7 | Product of Array Except Self | Done | 2026-08-04 | Ajay | `content/problems/product-of-array-except-self/`, two approaches, paper trace. First problem whose ANSWER is an output array — the memory wall becomes it (index → product) — see full entry below |
 
 ---
 
@@ -1493,3 +1495,138 @@ problem pages — which is a real check, because `readPaper` executes every
 not verified: anything visual.** Newly at risk and unobserved: Two Sum's SIX
 columns before `truncate` bites, Top K's two tables sharing one sheet, and
 Group Anagrams' long partition strings wrapping in the case list.
+
+### SP5 — Approach walkthrough ("HOW TO SOLVE IT")
+
+**Status:** In progress (Two Sum only)
+**Date:** 2026-08-04
+**Owner:** Ajay
+
+A third mode over the learning view, beside the animated trace and the paper
+sheet. The trace shows the finished algorithm running; the paper sheet dry-runs
+it over cases; this shows **neither** — it shows the DERIVATION: restate it, try
+the dumb thing, notice the waste, and let that push you to the insight. A button
+("◆ HOW TO SOLVE IT") sits next to RUN IT ON PAPER and opens a `<dialog>` with a
+flow spine and eight scroll-spied moves.
+
+Deliberately modelled on SP4, and the same four rules fall out — do not
+re-litigate:
+
+1. **A third model, not a `Frame` or a `PaperStroke`.** You read it, you do not
+   scrub it (no seek, so no snapshots) and it is a structured document, not
+   append-only ink (no `changed[]`). So it is `ApproachMove[]`, each move a stage
+   on the spine holding typed `ApproachBlock`s. All three models now coexist and
+   answer different questions; keep them separate.
+2. **Shared reader, per-problem content**, the same split as G1/SP4.
+   `components/approach/` (the `ApproachReader` + `ApproachDialog`) knows how to
+   draw a block and how to run the scroll-spy, and nothing about any problem.
+   The words, pseudocode and worked cases live in
+   `content/problems/<slug>/approach.ts`. Blocks are plain JSON, so — unlike
+   `ProblemChrome` — the whole walkthrough crosses the RSC boundary as ordinary
+   props, no `"use client"` anywhere in the content.
+3. **Opt-in purely by having the file.** `readApproach` in `lib/content.ts` is
+   the exact shape of `readPaper` (probe with `access`, so a broken `approach.ts`
+   fails the build rather than reporting "no approach"); `Problem.approach` is
+   `null` otherwise and the header renders no button. Route, view and header each
+   grew one prop (`approach`), threaded beside `paper`. **Name clash caught at
+   build:** `ArrayMemoryProblemView` already binds `approach` to the selected
+   TAB from player state, so the walkthrough prop is aliased
+   `approach: approachWalkthrough` locally.
+4. **Worked answers are hand-authored, pinned by a test** — SP4's one deliberate
+   exception. `approach.ts`'s `EXAMPLE.result` and every `CHECKS[].result` are
+   the author's reading of the question; `approach.test.ts` runs the real
+   algorithm — reusing the SAME `resultOf` the paper sheet drains, never a second
+   copy — and refuses to let them drift. The reader shows a check's `input` +
+   `why` + `result`; it carries the raw `nums`/`target` too, not for display but
+   so the test can re-derive the answer.
+
+Two Sum's eight moves: understand → concretize → brute → waste → **the turning
+question** → **the insight** (the one climax move, violet) → the plan → poke it →
+what it costs. The sequence IS the content — reorder it and it becomes a
+solution with headings, which is the trace pane one tab over. The reader leans on
+the token accents: cyan through-line, violet for the insight climax, amber for
+the two cautions (including the same store-after / `[0, 0]` trap the paper
+sheet's red aside pins).
+
+**Not yet done, and known gaps:**
+
+- **Two Sum only, but now a required recipe step.** `specs/add-a-problem.md`
+  grew a **§11** covering `approach.ts` + `approach.test.ts` (sections 11→14
+  renumbered, file count 11 → 13, Appendices B and C gained approach rows), so a
+  new problem ships a walkthrough as part of the recipe rather than as an option
+  — the same closing move SP4b made for the paper sheet. **Backfill gap:** the
+  six problems built before this (Contains Duplicate, Valid Anagram, Group
+  Anagrams, Top K, Encode/Decode, Product of Array) still have no `approach.ts`
+  and show no button (silent by design). They need one each to match the recipe.
+- **Same optimized-only gap as the paper sheet**, and shared with it: the
+  walkthrough derives the optimized approach and the approach tabs do not change
+  it. Consistent with SP4, so not a new inconsistency.
+- **The reader formats the check `input` generically** (`[a, b] · t=n`), which is
+  correct for numeric Two Sum but would show char codes for a future string
+  problem. The pre-rendered-string escape hatch (`ApproachCheck.input`) is
+  already there; a string problem would format it in its own `approach.ts`.
+
+Verified: `tsc --noEmit` clean, the new `approach.test.ts` green (12 tests,
+40 with `paper.test.ts` alongside), `next build` statically generates all seven
+problem pages — a real check, because `readApproach` executes `buildApproach()`
+at build time, so a walkthrough that throws fails the build. **Still not
+verified: anything visual** — same standing caveat as SP4.
+
+### G7 — Product of Array Except Self
+
+**Status:** Done
+**Date:** 2026-08-04
+**Owner:** Ajay
+
+The sixth problem, built entirely to `specs/add-a-problem.md`, and the first
+whose ANSWER is a full output array rather than a pair of indices or a boolean.
+Seven files' worth of data plus labels; nothing 3D, 2D, player or layout was
+touched.
+
+- **The memory wall is the ANSWER**, one slot per position (`slot.key` = index,
+  `slot.value` = the product standing at answer[i] right now). This is the same
+  generalization Encode and Decode already made — the wall is whatever key→value
+  structure a problem accumulates, not only a hash map — so the canvas needed no
+  change, as G1 rule 1 promised. `memoryLabel` is `ANSWER — index → product`.
+- **Both approaches raise the wall**, because both genuinely build the output
+  array. So the wall is NOT the approach-distinguishing signal here (there is no
+  memory-vs-no-memory story); TIME is, carried by the complexity readout and the
+  frame counter — the same job they do for Encode and Decode's equal-complexity
+  tabs.
+- **`scene.probe` is null on every frame** and `scene.target` is unset: nothing
+  is looked up by key, and the array is the whole input. `chrome.formatProbe`
+  exists to satisfy the contract and is never rendered; `formatArrayCaption`
+  returns null. `link` runs tile i → answer slot i to show which cell a position
+  is filling.
+- **Two approaches, no `sorted`.** `optimized` is the two-pass prefix/suffix
+  method (O(n) time, O(1) space beyond the output); `brute` recomputes each
+  answer by multiplying every other element (O(n²)). A `sorted` tab is
+  impossible in principle — answer[i] is pinned to position i, so reordering
+  destroys the mapping — the same reason Two Sum ships none.
+- **Brute shows every inner multiplication on purpose.** The redundant work IS
+  the lesson, so unlike Top K (which compresses its inner scan to one frame),
+  this one emits a frame per `product *= nums[j]` and carries `multiplications`
+  in vars. That makes brute the longer trace — 22 vs 19 on every shipped case.
+  **Counts depend only on n** (optimized 4n+3, brute n²+n+2), so all four n=4
+  cases print 19/22. The counts INVERT for n ≤ 3 (n² has not yet overtaken 2n —
+  the F1 trap), which is why `trace.test.ts` scopes "brute is longer" to the
+  shipped cases and the extras (`[7]`, `[3,5]`) do not assert it.
+- **The paper sheet draws TWO tables** (Top K's precedent, the second problem to
+  earn a second): the prefix pass, then the suffix pass, with `runOnPaper`
+  yielding the second `grid` mid-run. The BEFORE/AFTER columns guard the one
+  ordering that matters — the running product is folded into for the NEXT
+  position only AFTER the current cell is written, so answer[i] never multiplies
+  by itself — and `paper.test.ts` asserts it directly in both passes. The three
+  extra cases are the empty array, one element and a pair: the first two are
+  below LeetCode's n ≥ 2 and the canvas has nothing to say about either, but
+  they are exactly where an empty-product (`[7]` is `[1]`, not `[]`) or
+  loop-bounds mistake shows.
+
+Verified: `pnpm traces` (19/22 for all four cases), `tsc --noEmit`, `pnpm test`
+(1769 passing, 248 of them this problem's three suites), `eslint` on the new
+files (clean), and `pnpm build` (statically generates `/problems/
+product-of-array-except-self`; the trace count is now 72 files across 7
+problems, and `readPaper` ran the sheet at build time). **Not verified: anything
+visual** — the wall rendering n filled slots as the answer, the two-pass sweep,
+and the two-table sheet in the dialog all still want one browser pass, the same
+gap every problem since H2 has carried.

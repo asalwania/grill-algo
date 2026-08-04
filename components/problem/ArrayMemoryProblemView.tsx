@@ -17,6 +17,7 @@ import {
 import { NarrationStrip, CodePaneStack, MobileVariablesSheet } from "@/components/panels";
 import type {
   Approach,
+  ApproachMove,
   ArrayMemoryFrame,
   Language,
   PaperStroke,
@@ -52,6 +53,9 @@ export type ArrayMemoryProblemViewProps = {
   /** The handwritten dry run, or null for a problem with no `paper.ts`. Plain
    *  data, so unlike `chrome` it arrives straight from the route. */
   paper?: PaperStroke[] | null;
+  /** The approach walkthrough, or null for a problem with no `approach.ts`.
+   *  Plain data, like `paper` — it arrives straight from the route. */
+  approach?: ApproachMove[] | null;
 };
 
 /**
@@ -75,6 +79,10 @@ function ProblemViewLayout({
   chrome,
   brief: Brief,
   paper,
+  // Renamed locally: `approach` is already taken in this scope by the selected
+  // approach TAB from the player state (`usePlayerState()` below). This is the
+  // approach WALKTHROUGH — a different axis entirely.
+  approach: approachWalkthrough,
   answers,
   found,
 }: ArrayMemoryProblemViewProps & {
@@ -129,6 +137,7 @@ function ProblemViewLayout({
         approaches={approaches}
         complexity={chrome.complexity}
         paper={paper}
+        approach={approachWalkthrough}
         className="lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2"
       />
 

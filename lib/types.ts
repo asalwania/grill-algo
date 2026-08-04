@@ -380,3 +380,111 @@ export type PaperStroke =
   | { id: string; kind: 'row'; cells: string[]; hit: boolean }
   | { id: string; kind: 'verdict'; text: string; ok: boolean }
   | { id: string; kind: 'aside'; text: string; pen: Pen }
+
+/* ---------------------------------------------------------------------------
+ * Approach walkthrough — the derivation, from a blank page to the solution
+ * ------------------------------------------------------------------------ */
+
+/**
+ * ## What this is, and why it is neither a `Frame` nor a `PaperStroke`
+ *
+ * The animated trace shows the FINISHED algorithm executing. The paper sheet
+ * dry-runs that same finished algorithm over hand-picked cases. This third
+ * thing shows neither — it shows the DERIVATION: how a reader gets from "I
+ * don't know how to solve this" to the insight that makes it fast. Restate it,
+ * try the dumb thing, notice what it wastes, and let that push you to the idea.
+ *
+ * So the model is not stepped state (no seek, no reverse — you read it, you do
+ * not scrub it) and not append-only ink (it is a structured document, not a
+ * hand crossing a page). It is an ordered list of MOVES, each a stage on the
+ * flow spine, each holding a few typed BLOCKS. The shared reader in
+ * `components/approach/` knows how to draw each block kind and nothing about
+ * any problem; the words, the code and the worked cases live per-problem in
+ * `content/problems/<slug>/approach.ts`. A problem opts in purely by having the
+ * file — `lib/content.ts` returns `null` otherwise and the button is not shown,
+ * the same silent-by-design opt-in as the paper sheet.
+ *
+ * Every block is plain JSON with pre-rendered strings, so the whole walkthrough
+ * crosses the RSC boundary as ordinary props and the generator never enters the
+ * browser bundle — same discipline as the shipped frames and the paper sheet.
+ */
+
+/** A block's accent: a neutral note, or a caution the reader must not miss. */
+export type ApproachTone = 'note' | 'caution'
+
+/**
+ * A worked case shown in the reader — the single concrete example (stage 1) or
+ * one of the edge-case pokes (stage 7).
+ *
+ * `result` is HAND-AUTHORED, the same deliberate exception `PaperCase.expected`
+ * is: it is the author's reading of the QUESTION, produced independently of any
+ * code. `approach.test.ts` runs the real algorithm over every check's raw input
+ * and refuses to let the two disagree — that test is what makes the feature
+ * worth anything.
+ *
+ * `input` is the pre-rendered display string (formatted by the problem's own
+ * content file, so the shared reader stays problem-agnostic). `nums`/`target`
+ * are the raw input, carried NOT for display but so the test can re-derive
+ * `result` — the same split as the paper sheet's rendered strokes vs. its
+ * authored `CASES`.
+ */
+export type ApproachCheck = {
+  /** Pre-rendered input for display, e.g. `[3, 3] · t=6`. */
+  input: string
+  /** The hand argument for why this case comes out as it does. Authored. */
+  why: string
+  /** The answer AS THE PROBLEM STATES IT. Authored; pinned by the test. */
+  result: string
+  /** Raw input the test re-runs the real algorithm on. Never rendered. */
+  nums: number[]
+  /** The scalar input if the problem has one, packed like `TestCase.target`. */
+  target?: number
+}
+
+/**
+ * One drawn block inside a move. Plain JSON, like `PaperStroke` — the shared
+ * reader switches on `kind` and the problem never touches the renderer.
+ */
+export type ApproachBlock =
+  /** A narration paragraph. */
+  | { kind: 'text'; text: string }
+  /** "Say what you're being asked" — a labelled line each (Given / Return / …). */
+  | { kind: 'restate'; rows: { label: string; text: string }[] }
+  /** Pseudocode. `mark` lists 1-based lines to emphasise (the load-bearing one). */
+  | { kind: 'code'; caption?: string; code: string; mark?: number[] }
+  /** A coaching note. `caution` is the reader's red pen — the trap, the order rule. */
+  | { kind: 'aside'; tone: ApproachTone; label: string; text: string }
+  /** The turning question, set large — the hinge the whole method swings on. */
+  | { kind: 'pivot'; text: string }
+  /** The climax. One statement plus the detail that cashes it out. */
+  | { kind: 'insight'; statement: string; detail: string }
+  /** Worked cases: one row for stage 1's example, several for stage 7's pokes. */
+  | { kind: 'checks'; rows: ApproachCheck[] }
+  /**
+   * The cost readout. Each row is one approach's complexity; `win` marks the one
+   * this walkthrough arrived at, so the reader can light it against the rest.
+   */
+  | {
+      kind: 'cost'
+      rows: { label: string; time: string; space: string; win: boolean }[]
+      takeaway: string
+    }
+
+/**
+ * One move in the derivation — a numbered stage on the flow spine.
+ *
+ * The order IS the content: understand → concretize → brute → waste → insight
+ * → plan → poke → cost, each move earning the next. That is what justifies the
+ * numbered spine (a real sequence, not decoration).
+ */
+export type ApproachMove = {
+  /** Stable id; the reader keys the spine node and the card on it. */
+  id: string
+  /** Short label for the spine node and the card eyebrow, e.g. "Find the waste". */
+  label: string
+  /** The move's headline. Empty for a move that is only a pivot line. */
+  title: string
+  /** The single climax move (the insight). Exactly one per walkthrough. */
+  climax?: boolean
+  blocks: ApproachBlock[]
+}

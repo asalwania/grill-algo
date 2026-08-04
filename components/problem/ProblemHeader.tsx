@@ -5,7 +5,13 @@ import Link from "next/link";
 import { ApproachTabs, LanguageSelector } from "@/components/player";
 import { ComplexityReadout } from "@/components/panels";
 import { PaperTraceDialog } from "@/components/paper";
-import type { Approach, PaperStroke, ProblemMeta } from "@/lib/types";
+import { ApproachDialog } from "@/components/approach";
+import type {
+  Approach,
+  ApproachMove,
+  PaperStroke,
+  ProblemMeta,
+} from "@/lib/types";
 import type { ProblemChrome } from "./types";
 
 type ProblemHeaderProps = {
@@ -19,6 +25,10 @@ type ProblemHeaderProps = {
    *  MODE, like the approach tabs and the language selector it lines up with —
    *  not an action on the selected case. */
   paper?: PaperStroke[] | null;
+  /** The approach walkthrough, when the problem ships one. Its trigger lines up
+   *  beside the paper button — the two are companion modes over the page, one
+   *  for deriving the solution and one for dry-running it. */
+  approach?: ApproachMove[] | null;
   className?: string;
 };
 
@@ -42,6 +52,7 @@ export function ProblemHeader({
   approaches,
   complexity,
   paper,
+  approach,
   className = "",
 }: ProblemHeaderProps) {
   return (
@@ -81,9 +92,14 @@ export function ProblemHeader({
 
       <div className="flex flex-wrap items-center justify-between gap-14">
         <LanguageSelector />
-        {paper && paper.length > 0 && (
-          <PaperTraceDialog strokes={paper} title={meta.title} />
-        )}
+        <div className="flex flex-wrap items-center gap-8">
+          {approach && approach.length > 0 && (
+            <ApproachDialog moves={approach} title={meta.title} />
+          )}
+          {paper && paper.length > 0 && (
+            <PaperTraceDialog strokes={paper} title={meta.title} />
+          )}
+        </div>
       </div>
     </div>
   );

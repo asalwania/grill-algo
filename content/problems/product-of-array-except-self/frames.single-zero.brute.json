@@ -1,0 +1,1197 @@
+[
+  {
+    "step": 0,
+    "line": 3,
+    "kind": "init",
+    "narration": "An empty answer array. For each position, multiply every other element from scratch.",
+    "why": "Nothing is carried between positions, so the product for answer[i] shares no work with answer[i-1]. Each of the n answers costs a full pass of n-1 multiplications.",
+    "vars": {
+      "n": 4,
+      "answer": "[·, ·, ·, ·]",
+      "multiplications": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 6,
+    "kind": "compare",
+    "narration": "answer[0]: skip nums[0] = 4, multiply the rest. product starts at 1.",
+    "why": "The one element this position must NOT include is nums[i] itself. Everything else goes into the product.",
+    "vars": {
+      "n": 4,
+      "answer": "[·, ·, ·, ·]",
+      "multiplications": 0,
+      "i": 0,
+      "product": 1
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "match",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.product"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 9,
+    "kind": "compare",
+    "narration": "× nums[1] = 0 → product = 0.",
+    "why": "Every element except nums[i] is visited again here — work the two-pass method does once and reuses, and this one repeats for all n positions.",
+    "vars": {
+      "n": 4,
+      "answer": "[·, ·, ·, ·]",
+      "multiplications": 1,
+      "i": 0,
+      "j": 1,
+      "num": 0,
+      "product": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "match",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.multiplications",
+      "vars.num",
+      "vars.product"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 9,
+    "kind": "compare",
+    "narration": "× nums[2] = 2 → product = 0.",
+    "why": "Every element except nums[i] is visited again here — work the two-pass method does once and reuses, and this one repeats for all n positions.",
+    "vars": {
+      "n": 4,
+      "answer": "[·, ·, ·, ·]",
+      "multiplications": 2,
+      "i": 0,
+      "j": 2,
+      "num": 2,
+      "product": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "match",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.multiplications",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 9,
+    "kind": "compare",
+    "narration": "× nums[3] = 3 → product = 0.",
+    "why": "Every element except nums[i] is visited again here — work the two-pass method does once and reuses, and this one repeats for all n positions.",
+    "vars": {
+      "n": 4,
+      "answer": "[·, ·, ·, ·]",
+      "multiplications": 3,
+      "i": 0,
+      "j": 3,
+      "num": 3,
+      "product": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "match",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.multiplications",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 11,
+    "kind": "store",
+    "narration": "answer[0] = 0.",
+    "why": "One position settled after a full pass over the array. n such passes is the n² this approach pays and the two-pass method avoids.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, ·, ·, ·]",
+      "multiplications": 3,
+      "i": 0,
+      "product": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        0,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.answer",
+      "vars.j",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 6,
+    "kind": "compare",
+    "narration": "answer[1]: skip nums[1] = 0, multiply the rest. product starts at 1.",
+    "why": "The one element this position must NOT include is nums[i] itself. Everything else goes into the product.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, ·, ·, ·]",
+      "multiplications": 3,
+      "i": 1,
+      "product": 1
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.product"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 9,
+    "kind": "compare",
+    "narration": "× nums[0] = 4 → product = 4.",
+    "why": "Every element except nums[i] is visited again here — work the two-pass method does once and reuses, and this one repeats for all n positions.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, ·, ·, ·]",
+      "multiplications": 4,
+      "i": 1,
+      "j": 0,
+      "num": 4,
+      "product": 4
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "active",
+        "match",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        1,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.multiplications",
+      "vars.num",
+      "vars.product"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 9,
+    "kind": "compare",
+    "narration": "× nums[2] = 2 → product = 8.",
+    "why": "Every element except nums[i] is visited again here — work the two-pass method does once and reuses, and this one repeats for all n positions.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, ·, ·, ·]",
+      "multiplications": 5,
+      "i": 1,
+      "j": 2,
+      "num": 2,
+      "product": 8
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "match",
+        "active",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        1,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.multiplications",
+      "vars.num",
+      "vars.product"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 9,
+    "kind": "compare",
+    "narration": "× nums[3] = 3 → product = 24.",
+    "why": "Every element except nums[i] is visited again here — work the two-pass method does once and reuses, and this one repeats for all n positions.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, ·, ·, ·]",
+      "multiplications": 6,
+      "i": 1,
+      "j": 3,
+      "num": 3,
+      "product": 24
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "match",
+        "done",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        1,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.multiplications",
+      "vars.num",
+      "vars.product"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 11,
+    "kind": "store",
+    "narration": "answer[1] = 24.",
+    "why": "One position settled after a full pass over the array. n such passes is the n² this approach pays and the two-pass method avoids.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 24, ·, ·]",
+      "multiplications": 6,
+      "i": 1,
+      "product": 24
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 24,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        1,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.answer",
+      "vars.j",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 6,
+    "kind": "compare",
+    "narration": "answer[2]: skip nums[2] = 2, multiply the rest. product starts at 1.",
+    "why": "The one element this position must NOT include is nums[i] itself. Everything else goes into the product.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 24, ·, ·]",
+      "multiplications": 6,
+      "i": 2,
+      "product": 1
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "match",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 24,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.product"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 9,
+    "kind": "compare",
+    "narration": "× nums[0] = 4 → product = 4.",
+    "why": "Every element except nums[i] is visited again here — work the two-pass method does once and reuses, and this one repeats for all n positions.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 24, ·, ·]",
+      "multiplications": 7,
+      "i": 2,
+      "j": 0,
+      "num": 4,
+      "product": 4
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "match",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 24,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        2,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.multiplications",
+      "vars.num",
+      "vars.product"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 9,
+    "kind": "compare",
+    "narration": "× nums[1] = 0 → product = 0.",
+    "why": "Every element except nums[i] is visited again here — work the two-pass method does once and reuses, and this one repeats for all n positions.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 24, ·, ·]",
+      "multiplications": 8,
+      "i": 2,
+      "j": 1,
+      "num": 0,
+      "product": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "match",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 24,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        2,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.multiplications",
+      "vars.num",
+      "vars.product"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 9,
+    "kind": "compare",
+    "narration": "× nums[3] = 3 → product = 0.",
+    "why": "Every element except nums[i] is visited again here — work the two-pass method does once and reuses, and this one repeats for all n positions.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 24, ·, ·]",
+      "multiplications": 9,
+      "i": 2,
+      "j": 3,
+      "num": 3,
+      "product": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "match",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 24,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        2,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.multiplications",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 15,
+    "line": 11,
+    "kind": "store",
+    "narration": "answer[2] = 0.",
+    "why": "One position settled after a full pass over the array. n such passes is the n² this approach pays and the two-pass method avoids.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 24, 0, ·]",
+      "multiplications": 9,
+      "i": 2,
+      "product": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 24,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        2,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.answer",
+      "vars.j",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 16,
+    "line": 6,
+    "kind": "compare",
+    "narration": "answer[3]: skip nums[3] = 3, multiply the rest. product starts at 1.",
+    "why": "The one element this position must NOT include is nums[i] itself. Everything else goes into the product.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 24, 0, ·]",
+      "multiplications": 9,
+      "i": 3,
+      "product": 1
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "match"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 24,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.i",
+      "vars.product"
+    ]
+  },
+  {
+    "step": 17,
+    "line": 9,
+    "kind": "compare",
+    "narration": "× nums[0] = 4 → product = 4.",
+    "why": "Every element except nums[i] is visited again here — work the two-pass method does once and reuses, and this one repeats for all n positions.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 24, 0, ·]",
+      "multiplications": 10,
+      "i": 3,
+      "j": 0,
+      "num": 4,
+      "product": 4
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "match"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 24,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        3,
+        0
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.multiplications",
+      "vars.num",
+      "vars.product"
+    ]
+  },
+  {
+    "step": 18,
+    "line": 9,
+    "kind": "compare",
+    "narration": "× nums[1] = 0 → product = 0.",
+    "why": "Every element except nums[i] is visited again here — work the two-pass method does once and reuses, and this one repeats for all n positions.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 24, 0, ·]",
+      "multiplications": 11,
+      "i": 3,
+      "j": 1,
+      "num": 0,
+      "product": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "match"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 24,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        3,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.multiplications",
+      "vars.num",
+      "vars.product"
+    ]
+  },
+  {
+    "step": 19,
+    "line": 9,
+    "kind": "compare",
+    "narration": "× nums[2] = 2 → product = 0.",
+    "why": "Every element except nums[i] is visited again here — work the two-pass method does once and reuses, and this one repeats for all n positions.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 24, 0, ·]",
+      "multiplications": 12,
+      "i": 3,
+      "j": 2,
+      "num": 2,
+      "product": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "match"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 24,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        3,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.j",
+      "vars.multiplications",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 20,
+    "line": 11,
+    "kind": "store",
+    "narration": "answer[3] = 0.",
+    "why": "One position settled after a full pass over the array. n such passes is the n² this approach pays and the two-pass method avoids.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 24, 0, 0]",
+      "multiplications": 12,
+      "i": 3,
+      "product": 0
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 24,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": [
+        3,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.slots",
+      "scene.tiles",
+      "vars.answer",
+      "vars.j",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 21,
+    "line": 14,
+    "kind": "return",
+    "narration": "answer = [0, 24, 0, 0] — the product of all others at every position.",
+    "why": "The same answer as the two-pass method, bought with 12 multiplications: n positions × (n-1) each. The other reuses its running products and never repeats one.",
+    "vars": {
+      "n": 4,
+      "answer": "[0, 24, 0, 0]",
+      "multiplications": 12,
+      "result": "[0, 24, 0, 0]"
+    },
+    "scene": {
+      "nums": [
+        4,
+        0,
+        2,
+        3
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 0,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 24,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        3
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.result",
+      "scene.tiles",
+      "vars.i",
+      "vars.product",
+      "vars.result"
+    ]
+  }
+]

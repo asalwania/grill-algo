@@ -6,7 +6,7 @@ Contains Duplicate first — they are the same thing twice, and this file is
 their common shape. Read `AGENTS.md` only if you think you need to break a
 rule below.
 
-**What you write:** 11 files in `content/problems/<slug>/`, plus 2 one-line
+**What you write:** 13 files in `content/problems/<slug>/`, plus 2 one-line
 edits outside it. **What you do NOT write:** anything 3D, anything 2D, any
 player, any layout, any highlighting. The learning view is SHARED and already
 built. A problem is *data plus labels*, nothing else.
@@ -88,6 +88,8 @@ content/problems/<slug>/
   chrome.ts           labels + formatters
   paper.ts            THE OTHER FILE THAT MATTERS — the handwritten dry run
   paper.test.ts       what keeps the hand-authored answers honest
+  approach.ts         THE THIRD FILE THAT MATTERS — the derivation, blank page → insight
+  approach.test.ts    what keeps the walkthrough's answers honest
   ProblemBrief.tsx    plain-words statement + the case picker
   ProblemView.tsx     4-line wrapper (copy verbatim, change 2 names)
   content.mdx         create EMPTY. The loader reads it; a missing file throws.
@@ -615,7 +617,115 @@ pass for an algorithm returning the wrong values in a convenient order.
 
 ---
 
-## 11. Register the route
+## 11. `approach.ts` + `approach.test.ts` — "HOW TO SOLVE IT"
+
+Every problem ships an approach walkthrough. It is the **third** thing you
+author (trace, then paper, then this) and the third with a test whose whole job
+is to catch you writing down a wrong answer. A problem opts in **purely by
+having the file** — `lib/content.ts` returns `null` otherwise and the header
+button is not rendered — so forgetting it fails nothing. Do not forget it.
+
+### 11a. What this is NOT
+
+It is not the trace with headings, and it is not the paper sheet. Read the
+`ApproachMove` doc in `lib/types.ts` before you start.
+
+- The trace shows the FINISHED algorithm running; the paper sheet dry-runs that
+  same finished algorithm over cases; this shows **neither** — it shows the
+  DERIVATION: how a reader gets from "I don't know how to solve this" to the
+  insight. Restate it → try the dumb thing → notice the waste → the insight →
+  the plan → poke it → the cost.
+- **A third model, deliberately.** You read it, you do not scrub it (no seek, so
+  no snapshots) and it is a structured document, not append-only ink (no
+  `changed[]`). So it is `ApproachMove[]`, each move a stage on the flow spine
+  holding a few typed `ApproachBlock`s. Do NOT unify it with `Frame` or
+  `PaperStroke` — the three answer different questions.
+- **Every block is plain JSON with pre-rendered strings**, so the whole
+  walkthrough crosses the RSC boundary as ordinary props — like the paper sheet,
+  no `"use client"` is involved anywhere in the content.
+- **`components/approach/` is shared and knows how to draw a block, nothing
+  else.** Do not touch it. It already runs the spine, the scroll-spy and every
+  block kind.
+
+### 11b. The eight-move sequence
+
+`buildApproach()` returns the moves in reading order, and the ORDER is the
+lesson, not decoration — you cannot appreciate the insight until you have felt
+the waste. Copy the sequence; write your own words into it:
+
+| # | move id | what it holds |
+| --- | --- | --- |
+| 0 | `understand` | restate it in your own words; a `caution` aside names the one word people miss (Two Sum: "indices, not values") |
+| 1 | `concrete`   | the smallest real example, worked by hand, with its answer — a one-row `checks` block |
+| 2 | `brute`      | the dumb thing that is definitely correct — a `code` block, plus a note on why you keep it |
+| 3 | `waste`      | what the brute force repeats, and the smell that names the fix |
+| 4 | `pivot`      | the one turning question, set large — a single `pivot` block, empty `title` |
+| 5 | `insight`    | **the climax.** The ONE move with `climax: true`, holding an `insight` block. Exactly one per walkthrough |
+| 6 | `plan`       | the real pseudocode — a `code` block with `mark` on the load-bearing line |
+| 7 | `poke`       | the nasty cases the plan must survive, on paper — a `checks` block |
+| 8 | `cost`       | name the trade — a `cost` block, the winning row lit against the brute one |
+
+Reorder these and it stops being a derivation and becomes a solution with
+headings — which is the trace pane, one tab over.
+
+### 11c. Worked answers are hand-authored, pinned by the test
+
+The same deliberate exception §10c makes, and the reason this is worth anything.
+`EXAMPLE.result` and every `CHECKS[].result` are your reading of the QUESTION,
+authored — never pasted from the loop.
+
+**`approach.ts` holds NO algorithm.** It is self-contained authored content.
+`approach.test.ts` imports `resultOf` from `./paper` — the one real
+implementation, already there from §10 — and pins every authored answer against
+it. Never write a second solver; that copy is what drifts.
+
+The pokes are the same three cases the canvas cannot sell (§10c), aimed one
+stage earlier — at the PLAN, before it is code: equal values that ARE the
+answer, a case that must not reuse one element, and no answer at all. Pick
+whichever your problem actually has.
+
+### 11d. The blocks you assemble
+
+The reader switches on `kind`; you only build data (`lib/types.ts` has the
+exact shapes):
+
+- `text` — a narration paragraph.
+- `restate` — labelled lines (`Given` / `True` / `Return`).
+- `code` — `{ caption?, code, mark? }`; `mark` lists 1-based lines to light.
+- `aside` — `{ tone: 'note' | 'caution', label, text }`. **`caution` is the
+  reader's red pen** — the trap, the order rule. Author at least one; Two Sum's
+  is the store-after / `[0, 0]` trap, the same one the paper sheet pins.
+- `pivot` — the turning question, one line.
+- `insight` — `{ statement, detail }`; only inside the climax move.
+- `checks` — `{ rows: ApproachCheck[] }`. Each row carries a pre-rendered
+  `input` (**format it in this file**, so the shared reader stays
+  problem-agnostic), the raw `nums`/`target` (**not for display** — so the test
+  can re-derive `result`), a `why` and the authored `result`.
+- `cost` — `{ rows: { label, time, space, win }[], takeaway }`; exactly one row
+  is `win: true`.
+
+### 11e. `approach.test.ts`
+
+Copy [two-sum/approach.test.ts](../content/problems/two-sum/approach.test.ts)
+and adapt. It must contain, at minimum:
+
+- **Every authored answer** (`EXAMPLE` + `CHECKS`) equals `resultOf(nums,
+  target)`. The load-bearing one. A second, independent brute-force pair search
+  agrees too.
+- **Every rendered `checks` row's `result`** also equals `resultOf(row.nums,
+  row.target)` — display and verification cannot drift.
+- The move ids are the eight-move sequence in order; **exactly one `climax`**,
+  and it carries the `insight` block; every move has a non-empty label and a
+  unique id.
+- Every `code` block's `mark` lands within its own line range; no `checks` row
+  has a blank field; the `cost` block names ≥2 approaches with **exactly one**
+  winner.
+- `JSON.parse(JSON.stringify(moves))` round-trips — a function or a Map here
+  fails the build with an unhelpful message far from this file.
+
+---
+
+## 12. Register the route
 
 `app/problems/[slug]/page.tsx` — two lines:
 
@@ -634,7 +744,7 @@ the scene, not the player, not the layout.
 
 ---
 
-## 12. Build and verify, in this order
+## 13. Build and verify, in this order
 
 ```
 pnpm traces        # writes cases.json, approaches.json, 4 x N frame files
@@ -649,22 +759,23 @@ pnpm build
 2-frame trace, a 400-frame trace) means the staging is wrong.
 
 `pnpm build` runs `pnpm traces` first via `prebuild`, so a stale frame file
-cannot ship. It also runs `paper.ts` — `readPaper` executes `writeSheet()` at
-build time for every problem that has the file — so a sheet that throws fails
+cannot ship. It also runs `paper.ts` AND `approach.ts` — `readPaper` executes
+`writeSheet()` and `readApproach` executes `buildApproach()` at build time for
+every problem that has the file — so a sheet or a walkthrough that throws fails
 the build rather than the page.
 
-Then open `/problems/<slug>` and **click RUN IT ON PAPER**. If the button is
-not there, `paper.ts` is missing or misnamed. Nothing else in the pipeline will
-tell you.
+Then open `/problems/<slug>` and **click both HOW TO SOLVE IT and RUN IT ON
+PAPER**. If a button is not there, its file (`approach.ts` / `paper.ts`) is
+missing or misnamed. Nothing else in the pipeline will tell you.
 
 ---
 
-## 13. Log it
+## 14. Log it
 
 Append one row to Phase 7 in [specs/progress-tracker.md](progress-tracker.md):
 
 ```
-| G<n> | <Title> | Done | YYYY-MM-DD | <owner> | `content/problems/<slug>/`, <n> approaches, paper trace |
+| G<n> | <Title> | Done | YYYY-MM-DD | <owner> | `content/problems/<slug>/`, <n> approaches, paper trace, approach walkthrough |
 ```
 
 Add a full entry below the table **only** if something deviated from this
@@ -698,8 +809,11 @@ Everything else is unchanged.
 | Duplicate React key warning in the flat view | two slots pushed with the same `key` |
 | `Incomplete data for case … / approach …` at render | `approaches.json`, frame files and `solutions/index.ts` disagree — rerun `pnpm traces` |
 | No RUN IT ON PAPER button, and nothing failed | `paper.ts` missing or misnamed — opting in IS having the file, so its absence is silent by design |
+| No HOW TO SOLVE IT button, and nothing failed | `approach.ts` missing or misnamed — same silent-by-design opt-in as the paper sheet |
 | Paper table cells spill outside the ruled columns | a row's `cells.length` disagrees with its grid's `columns.length` |
 | Paper test: *"authored expectations"* fails | good — that is the feature working. Fix the `expected` you wrote, do NOT paste in what the code returned |
+| Approach test: *"authored answers"* fails | good — same as above. Fix the `result` you wrote, do NOT paste in what the code returned |
+| `Duplicate identifier 'approach'` in the view | the walkthrough prop clashes with the selected-approach tab; it is aliased `approach: approachWalkthrough` in `ArrayMemoryProblemView` — do not un-alias it |
 
 ## Appendix C — things you must not do
 
@@ -712,10 +826,16 @@ Everything else is unchanged.
 - Do not hand-write frame JSON or a `changed[]` array.
 - Do not touch `components/paper/`. It knows how a pen looks and nothing about
   any problem; it already handles any column count and any number of tables.
-- Do not derive `PaperCase.expected` by running the code. That is the one place
-  a hand-written answer is the whole point (§10c).
-- Do not build the paper sheet out of `Frame`s, or give `PaperStroke` a
-  `changed[]`. Ink is append-only; the two models answer different questions.
+- Do not touch `components/approach/`. It knows how to draw a block and run the
+  spine, and nothing about any problem.
+- Do not derive `PaperCase.expected` — or `EXAMPLE.result` / `CHECKS[].result`
+  in `approach.ts` — by running the code. That is the one place a hand-written
+  answer is the whole point (§10c, §11c).
+- Do not put an algorithm in `approach.ts`. It holds authored content only; the
+  test drains `./paper`'s `resultOf` to pin the answers, never a second solver.
+- Do not build the paper sheet out of `Frame`s, or the approach walkthrough out
+  of `Frame`s or `PaperStroke`s. Three models, three questions — keep them
+  separate.
 - Do not add a dependency. Ask first.
 - Do not edit `content/catalog.ts`.
 - Do not put continuous or interpolated values into React state or Context —

@@ -6,6 +6,7 @@ import { join } from 'node:path'
 import { resolveCatalog } from './catalog'
 import type {
   Approach,
+  ApproachMove,
   CatalogProblem,
   Frame,
   PaperStroke,
@@ -26,6 +27,7 @@ const PROBLEMS_DIR = join(process.cwd(), 'content', 'problems')
  *   solutions/index.ts            -> export const solutions: Partial<Record<Approach, Solution[]>>
  *   content.mdx                   -> prose, returned here as raw source
  *   paper.ts                      -> export function* writeSheet(): PaperStroke (OPTIONAL)
+ *   approach.ts                   -> export function buildApproach(): ApproachMove[] (OPTIONAL)
  */
 export type Problem<TScene = unknown> = {
   meta: ProblemMeta
@@ -58,6 +60,16 @@ export type Problem<TScene = unknown> = {
    * null.
    */
   paper: PaperStroke[] | null
+  /**
+   * The approach walkthrough — the derivation, from a blank page to the
+   * solution — or `null` for a problem that has not written one.
+   *
+   * Same opt-in-by-file-existence as `paper`: a problem ships one purely by
+   * adding `approach.ts`, and the header hides the "HOW TO SOLVE IT" button
+   * when this is null. The moves are plain JSON, so they cross the RSC boundary
+   * as ordinary props.
+   */
+  approach: ApproachMove[] | null
 }
 
 export async function getProblemSlugs(): Promise<string[]> {
@@ -158,6 +170,26 @@ async function readPaper(dir: string, slug: string): Promise<PaperStroke[] | nul
   return [...(mod.writeSheet() as Generator<PaperStroke>)]
 }
 
+/**
+ * Runs the problem's approach walkthrough builder, if it has one.
+ *
+ * The exact shape of `readPaper`, and for the same reasons: existence is probed
+ * with `access` rather than a swallowed import, so a real error inside an
+ * `approach.ts` that DOES exist surfaces as a build failure rather than being
+ * silently reported to the page as "this problem has no approach". Absent means
+ * absent; broken still throws. Runs at build time (static route), so the
+ * builder never reaches the browser and only its plain-JSON result crosses.
+ */
+async function readApproach(dir: string, slug: string): Promise<ApproachMove[] | null> {
+  try {
+    await access(join(dir, 'approach.ts'))
+  } catch {
+    return null
+  }
+  const mod = await import(`../content/problems/${slug}/approach`)
+  return (mod.buildApproach as () => ApproachMove[])()
+}
+
 export async function getProblem<TScene = unknown>(
   slug: string,
 ): Promise<Problem<TScene>> {
@@ -168,12 +200,13 @@ export async function getProblem<TScene = unknown>(
     readCases(dir),
     readApproaches(dir),
   ])
-  const [meta, frames, solutionsMod, mdx, paper] = await Promise.all([
+  const [meta, frames, solutionsMod, mdx, paper, approach] = await Promise.all([
     getProblemMeta(slug),
     readFrames<TScene>(dir, cases, approaches),
     import(`../content/problems/${slug}/solutions/index`),
     readFile(join(dir, 'content.mdx'), 'utf8'),
     readPaper(dir, slug),
+    readApproach(dir, slug),
   ])
 
   return {
@@ -184,5 +217,6 @@ export async function getProblem<TScene = unknown>(
     solutions: solutionsMod.solutions as Partial<Record<Approach, Solution[]>>,
     mdx,
     paper,
+    approach,
   }
 }

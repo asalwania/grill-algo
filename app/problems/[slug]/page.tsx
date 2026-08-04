@@ -11,6 +11,7 @@ import { ProblemView as ValidAnagramView } from "@/content/problems/valid-anagra
 import { ProblemView as GroupAnagramsView } from "@/content/problems/group-anagrams/ProblemView";
 import { ProblemView as TopKFrequentElementsView } from "@/content/problems/top-k-frequent-elements/ProblemView";
 import { ProblemView as EncodeAndDecodeStringsView } from "@/content/problems/encode-and-decode-strings/ProblemView";
+import { ProblemView as ProductOfArrayExceptSelfView } from "@/content/problems/product-of-array-except-self/ProblemView";
 
 const LANGUAGES: Language[] = ["javascript", "python", "java", "go"];
 
@@ -38,6 +39,7 @@ const VIEWS: Record<
   "group-anagrams": GroupAnagramsView,
   "top-k-frequent-elements": TopKFrequentElementsView,
   "encode-and-decode-strings": EncodeAndDecodeStringsView,
+  "product-of-array-except-self": ProductOfArrayExceptSelfView,
 };
 
 export async function generateStaticParams() {
@@ -132,6 +134,9 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
       // and what crosses is JSON. `null` for a problem with no paper.ts, and
       // the view simply does not offer the button.
       paper={problem.paper}
+      // Same deal as `paper`: the approach walkthrough ran at build time and
+      // crosses as JSON. `null` for a problem with no approach.ts.
+      approach={problem.approach}
     />
   );
 }
