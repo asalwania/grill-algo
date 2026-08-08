@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ComponentType, ReactNode } from "react";
 import { CodePane } from "@/components/panels/CodePane";
-import type { ArrayMemoryProblemViewProps } from "@/components/problem";
-import { getProblem, getProblemMeta, getProblemSlugs } from "@/lib/content";
-import type { Approach, ArrayMemoryScene, Language } from "@/lib/types";
+import type { ArrayMemoryProblemViewProps, GridProblemViewProps } from "@/components/problem";
+import { getProblem, getProblemMeta, getProblemSlugs, type Problem } from "@/lib/content";
+import type { Approach, ArrayMemoryScene, GridScene, Language } from "@/lib/types";
 import { ProblemView as TwoSumView } from "@/content/problems/two-sum/ProblemView";
 import { ProblemView as ContainsDuplicateView } from "@/content/problems/contains-duplicate/ProblemView";
 import { ProblemView as ValidAnagramView } from "@/content/problems/valid-anagram/ProblemView";
@@ -12,24 +12,29 @@ import { ProblemView as GroupAnagramsView } from "@/content/problems/group-anagr
 import { ProblemView as TopKFrequentElementsView } from "@/content/problems/top-k-frequent-elements/ProblemView";
 import { ProblemView as EncodeAndDecodeStringsView } from "@/content/problems/encode-and-decode-strings/ProblemView";
 import { ProblemView as ProductOfArrayExceptSelfView } from "@/content/problems/product-of-array-except-self/ProblemView";
+import { ProblemView as ValidSudokuView } from "@/content/problems/valid-sudoku/ProblemView";
 
 const LANGUAGES: Language[] = ["javascript", "python", "java", "go"];
 
 /**
- * Slug -> the problem's own client view.
+ * Slug -> the problem's own client view, split by scene family (see
+ * `GRID_VIEWS` below) since each family's view expects a differently-typed
+ * `chrome`/`framesByCase` and `getProblem` has to be called with the matching
+ * `TScene`.
  *
- * Each entry is a thin wrapper supplying that problem's `ProblemChrome` and
- * brief to the shared `ArrayMemoryProblemView`; everything else on the page is
- * common. A registry rather than a prop because chrome holds functions, which
- * cannot cross the RSC boundary — so the choice has to be made by importing a
- * client module, not by passing data to one.
+ * Each entry is a thin wrapper supplying that problem's chrome and brief to
+ * the shared view; everything else on the page is common. A registry rather
+ * than a prop because chrome holds functions, which cannot cross the RSC
+ * boundary — so the choice has to be made by importing a client module, not
+ * by passing data to one.
  *
  * Note this bundles every registered problem's chrome into the one
  * `/problems/[slug]` route. That is inherent to a dynamic route (a client-side
- * registry would do the same), and at two problems it is a few hundred bytes;
- * it becomes worth revisiting — via `next/dynamic` per slug — well before 150.
+ * registry would do the same), and at eight problems it is a few hundred
+ * bytes; it becomes worth revisiting — via `next/dynamic` per slug — well
+ * before 150.
  */
-const VIEWS: Record<
+const ARRAY_VIEWS: Record<
   string,
   ComponentType<Omit<ArrayMemoryProblemViewProps, "chrome" | "brief">>
 > = {
@@ -40,6 +45,14 @@ const VIEWS: Record<
   "top-k-frequent-elements": TopKFrequentElementsView,
   "encode-and-decode-strings": EncodeAndDecodeStringsView,
   "product-of-array-except-self": ProductOfArrayExceptSelfView,
+};
+
+/** The grid-problem family's own registry — see `ARRAY_VIEWS`. */
+const GRID_VIEWS: Record<
+  string,
+  ComponentType<Omit<GridProblemViewProps, "chrome" | "brief">>
+> = {
+  "valid-sudoku": ValidSudokuView,
 };
 
 export async function generateStaticParams() {
@@ -67,24 +80,18 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProblemPage({ params }: ProblemPageProps) {
-  const { slug } = await params;
-
-  const View = VIEWS[slug];
-  // A content directory with no registered view is a half-built problem, not
-  // a 500 — generateStaticParams reads the directory, so this is reachable the
-  // moment someone scaffolds content/problems/<slug>/ without wiring it up.
-  if (!View) notFound();
-
-  const problem = await getProblem<ArrayMemoryScene>(slug);
-
+/**
+ * Panes/lineMaps/lines are generic over `TScene` — they only ever touch
+ * `Approach`/`Language`/`frame.line`, never `frame.scene` — so this is shared
+ * by both families rather than duplicated per registry.
+ */
+function buildPaneProps<TScene>(problem: Problem<TScene>, slug: string) {
   const panes: Partial<Record<Approach, Record<Language, ReactNode>>> = {};
   const lineMaps: Partial<
     Record<Approach, Record<Language, Record<number, number>>>
   > = {};
-  // Panes and lineMaps are per approach x language only — a code listing never
-  // depends on which input is playing. `lines` does, since it is the trace's
-  // own per-step line sequence.
+  // `lines` depends on which input is playing (it's the trace's own per-step
+  // line sequence); panes/lineMaps are per approach x language only.
   const lines: Record<string, Partial<Record<Approach, number[]>>> = {};
 
   // Driven by the problem's OWN approaches (approaches.json), not the
@@ -121,22 +128,57 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
     lines[testCase.id] = perApproach;
   }
 
-  return (
-    <View
-      meta={problem.meta}
-      cases={problem.cases}
-      approaches={problem.approaches}
-      framesByCase={problem.frames}
-      panes={panes}
-      lineMaps={lineMaps}
-      lines={lines}
-      // Plain data, unlike `chrome` — the generator ran here, at build time,
-      // and what crosses is JSON. `null` for a problem with no paper.ts, and
-      // the view simply does not offer the button.
-      paper={problem.paper}
-      // Same deal as `paper`: the approach walkthrough ran at build time and
-      // crosses as JSON. `null` for a problem with no approach.ts.
-      approach={problem.approach}
-    />
-  );
+  return { panes, lineMaps, lines };
+}
+
+export default async function ProblemPage({ params }: ProblemPageProps) {
+  const { slug } = await params;
+
+  // A content directory with no registered view is a half-built problem, not
+  // a 500 — generateStaticParams reads the directory, so this is reachable the
+  // moment someone scaffolds content/problems/<slug>/ without wiring it up.
+  const ArrayView = ARRAY_VIEWS[slug];
+  if (ArrayView) {
+    const problem = await getProblem<ArrayMemoryScene>(slug);
+    const { panes, lineMaps, lines } = buildPaneProps(problem, slug);
+    return (
+      <ArrayView
+        meta={problem.meta}
+        cases={problem.cases}
+        approaches={problem.approaches}
+        framesByCase={problem.frames}
+        panes={panes}
+        lineMaps={lineMaps}
+        lines={lines}
+        // Plain data, unlike `chrome` — the generator ran here, at build time,
+        // and what crosses is JSON. `null` for a problem with no paper.ts, and
+        // the view simply does not offer the button.
+        paper={problem.paper}
+        // Same deal as `paper`: the approach walkthrough ran at build time and
+        // crosses as JSON. `null` for a problem with no approach.ts.
+        approach={problem.approach}
+      />
+    );
+  }
+
+  const GridView = GRID_VIEWS[slug];
+  if (GridView) {
+    const problem = await getProblem<GridScene>(slug);
+    const { panes, lineMaps, lines } = buildPaneProps(problem, slug);
+    return (
+      <GridView
+        meta={problem.meta}
+        cases={problem.cases}
+        approaches={problem.approaches}
+        framesByCase={problem.frames}
+        panes={panes}
+        lineMaps={lineMaps}
+        lines={lines}
+        paper={problem.paper}
+        approach={problem.approach}
+      />
+    );
+  }
+
+  notFound();
 }

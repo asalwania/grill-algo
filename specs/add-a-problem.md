@@ -840,3 +840,59 @@ Everything else is unchanged.
 - Do not edit `content/catalog.ts`.
 - Do not put continuous or interpolated values into React state or Context —
   only the discrete step index and boolean flags.
+
+## Appendix D — grid problems (2D boards)
+
+This whole recipe assumes `ArrayMemoryScene` — a flat `nums`, one `cursor`, at
+most one memory structure. That is the right shape for every Arrays & Hashing
+problem so far, but it has no honest reading for a problem whose input is
+genuinely 2D with more than one constraint at once (Valid Sudoku's row/column/
+box; likely also Search a 2D Matrix, Word Search, Number of Islands, Rotting
+Oranges). Flattening one of those into `nums` renders as a line of tiles with
+no board structure visible — do not do that. Use the GRID family instead
+(G8, `specs/progress-tracker.md`), which exists for exactly this shape:
+
+- **Types**: `GridScene`, `GridCellState`, `GridFrame` in `lib/types.ts`.
+  `GridScene` is `{ rows, cols, values, cells, cursor, link, result }` — same
+  "canvas reads only states and a flat index" discipline as `ArrayMemoryScene`.
+- **Scene**: `components/scene/GridScene.tsx` (3D, XZ-plane layout) +
+  `GridLabelLayer.tsx` (DOM value chips, no index caption — a board position
+  is already legible from where the cell sits). Both take an OPTIONAL
+  `boxSize?: {rows,cols}` purely for a checkerboard/ruling accent — never use
+  it to decide a cell's STATE, only its resting tint. A grid problem with no
+  sub-block structure omits it.
+- **View layer**: `GridFlatView.tsx`, `GridScenePanel.tsx`, `GridProblemView.tsx`,
+  `GridChrome`, `GridProblemBriefProps` in `components/problem/` — the grid
+  family's counterparts to `FlatView`/`ScenePanel`/`ArrayMemoryProblemView`/
+  `ProblemChrome`/`ProblemBriefProps`. `ProblemHeader` and everything in
+  `components/player/`, `components/paper/`, `components/approach/` are
+  reused UNCHANGED — they were already scene-agnostic.
+- **No memory wall.** There is no grid equivalent of `slots`/`MemoryWall`/
+  `LookupBeam`. Use `GridCellState`'s `'peer'` value instead — mark cells that
+  share the active cell's row/column/box (or whatever your problem's adjacency
+  is) as `'peer'`. This is not decorative: it should be exactly the set your
+  optimized approach's lookups are implicitly checking against, the same way
+  G8's peers ARE the cells its shared map would hit.
+- **No camera choreography.** A board that fits in one static
+  `initialCameraPosition` doesn't need `SceneShell`'s F12 dolly machinery.
+  Porting it is real, separate scope — only take it on if your board genuinely
+  doesn't fit one establishing shot.
+- **`TestCase.nums` / `PaperCase.nums` still carry the board** — row-major,
+  flattened, same repurposing precedent as Appendix A. `GridChrome`'s
+  `formatCaseInput` takes `rows`/`cols` as separate params since `TestCase`
+  itself carries neither.
+- **`GridProblemView`'s `found` pill keys off `chrome.formatAnswer(result) ===
+  "true"`**, not off `result !== null` the way the array family's does. Do not
+  copy the array family's formula — whether "result populated" is the
+  good-news or bad-news case depends on what your problem's `result` pair
+  actually represents (G8's is a CONFLICT, so populated means invalid).
+- **Re-check F1's "every frame must change scene" against a sparse board.** A
+  board empty enough that nothing is ever compared can make init and the
+  exhausted frame scene-identical — G8's fix (sweep every still-`idle` cell to
+  `'done'` on the exhausted frame) is the reusable pattern; a 6-element array
+  never hits this case, so do not assume the array family's generators already
+  cover it.
+- **`app/problems/[slug]/page.tsx` needs a `GRID_VIEWS` entry**, alongside
+  `ARRAY_VIEWS` — not a change to the existing registry. `getProblem<GridScene>`
+  for a grid slug, `getProblem<ArrayMemoryScene>` for an array one. The shared
+  `buildPaneProps<TScene>` helper needs no change either way.

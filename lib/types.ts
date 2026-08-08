@@ -133,6 +133,51 @@ export type TwoSumScene = ArrayMemoryScene & { target: number }
 export type TwoSumFrame = Frame<TwoSumScene>
 
 // ---------------------------------------------------------------------------
+// Grid scene
+// ---------------------------------------------------------------------------
+
+/**
+ * `peer` marks a cell already-processed and sharing a row/column/box with the
+ * cell currently under the beam — the set an optimized lookup is implicitly
+ * checking against. Not decorative: a trace that never sets it is throwing
+ * away the one thing a 2D board can show that a 1D array can't.
+ */
+export type GridCellState = 'idle' | 'active' | 'peer' | 'done' | 'conflict'
+
+/**
+ * Geometry-bearing state only, same discipline as ArrayMemoryScene: the
+ * canvas reads only cell STATES and a flat INDEX, never a value. Shared by the
+ * grid-problem family — 2D board problems with no honest 1D reading (Valid
+ * Sudoku, and any future Arrays & Hashing / Matrix problem shaped like it).
+ *
+ * Deliberately NOT a fork of ArrayMemoryScene: a 9x9 board has three
+ * overlapping constraint sets (row, column, box) at once, which a flat
+ * `nums` + single `cursor` can't express without losing the structure that
+ * makes the problem worth visualizing in the first place.
+ */
+export type GridScene = {
+  rows: number
+  cols: number
+  /** Row-major, length rows*cols. 0 is an empty cell. */
+  values: number[]
+  /** Row-major, one per cell. */
+  cells: GridCellState[]
+  /** Flat index (row*cols + col) of the cell under the beam, or null. */
+  cursor: number | null
+  /** Transient: the two flat cell indices currently being compared. */
+  link: [number, number] | null
+  /**
+   * The two flat cell indices that conflict, once found — null both while
+   * still running and if the board is valid (ProblemChrome.formatAnswer is
+   * what turns `result !== null` back into the boolean the problem asks for,
+   * same convention ArrayMemoryScene's `result` already uses).
+   */
+  result: [number, number] | null
+}
+
+export type GridFrame = Frame<GridScene>
+
+// ---------------------------------------------------------------------------
 // Content
 // ---------------------------------------------------------------------------
 

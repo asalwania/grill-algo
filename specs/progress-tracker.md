@@ -136,6 +136,7 @@ single-problem machinery into a reusable family is recorded here.
 | G5 | Top K Frequent Elements | Done | 2026-07-28 | Ajay | `content/problems/top-k-frequent-elements/`, three approaches, first problem to use `scene.target` as a genuine parameter (k) — see full entry below |
 | G6 | Encode and Decode Strings | Done | 2026-07-29 | Ajay | `content/problems/encode-and-decode-strings/`, two approaches, paper trace. First problem whose trace is a ROUND TRIP and whose two approaches share a complexity — see full entry below |
 | G7 | Product of Array Except Self | Done | 2026-08-04 | Ajay | `content/problems/product-of-array-except-self/`, two approaches, paper trace. First problem whose ANSWER is an output array — the memory wall becomes it (index → product) — see full entry below |
+| G8 | Valid Sudoku — new GRID scene family | Done | 2026-08-04 | Ajay | `lib/types.ts` (`GridScene`), `components/scene/GridScene.tsx` + `GridLabelLayer.tsx`, `components/problem/Grid*`, `app/problems/[slug]/page.tsx` branch, `content/problems/valid-sudoku/`. First problem NOT in the array-plus-memory family — see full entry below |
 
 ---
 
@@ -1660,3 +1661,124 @@ problems, and `readPaper` ran the sheet at build time). **Not verified: anything
 visual** — the wall rendering n filled slots as the answer, the two-pass sweep,
 and the two-table sheet in the dialog all still want one browser pass, the same
 gap every problem since H2 has carried.
+
+### G8 — Valid Sudoku — new GRID scene family
+
+**Status:** Done
+**Date:** 2026-08-04
+**Owner:** Ajay
+
+The eighth problem, and the first that does NOT fit `ArrayMemoryScene`. Valid
+Sudoku is a 9x9 board checked against three overlapping constraint sets (row,
+column, box) — flattening it into a 1D `nums` row (as every problem G2-G7
+does) would render as a line of 81 tiles with no board structure visible,
+defeating the point of visualizing it. User-confirmed decision, via
+AskUserQuestion, before any code was written: build a real parallel grid scene
+family rather than shoehorn. This is the kind of decision G1 made for arrays
+and is recorded fully here so the NEXT grid problem (Search a 2D Matrix, Word
+Search, Number of Islands, Rotting Oranges, ...) does not re-litigate it.
+
+**What's new (the grid family), additive-only — nothing existing changed:**
+- `lib/types.ts`: `GridCellState = 'idle'|'active'|'peer'|'done'|'conflict'`,
+  `GridScene` (`rows`, `cols`, `values`, `cells`, `cursor`, `link`, `result`),
+  `GridFrame`. Same discipline as `ArrayMemoryScene`: the canvas reads only
+  cell STATES and a flat INDEX, never a value.
+- `components/scene/GridScene.tsx` (3D) + `GridLabelLayer.tsx` (DOM overlay),
+  modeled on `ArrayMemoryScene.tsx`'s conventions (imperative `frameRef` +
+  `useFrame` damping, same `DAMPING`/`SETTLE_EPSILON`, `ReflectiveGround`
+  reused verbatim) but laid out on the XZ plane instead of a single row.
+- `components/problem/GridFlatView.tsx`, `GridScenePanel.tsx`,
+  `GridProblemView.tsx`, plus `GridChrome`/`GridProblemBriefProps` in
+  `components/problem/types.ts` — the grid family's forks of `FlatView.tsx`,
+  `ScenePanel.tsx`, `ArrayMemoryProblemView.tsx` and `ProblemChrome`.
+  `ProblemHeader`, all of `components/player/`, `components/paper/` and
+  `components/approach/` needed ZERO changes — confirmed genuinely
+  scene-agnostic, exactly as their doc comments claimed.
+- `app/problems/[slug]/page.tsx`: the one existing file touched. `VIEWS` split
+  into `ARRAY_VIEWS`/`GRID_VIEWS`, each keyed to its own `getProblem<TScene>`
+  call; the panes/lineMaps/lines-building loop (already scene-agnostic)
+  extracted into a shared `buildPaneProps<TScene>` helper so it isn't
+  duplicated. The 7 existing problems' code path is byte-for-byte unchanged.
+
+**Decisions a future grid problem should inherit, not re-derive:**
+- **No memory wall.** The array family's `slots` has no grid equivalent here —
+  a `GridCellState = 'peer'` does that job instead: it marks already-processed
+  cells sharing the active cell's row/column/box, which is exactly the set the
+  optimized approach's map lookups are implicitly checking against. Not
+  decorative — it's algorithmically faithful, and it costs no second structure
+  to render (no `MemoryWall`/`LookupBeam` port).
+- **`peer` unlights a box's structure via a plain checkerboard, not literal box
+  geometry.** `GridScene.tsx` tints idle cells by `(row+col)%2` unless an
+  OPTIONAL `boxSize?: {rows,cols}` prop is supplied (Sudoku passes `{3,3}`),
+  which only changes which two cells share a tint — the scene still never
+  hard-codes "3x3 box" as a concept. Keeps the canvas problem-agnostic the way
+  G1 rule 1 requires, for a family where "sub-block structure" is optional,
+  not universal (a future Search a 2D Matrix has none).
+- **No camera choreography (no F12 port).** A 9x9 board is small enough to
+  frame entirely in one static `initialCameraPosition` — unlike a long array
+  where dollying to the active tile matters. Real, separate scope if a future
+  grid problem is too large to fit in one static shot.
+- **`TestCase`/`PaperCase` needed no changes.** A board packs into the
+  existing `nums: number[]` as 81 row-major values (0 = empty cell) — the same
+  repurposing precedent Valid Anagram set for `target` (`add-a-problem.md`
+  Appendix A). `GridChrome.formatCaseInput(values, rows, cols)` takes rows/cols
+  as separate params since `TestCase` carries neither.
+- **The `found` pill can't reuse the array family's `result !== null` formula.**
+  For Contains Duplicate, "result populated" always happens to be the
+  green/positive story (a duplicate WAS found). For a grid problem `result` is
+  the CONFLICT — populated means INVALID. `GridProblemView`'s `found` keys off
+  `chrome.formatAnswer(result) === "true"` instead, which is correct regardless
+  of which way a problem's `result`-to-boolean mapping points.
+- **F1's "every frame must change scene" has a real degenerate case a 6-element
+  array never hits: a board sparse enough that NOTHING is ever compared** (an
+  empty board, or one so sparse every row/column/box has fewer than 2 filled
+  cells). Both generators' exhausted-frame now sweeps every still-`idle` cell
+  to `'done'` — a no-op on any normal board (filled cells are already `'done'`
+  by then) but the only thing that saves the degenerate case from an
+  init-equals-exhausted frame. `trace.test.ts`'s "empty board" / "single filled
+  cell" cases exist specifically to catch this; they failed before the sweep
+  was added.
+
+**The algorithm, real not invented:** `optimized` is one shared
+`Map<string, cellIndex>` keyed by encoded `r{row}d{digit}` /`c{col}d{digit}` /
+`b{box}d{digit}` strings — one pass, O(n²) time / O(n²) space (n = board
+dimension, not the literal 81). `brute` is three FULLY SEPARATE passes (rows,
+then columns, then boxes), each group getting its own throwaway `Set`
+discarded before the next group — O(n³) time / O(1) space. No `sorted` tab — a
+board has no order to sort by. Frame staging is coarser than the array family's
+three-beat convention (2 beats per filled cell for optimized: light +
+peer-highlight, then resolve; 1 beat per non-trivial group for brute, the
+group's own uniqueness check computed off-screen, same sanctioned technique as
+the sorted trace's off-screen sort) — deliberate, since an 81-cell board is
+much bigger than a 6-8 element array and the three-beat convention was sized
+for that.
+
+**Test cases** are realistic sparse boards (LeetCode's own boards never come
+fully filled): `sample` = LeetCode's own invalid example (a duplicate 8 in
+column 1, found on the 11th filled cell — good "grinds through some before
+failing" story), `first-pair` = two 5s in row 1 (conflict on the second filled
+cell), `late-answer` = 4 harmless scattered givens plus two 7s sharing ONLY a
+box (no row/column conflict) — invisible to row- and column-checking alone,
+and for brute specifically it's the literal LAST of the 27 groups checked (all
+26 before it skip outright, having &lt;2 filled cells). `no-answer` = LeetCode's
+own valid example (30 filled cells, every group runs to completion — mandatory
+per the recipe).
+
+Verified: `pnpm traces` (sample 19/21, first-pair 5/3, late-answer 13/5,
+no-answer 62/48 optimized/brute — all in the tens as intended, not hundreds),
+`tsc --noEmit`, `pnpm test` (2020 passing), `eslint` (clean on every new file),
+`pnpm build` (statically generates `/problems/valid-sudoku`, 8 problems now).
+**Verified visually, unlike G2-G7's gap**: a full `pnpm dev` browser pass on
+`/problems/valid-sudoku` — 3D board renders as an actual 9x9 grid with
+checkerboard tint, `active`/`peer`/`done` states light correctly while
+scrubbing, the conflict beam draws across the XZ plane and both conflicting
+cells flash amber, the 2D flat view renders a real ruled 9x9 grid with box
+borders and a "conflict at row X, col Y and row X, col Y" caption, both
+approach tabs work, RUN IT ON PAPER's table (literally 1 row per filled cell,
+not a board dump) and HOW TO SOLVE IT's 8-move walkthrough both open and
+complete correctly, and `/problems/two-sum` still loads and animates
+unchanged — confirming the `page.tsx` branch didn't regress the array family.
+One bug the browser pass caught that no test did: `paper.ts`'s "seen AFTER"
+action column was echoing the internal 0-based map keys (`+r0d8`) against a
+1-based "already has it?" column (`r1✗`) — fixed to a separate 1-based display
+key, distinct from the 0-based key actually used for the Map lookup.

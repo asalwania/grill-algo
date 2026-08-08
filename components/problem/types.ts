@@ -84,3 +84,36 @@ export type ProblemBriefProps = {
   className?: string;
   style?: CSSProperties;
 };
+
+/**
+ * `ProblemChrome`'s sibling for the grid-problem family. Considerably
+ * smaller: there is no memory wall or probe pill for this family (GridScene
+ * has no `slots`), so `memoryLabel`/`formatProbe`/`formatArrayCaption` have
+ * no grid equivalent — the `peer` cell state carries that story instead, and
+ * it needs no DOM chrome to explain itself.
+ */
+export type GridChrome = {
+  complexity: Partial<Record<Approach, { time: string; space: string }>>;
+  /**
+   * The answer as the PROBLEM states it, from the pair that decided it —
+   * same boolean-via-pair convention as `ProblemChrome.formatAnswer`. `null`
+   * is the valid-board case.
+   */
+  formatAnswer: (result: [number, number] | null) => string;
+  /**
+   * One line naming what a case's board is, for the picker card. A full
+   * board isn't readable as one inline string the way an array is, so this
+   * is a summary (e.g. filled-cell count), not a literal dump of `values`.
+   */
+  formatCaseInput: (values: number[], rows: number, cols: number) => string;
+};
+
+/** `ProblemBriefProps`'s sibling for the grid-problem family. */
+export type GridProblemBriefProps = {
+  cases: TestCase[];
+  answers: Record<string, string>;
+  found: Record<string, boolean>;
+  chrome: GridChrome;
+  className?: string;
+  style?: CSSProperties;
+};

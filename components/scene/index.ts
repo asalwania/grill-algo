@@ -5,3 +5,5 @@ export {
   type SlotScreenPosition,
   type TileScreenPosition,
 } from "./ArrayMemoryScene";
+export { GridScene, type CellScreenPosition, type GridBoxSize } from "./GridScene";
+export { GridLabelLayer, type GridLabelLayerHandle } from "./GridLabelLayer";
