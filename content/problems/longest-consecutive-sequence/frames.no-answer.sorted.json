@@ -1,0 +1,256 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "The numbers as they arrived, in no particular order.",
+    "why": "A run can be scattered anywhere in here. Sorting turns \"is this value one more than some other value in the array\" into \"is this value one more than the one right beside it\".",
+    "vars": {
+      "n": 4,
+      "longest": 1,
+      "current": 1
+    },
+    "scene": {
+      "nums": [
+        50,
+        10,
+        70,
+        30
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 2,
+    "kind": "store",
+    "narration": "Sorted: 10, 30, 50, 70.",
+    "why": "Once ordered, a run of consecutive values is a run of NEIGHBOURS — walking left to right and comparing each value with the one before it is now enough.",
+    "vars": {
+      "n": 4,
+      "longest": 1,
+      "current": 1,
+      "sorted": "10, 30, 50, 70"
+    },
+    "scene": {
+      "nums": [
+        10,
+        30,
+        50,
+        70
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.nums",
+      "scene.tiles",
+      "vars.sorted"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 10,
+    "kind": "compare",
+    "narration": "30 is not one more than 10 — a new run starts here, at length 1.",
+    "why": "The gap breaks the chain for good: nothing later can extend a run that already ended, because the array is sorted and can only move forward.",
+    "vars": {
+      "n": 4,
+      "longest": 1,
+      "current": 30,
+      "i": 1,
+      "previous": 10,
+      "run": 1
+    },
+    "scene": {
+      "nums": [
+        10,
+        30,
+        50,
+        70
+      ],
+      "tiles": [
+        "active",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        1
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.current",
+      "vars.i",
+      "vars.previous",
+      "vars.run",
+      "vars.sorted"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 10,
+    "kind": "compare",
+    "narration": "50 is not one more than 30 — a new run starts here, at length 1.",
+    "why": "The gap breaks the chain for good: nothing later can extend a run that already ended, because the array is sorted and can only move forward.",
+    "vars": {
+      "n": 4,
+      "longest": 1,
+      "current": 50,
+      "i": 2,
+      "previous": 30,
+      "run": 1
+    },
+    "scene": {
+      "nums": [
+        10,
+        30,
+        50,
+        70
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "active",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.current",
+      "vars.i",
+      "vars.previous"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 10,
+    "kind": "compare",
+    "narration": "70 is not one more than 50 — a new run starts here, at length 1.",
+    "why": "The gap breaks the chain for good: nothing later can extend a run that already ended, because the array is sorted and can only move forward.",
+    "vars": {
+      "n": 4,
+      "longest": 1,
+      "current": 70,
+      "i": 3,
+      "previous": 50,
+      "run": 1
+    },
+    "scene": {
+      "nums": [
+        10,
+        30,
+        50,
+        70
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "active"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        3
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.current",
+      "vars.i",
+      "vars.previous"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 14,
+    "kind": "return",
+    "narration": "The longest run has length 1, starting at 10.",
+    "why": "The sort costs O(n log n) up front; the walk after it is a single O(n) pass with no lookups at all — cheaper per step than the optimized approach, just not cheaper overall.",
+    "vars": {
+      "n": 4,
+      "longest": 1,
+      "result": "1"
+    },
+    "scene": {
+      "nums": [
+        10,
+        30,
+        50,
+        70
+      ],
+      "tiles": [
+        "match",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.result",
+      "scene.tiles",
+      "vars.current",
+      "vars.i",
+      "vars.previous",
+      "vars.result",
+      "vars.run"
+    ]
+  }
+]

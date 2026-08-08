@@ -2,8 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { ComponentType, ReactNode } from "react";
 import { CodePane } from "@/components/panels/CodePane";
-import type { ArrayMemoryProblemViewProps, GridProblemViewProps } from "@/components/problem";
-import { getProblem, getProblemMeta, getProblemSlugs, type Problem } from "@/lib/content";
+import type {
+  AdjacentProblem,
+  ArrayMemoryProblemViewProps,
+  GridProblemViewProps,
+} from "@/components/problem";
+import { getCatalog, getProblem, getProblemMeta, getProblemSlugs, type Problem } from "@/lib/content";
+import { readyProblems } from "@/lib/catalog";
 import type { Approach, ArrayMemoryScene, GridScene, Language } from "@/lib/types";
 import { ProblemView as TwoSumView } from "@/content/problems/two-sum/ProblemView";
 import { ProblemView as ContainsDuplicateView } from "@/content/problems/contains-duplicate/ProblemView";
@@ -13,6 +18,7 @@ import { ProblemView as TopKFrequentElementsView } from "@/content/problems/top-
 import { ProblemView as EncodeAndDecodeStringsView } from "@/content/problems/encode-and-decode-strings/ProblemView";
 import { ProblemView as ProductOfArrayExceptSelfView } from "@/content/problems/product-of-array-except-self/ProblemView";
 import { ProblemView as ValidSudokuView } from "@/content/problems/valid-sudoku/ProblemView";
+import { ProblemView as LongestConsecutiveSequenceView } from "@/content/problems/longest-consecutive-sequence/ProblemView";
 
 const LANGUAGES: Language[] = ["javascript", "python", "java", "go"];
 
@@ -45,6 +51,7 @@ const ARRAY_VIEWS: Record<
   "top-k-frequent-elements": TopKFrequentElementsView,
   "encode-and-decode-strings": EncodeAndDecodeStringsView,
   "product-of-array-except-self": ProductOfArrayExceptSelfView,
+  "longest-consecutive-sequence": LongestConsecutiveSequenceView,
 };
 
 /** The grid-problem family's own registry — see `ARRAY_VIEWS`. */
@@ -131,6 +138,27 @@ function buildPaneProps<TScene>(problem: Problem<TScene>, slug: string) {
   return { panes, lineMaps, lines };
 }
 
+/**
+ * The problem immediately before/after `slug` in the catalog's authored
+ * order, restricted to what's built — the same list and order as
+ * `/problems`' "Available now" section. `null` at either end (Two Sum has no
+ * prev, the newest problem has no next).
+ */
+async function getAdjacentProblems(
+  slug: string,
+): Promise<{ prev: AdjacentProblem | null; next: AdjacentProblem | null }> {
+  const ready = readyProblems(await getCatalog());
+  const index = ready.findIndex((problem) => problem.slug === slug);
+  const toAdjacent = (problem: (typeof ready)[number]): AdjacentProblem => ({
+    slug: problem.slug,
+    title: problem.title,
+  });
+  return {
+    prev: index > 0 ? toAdjacent(ready[index - 1]) : null,
+    next: index >= 0 && index < ready.length - 1 ? toAdjacent(ready[index + 1]) : null,
+  };
+}
+
 export default async function ProblemPage({ params }: ProblemPageProps) {
   const { slug } = await params;
 
@@ -141,6 +169,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   if (ArrayView) {
     const problem = await getProblem<ArrayMemoryScene>(slug);
     const { panes, lineMaps, lines } = buildPaneProps(problem, slug);
+    const { prev, next } = await getAdjacentProblems(slug);
     return (
       <ArrayView
         meta={problem.meta}
@@ -157,6 +186,8 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
         // Same deal as `paper`: the approach walkthrough ran at build time and
         // crosses as JSON. `null` for a problem with no approach.ts.
         approach={problem.approach}
+        prev={prev}
+        next={next}
       />
     );
   }
@@ -165,6 +196,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   if (GridView) {
     const problem = await getProblem<GridScene>(slug);
     const { panes, lineMaps, lines } = buildPaneProps(problem, slug);
+    const { prev, next } = await getAdjacentProblems(slug);
     return (
       <GridView
         meta={problem.meta}
@@ -176,6 +208,8 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
         lines={lines}
         paper={problem.paper}
         approach={problem.approach}
+        prev={prev}
+        next={next}
       />
     );
   }

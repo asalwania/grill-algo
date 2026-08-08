@@ -1,0 +1,1959 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "An empty set, and one pass to fill it.",
+    "why": "A run can only be confirmed by asking whether specific neighbouring values exist, and a set answers \"is this value present?\" in one step no matter how large it grows.",
+    "vars": {
+      "n": 6,
+      "seen": "{}",
+      "longest": 0
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 3,
+    "kind": "compare",
+    "narration": "Take nums[0] = 30.",
+    "why": "Every element is read exactly once here — the real work happens in the second pass, once the whole set is known.",
+    "vars": {
+      "n": 6,
+      "seen": "{}",
+      "longest": 0,
+      "i": 0,
+      "num": 30
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 4,
+    "kind": "store",
+    "narration": "New value. Remember 30.",
+    "why": "Order does not matter here, only membership — which is exactly what a set is for.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30 }",
+      "longest": 0,
+      "i": 0,
+      "num": 30,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": 30,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.found",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 3,
+    "kind": "compare",
+    "narration": "Take nums[1] = 40.",
+    "why": "Every element is read exactly once here — the real work happens in the second pass, once the whole set is known.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30 }",
+      "longest": 0,
+      "i": 1,
+      "num": 40
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.found",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 4,
+    "kind": "store",
+    "narration": "New value. Remember 40.",
+    "why": "Order does not matter here, only membership — which is exactly what a set is for.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40 }",
+      "longest": 0,
+      "i": 1,
+      "num": 40,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": 40,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.found",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 3,
+    "kind": "compare",
+    "narration": "Take nums[2] = 20.",
+    "why": "Every element is read exactly once here — the real work happens in the second pass, once the whole set is known.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40 }",
+      "longest": 0,
+      "i": 2,
+      "num": 20
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.found",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 4,
+    "kind": "store",
+    "narration": "New value. Remember 20.",
+    "why": "Order does not matter here, only membership — which is exactly what a set is for.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20 }",
+      "longest": 0,
+      "i": 2,
+      "num": 20,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        }
+      ],
+      "probe": 20,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.found",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 3,
+    "kind": "compare",
+    "narration": "Take nums[3] = 1.",
+    "why": "Every element is read exactly once here — the real work happens in the second pass, once the whole set is known.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20 }",
+      "longest": 0,
+      "i": 3,
+      "num": 1
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.found",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 4,
+    "kind": "store",
+    "narration": "New value. Remember 1.",
+    "why": "Order does not matter here, only membership — which is exactly what a set is for.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1 }",
+      "longest": 0,
+      "i": 3,
+      "num": 1,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        }
+      ],
+      "probe": 1,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.found",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 3,
+    "kind": "compare",
+    "narration": "Take nums[4] = 2.",
+    "why": "Every element is read exactly once here — the real work happens in the second pass, once the whole set is known.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1 }",
+      "longest": 0,
+      "i": 4,
+      "num": 2
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 4,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.found",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 4,
+    "kind": "store",
+    "narration": "New value. Remember 2.",
+    "why": "Order does not matter here, only membership — which is exactly what a set is for.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2 }",
+      "longest": 0,
+      "i": 4,
+      "num": 2,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": 4,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        }
+      ],
+      "probe": 2,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.found",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 3,
+    "kind": "compare",
+    "narration": "Take nums[5] = 3.",
+    "why": "Every element is read exactly once here — the real work happens in the second pass, once the whole set is known.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2 }",
+      "longest": 0,
+      "i": 5,
+      "num": 3
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 5,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.found",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 4,
+    "kind": "store",
+    "narration": "New value. Remember 3.",
+    "why": "Order does not matter here, only membership — which is exactly what a set is for.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 0,
+      "i": 5,
+      "num": 3,
+      "found": false
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 5,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 3,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "scene.slots",
+      "scene.tiles",
+      "vars.found",
+      "vars.seen"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 10,
+    "kind": "compare",
+    "narration": "29 is not remembered — 30 starts a run.",
+    "why": "This is the one check brute force never makes: it tries every element as a start, even the ones already in the middle of a run.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 0,
+      "num": 30,
+      "isStart": true
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "active",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 29,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.found",
+      "vars.i",
+      "vars.isStart",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 13,
+    "kind": "compare",
+    "narration": "31 is not remembered. The run from 30 stops at length 1.",
+    "why": "Each check costs one lookup, so a run of length L is confirmed in L steps — not the L full-array scans brute force needs.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 0,
+      "num": 30,
+      "length": 1
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "active",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 31,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.isStart",
+      "vars.length"
+    ]
+  },
+  {
+    "step": 15,
+    "line": 15,
+    "kind": "match",
+    "narration": "1 beats the previous best. New longest run: 1, starting at 30.",
+    "why": "The record is kept as a plain number — there is no need to remember which values formed it until the very end.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 1,
+      "num": 30,
+      "length": 1
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "active",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 0,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 31,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.result",
+      "vars.longest"
+    ]
+  },
+  {
+    "step": 16,
+    "line": 10,
+    "kind": "compare",
+    "narration": "39 is not remembered — 40 starts a run.",
+    "why": "This is the one check brute force never makes: it tries every element as a start, even the ones already in the middle of a run.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 1,
+      "num": 40,
+      "isStart": true
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 39,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.isStart",
+      "vars.length",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 17,
+    "line": 13,
+    "kind": "compare",
+    "narration": "41 is not remembered. The run from 40 stops at length 1.",
+    "why": "Each check costs one lookup, so a run of length L is confirmed in L steps — not the L full-array scans brute force needs.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 1,
+      "num": 40,
+      "length": 1
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 41,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.isStart",
+      "vars.length"
+    ]
+  },
+  {
+    "step": 18,
+    "line": 10,
+    "kind": "compare",
+    "narration": "19 is not remembered — 20 starts a run.",
+    "why": "This is the one check brute force never makes: it tries every element as a start, even the ones already in the middle of a run.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 1,
+      "num": 20,
+      "isStart": true
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 19,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.isStart",
+      "vars.length",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 19,
+    "line": 13,
+    "kind": "compare",
+    "narration": "21 is not remembered. The run from 20 stops at length 1.",
+    "why": "Each check costs one lookup, so a run of length L is confirmed in L steps — not the L full-array scans brute force needs.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 1,
+      "num": 20,
+      "length": 1
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 21,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.probe",
+      "vars.isStart",
+      "vars.length"
+    ]
+  },
+  {
+    "step": 20,
+    "line": 10,
+    "kind": "compare",
+    "narration": "0 is not remembered — 1 starts a run.",
+    "why": "This is the one check brute force never makes: it tries every element as a start, even the ones already in the middle of a run.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 1,
+      "num": 1,
+      "isStart": true
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 0,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.probe",
+      "scene.tiles",
+      "vars.isStart",
+      "vars.length",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 21,
+    "line": 13,
+    "kind": "compare",
+    "narration": "2 is remembered. The run from 1 is now length 2.",
+    "why": "Each check costs one lookup, so a run of length L is confirmed in L steps — not the L full-array scans brute force needs.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 1,
+      "num": 1,
+      "length": 2
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 2,
+      "link": [
+        3,
+        4
+      ],
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.probe",
+      "vars.isStart",
+      "vars.length"
+    ]
+  },
+  {
+    "step": 22,
+    "line": 13,
+    "kind": "compare",
+    "narration": "3 is remembered. The run from 1 is now length 3.",
+    "why": "Each check costs one lookup, so a run of length L is confirmed in L steps — not the L full-array scans brute force needs.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 1,
+      "num": 1,
+      "length": 3
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 3,
+      "link": [
+        3,
+        5
+      ],
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "scene.link",
+      "scene.probe",
+      "vars.length"
+    ]
+  },
+  {
+    "step": 23,
+    "line": 13,
+    "kind": "compare",
+    "narration": "4 is not remembered. The run from 1 stops at length 3.",
+    "why": "Each check costs one lookup, so a run of length L is confirmed in L steps — not the L full-array scans brute force needs.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 1,
+      "num": 1,
+      "length": 3
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 4,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "scene.link",
+      "scene.probe"
+    ]
+  },
+  {
+    "step": 24,
+    "line": 15,
+    "kind": "match",
+    "narration": "3 beats the previous best. New longest run: 3, starting at 1.",
+    "why": "The record is kept as a plain number — there is no need to remember which values formed it until the very end.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 3,
+      "num": 1,
+      "length": 3
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 4,
+      "link": null,
+      "result": [
+        3,
+        3
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.result",
+      "vars.longest"
+    ]
+  },
+  {
+    "step": 25,
+    "line": 10,
+    "kind": "compare",
+    "narration": "1 is already remembered, so 2 cannot start a run.",
+    "why": "Every consecutive run has exactly one value with no predecessor in the set — checking for it is what stops the same run being counted more than once.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 3,
+      "num": 2,
+      "isStart": false
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "done"
+      ],
+      "cursor": 4,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 1,
+      "link": [
+        4,
+        3
+      ],
+      "result": [
+        3,
+        3
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.isStart",
+      "vars.length",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 26,
+    "line": 10,
+    "kind": "compare",
+    "narration": "2 is already remembered, so 3 cannot start a run.",
+    "why": "Every consecutive run has exactly one value with no predecessor in the set — checking for it is what stops the same run being counted more than once.",
+    "vars": {
+      "n": 6,
+      "seen": "{ 30, 40, 20, 1, 2, 3 }",
+      "longest": 3,
+      "num": 3,
+      "isStart": false
+    },
+    "scene": {
+      "nums": [
+        30,
+        40,
+        20,
+        1,
+        2,
+        3
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 5,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": 2,
+      "link": [
+        5,
+        4
+      ],
+      "result": [
+        3,
+        3
+      ]
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.probe",
+      "scene.tiles",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 27,
+    "line": 18,
+    "kind": "return",
+    "narration": "The longest run has length 3, starting at 1.",
+    "why": "Every value was written down once and looked up a bounded number of times — once as a candidate and once per step of the run it belongs to. Summed over the whole array that is O(n), against brute force’s O(n³).",
+    "vars": {
+      "n": 6,
+      "longest": 3,
+      "result": "3"
+    },
+    "scene": {
+      "nums": [
+        1,
+        2,
+        3,
+        30,
+        40,
+        20
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [
+        {
+          "key": 30,
+          "value": 0,
+          "state": "filled"
+        },
+        {
+          "key": 40,
+          "value": 1,
+          "state": "filled"
+        },
+        {
+          "key": 20,
+          "value": 2,
+          "state": "filled"
+        },
+        {
+          "key": 1,
+          "value": 3,
+          "state": "filled"
+        },
+        {
+          "key": 2,
+          "value": 4,
+          "state": "filled"
+        },
+        {
+          "key": 3,
+          "value": 5,
+          "state": "filled"
+        }
+      ],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        2
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.nums",
+      "scene.probe",
+      "scene.result",
+      "scene.tiles",
+      "vars.isStart",
+      "vars.num",
+      "vars.result",
+      "vars.seen"
+    ]
+  }
+]

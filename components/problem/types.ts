@@ -2,6 +2,18 @@ import type { CSSProperties } from "react";
 import type { Approach, ArrayMemoryScene, TestCase } from "@/lib/types";
 
 /**
+ * The neighbouring problem in the catalog's authored order (CATALOG in
+ * content/catalog.ts), filtered to what's actually built — the same order
+ * /problems' "Available now" section renders. Deliberately NOT `meta.number`
+ * (lib/types.ts: "Displayed on the card; not an ordering key") — that's the
+ * LeetCode id, unrelated to teaching order.
+ */
+export type AdjacentProblem = {
+  slug: string;
+  title: string;
+};
+
+/**
  * Everything the shared learning view needs that differs between problems.
  *
  * The 3D scene needed no parameterization at all — AGENTS.md confines every

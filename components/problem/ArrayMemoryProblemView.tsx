@@ -26,7 +26,7 @@ import type {
 } from "@/lib/types";
 import { ProblemHeader } from "./ProblemHeader";
 import { ScenePanel } from "./ScenePanel";
-import type { ProblemBriefProps, ProblemChrome } from "./types";
+import type { AdjacentProblem, ProblemBriefProps, ProblemChrome } from "./types";
 
 export type ArrayMemoryProblemViewProps = {
   meta: ProblemMeta;
@@ -56,6 +56,10 @@ export type ArrayMemoryProblemViewProps = {
   /** The approach walkthrough, or null for a problem with no `approach.ts`.
    *  Plain data, like `paper` — it arrives straight from the route. */
   approach?: ApproachMove[] | null;
+  /** The previous/next problem in catalog order, or null at either end.
+   *  Plain data computed by the route from the catalog, like `paper`. */
+  prev?: AdjacentProblem | null;
+  next?: AdjacentProblem | null;
 };
 
 /**
@@ -83,6 +87,8 @@ function ProblemViewLayout({
   // approach TAB from the player state (`usePlayerState()` below). This is the
   // approach WALKTHROUGH — a different axis entirely.
   approach: approachWalkthrough,
+  prev,
+  next,
   answers,
   found,
 }: ArrayMemoryProblemViewProps & {
@@ -138,6 +144,8 @@ function ProblemViewLayout({
         complexity={chrome.complexity}
         paper={paper}
         approach={approachWalkthrough}
+        prev={prev}
+        next={next}
         className="lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2"
       />
 

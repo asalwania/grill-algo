@@ -27,7 +27,7 @@ import type {
 } from "@/lib/types";
 import { ProblemHeader } from "./ProblemHeader";
 import { GridScenePanel } from "./GridScenePanel";
-import type { GridChrome, GridProblemBriefProps } from "./types";
+import type { AdjacentProblem, GridChrome, GridProblemBriefProps } from "./types";
 
 export type GridProblemViewProps = {
   meta: ProblemMeta;
@@ -44,6 +44,9 @@ export type GridProblemViewProps = {
   boxSize?: GridBoxSize;
   paper?: PaperStroke[] | null;
   approach?: ApproachMove[] | null;
+  /** The previous/next problem in catalog order, or null at either end. */
+  prev?: AdjacentProblem | null;
+  next?: AdjacentProblem | null;
 };
 
 /**
@@ -64,6 +67,8 @@ function ProblemViewLayout({
   boxSize,
   paper,
   approach: approachWalkthrough,
+  prev,
+  next,
   answers,
   found,
 }: GridProblemViewProps & {
@@ -110,6 +115,8 @@ function ProblemViewLayout({
         complexity={chrome.complexity}
         paper={paper}
         approach={approachWalkthrough}
+        prev={prev}
+        next={next}
         className="lg:col-start-1 lg:col-end-2 lg:row-start-1 lg:row-end-2"
       />
 

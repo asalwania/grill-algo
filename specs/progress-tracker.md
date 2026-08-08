@@ -137,6 +137,8 @@ single-problem machinery into a reusable family is recorded here.
 | G6 | Encode and Decode Strings | Done | 2026-07-29 | Ajay | `content/problems/encode-and-decode-strings/`, two approaches, paper trace. First problem whose trace is a ROUND TRIP and whose two approaches share a complexity — see full entry below |
 | G7 | Product of Array Except Self | Done | 2026-08-04 | Ajay | `content/problems/product-of-array-except-self/`, two approaches, paper trace. First problem whose ANSWER is an output array — the memory wall becomes it (index → product) — see full entry below |
 | G8 | Valid Sudoku — new GRID scene family | Done | 2026-08-04 | Ajay | `lib/types.ts` (`GridScene`), `components/scene/GridScene.tsx` + `GridLabelLayer.tsx`, `components/problem/Grid*`, `app/problems/[slug]/page.tsx` branch, `content/problems/valid-sudoku/`. First problem NOT in the array-plus-memory family — see full entry below |
+| G9 | Longest Consecutive Sequence | Done | 2026-08-08 | Ajay | `content/problems/longest-consecutive-sequence/`, three approaches, paper trace (2 tables), approach walkthrough. First problem whose ANSWER is a plain LENGTH rather than a pair, a boolean or an array — see full entry below |
+| - | Prev/next problem navigation | Done | 2026-08-08 | Ajay | `ProblemHeader` gains a PREV/NEXT nav beside "ALL PROBLEMS"; `app/problems/[slug]/page.tsx` resolves neighbours from `readyProblems(getCatalog())` — see full entry below |
 
 ---
 
@@ -1782,3 +1784,129 @@ One bug the browser pass caught that no test did: `paper.ts`'s "seen AFTER"
 action column was echoing the internal 0-based map keys (`+r0d8`) against a
 1-based "already has it?" column (`r1✗`) — fixed to a separate 1-based display
 key, distinct from the 0-based key actually used for the Map lookup.
+
+### G9 — Longest Consecutive Sequence
+
+**Status:** Done
+**Date:** 2026-08-08
+**Owner:** Ajay
+
+The ninth problem, built to `specs/add-a-problem.md`, back in the
+array-plus-memory family (G1) rather than G8's grid one — the input is a flat
+array, so no new scene was needed. Three approaches, paper trace (two tables,
+Top K's precedent), approach walkthrough.
+
+- **The memory wall is a SET, not a map.** `slot.key` is a value from the
+  array, `slot.value` the index it was first seen at (carried only so the
+  wall can point back at where a value came from — the algorithm itself never
+  reads it). `memoryLabel` is `SEEN — set of values`.
+- **The answer is a plain LENGTH — no problem before this one has that
+  shape.** Two Sum/Contains Duplicate answer with a pair or a boolean-via-pair,
+  Group Anagrams a partition, Top K a set of values, Product of Array Except
+  Self a full output array. This one is just a number, and it reuses Top K's
+  own move for it: every approach ends by rewriting `nums` so the winning
+  run's values sit at the front, ascending, and reports the tile SPAN
+  (`[0, length - 1]`) that covers it — `layoutAnswer`, shared by all three
+  generators, is what guarantees the three approaches report the exact same
+  span even though they may legitimately discover the run via different
+  candidates (optimized walks first-seen order, sorted walks ascending value
+  order).
+- **This problem has no early-return branch anywhere**, unlike most of the
+  family — there is no "found it, stop" moment, every input runs to the
+  final `return`. Two consequences, both recorded in `trace.ts`'s header so a
+  future session does not "fix" them: (1) `result` is NEVER null on a shipped
+  frame (even the loneliest array has a run of length 1), so `found` is
+  always `true` for every case — the closest this problem gets to Two Sum's
+  "not found" branch is `no-answer`, repurposed as "every value is isolated,
+  longest run is 1"; (2) the usual trace.test.ts constraint "only `no-answer`
+  reaches the final line" does not apply — EVERY case reaches it, and the
+  test asserts that instead.
+- **F1's "every frame must change scene" rule caught two real bugs during
+  build**, both instructive:
+  1. A "new record" frame that only updated `vars.longest` — with cursor,
+     tiles, link all unchanged from the immediately preceding frame — was
+     scene-identical whenever a candidate's very first check already set a
+     new best (the common case for an n=1 walk). Fixed by giving the record
+     frame a genuine scene marker: `result = [tileIndex, tileIndex]`, a
+     transient "current leader" pointer later overwritten wholesale by
+     `layoutAnswer`'s real span. Worth knowing for the next length-only
+     problem: a frame whose only news is a NUMBER going up needs an excuse to
+     touch `scene` too, or it is a dead step by construction.
+  2. Brute force's per-candidate walk emitted an "arrival" frame and then,
+     separately, a "the very first check already failed" frame — and when a
+     candidate's chain never extends at all (the common case for most
+     elements), those two frames have identical `cursor`/`tiles`/`link`.
+     Fixed by folding the immediate-failure case into the arrival frame
+     itself rather than emitting a second one; a candidate that DOES extend
+     still gets its own per-step frames as before. This dropped brute's
+     headline-case frame count from 24 to 21 — pinned in `trace.test.ts`, not
+     guessed.
+- **Brute force is the true O(n³) reading** — `nums.includes(current + 1)`,
+  a real linear scan, not a set — mirrored per-language in `solutions/`
+  (Java and Go both need a hand-written `contains`/`containsValue` helper,
+  since neither has a built-in `Array.includes`). Go's listings use the
+  builtin `max()` (1.21+) to stay 1:1 with canonical's `Math.max`; Go has no
+  ternary, so `sorted`'s single-line conditional becomes an if/else block,
+  and `lineMap` points the canonical key at the `if` that decides which
+  branch runs.
+- **The paper sheet draws two tables**, the same shape Top K's own two-phase
+  algorithm earns: build the set (bookkeeping), then scan each DISTINCT value
+  once for a missing predecessor and walk forward from it (the idea). The
+  BEFORE/AFTER split guards the classic hand-trace error — checking `value -
+  1` against a set that has not finished filling yet — and the seven cases
+  include a run built entirely from negative numbers, the one place a sign
+  slip in `value - 1` would go unnoticed if every other case happened to be
+  positive.
+
+Verified: `pnpm traces` (sample 29/12/21, first-pair 23/9/15, late-answer
+28/10/15, no-answer 19/6/7 — optimized/sorted/brute), `tsc --noEmit` (clean),
+`pnpm test` (2321 passing, repo-wide), `eslint`
+(clean on every new file; pre-existing `design-reference/support.js` and
+`SiteFooter.tsx` findings unrelated), `pnpm build` (clean, statically
+generates `/problems/longest-consecutive-sequence`, 9 problems now — read the
+prerendered HTML directly: correct `<title>`, both `HOW TO SOLVE IT` and
+`RUN IT ON PAPER` present, frame 0's narration in the static output).
+**Not verified visually** — no browser connected this session, same gap
+every problem except G8 has carried.
+
+### - — Prev/next problem navigation
+
+**Status:** Done
+**Date:** 2026-08-08
+**Owner:** Ajay
+
+`ProblemHeader` (`components/problem/ProblemHeader.tsx`) grows a PREV/NEXT
+`<nav>` beside the existing "ALL PROBLEMS" breadcrumb, shared by both
+families since it lives in the one header component both
+`ArrayMemoryProblemView` and `GridProblemView` already render. `null` at
+either end (Contains Duplicate has no PREV, Longest Consecutive Sequence has
+no NEXT today) renders as inert `text-text-muted/40` text rather than a link,
+so the row never changes width when it hits an edge.
+
+- **Adjacency follows `readyProblems(getCatalog())` order — CATALOG's
+  authored (NeetCode teaching) order, filtered to built problems — not
+  `meta.number`.** `CatalogEntry.number` is explicitly documented as "the
+  LeetCode problem number... not an ordering key" (`lib/types.ts:242-243`),
+  and `getAllProblemMeta()`'s number-sort would have put Two Sum (LeetCode
+  #1) first regardless of category. Using the catalog order instead means
+  PREV/NEXT walks the same sequence a visitor sees on `/problems`' "Available
+  now" section: `contains-duplicate → valid-anagram → two-sum →
+  group-anagrams → top-k-frequent-elements → encode-and-decode-strings →
+  product-of-array-except-self → valid-sudoku →
+  longest-consecutive-sequence`.
+- **New `AdjacentProblem` type** (`components/problem/types.ts`) is the
+  `{slug, title}` the route computes server-side (`getAdjacentProblems` in
+  `app/problems/[slug]/page.tsx`) and threads through both
+  `ArrayMemoryProblemViewProps` and `GridProblemViewProps` as `prev`/`next` —
+  plain data, so unlike `chrome` it crosses the RSC boundary as an ordinary
+  prop, same pattern as `paper` and `approach`.
+
+Verified: `tsc --noEmit` clean, `eslint` clean on every changed file, `pnpm
+test` (2321 passing, repo-wide, unaffected), and the prerendered HTML on the
+already-running dev server confirmed all three cases directly — middle
+(`two-sum`: PREV → `valid-anagram`, NEXT → `group-anagrams`), first
+(`contains-duplicate`: PREV disabled, NEXT → `valid-anagram`), and last
+(`longest-consecutive-sequence`: PREV → `valid-sudoku`, NEXT disabled).
+**Not verified visually** — no browser extension connected this session,
+same gap most entries above have carried; only the emitted HTML/classes were
+inspected, not a rendered screenshot.

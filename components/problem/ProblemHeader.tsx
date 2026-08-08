@@ -12,7 +12,7 @@ import type {
   PaperStroke,
   ProblemMeta,
 } from "@/lib/types";
-import type { ProblemChrome } from "./types";
+import type { AdjacentProblem, ProblemChrome } from "./types";
 
 type ProblemHeaderProps = {
   meta: ProblemMeta;
@@ -29,6 +29,10 @@ type ProblemHeaderProps = {
    *  beside the paper button — the two are companion modes over the page, one
    *  for deriving the solution and one for dry-running it. */
   approach?: ApproachMove[] | null;
+  /** Neighbouring problems in catalog order (lib/catalog.ts's `readyProblems`),
+   *  `null` at either end of the built list. */
+  prev?: AdjacentProblem | null;
+  next?: AdjacentProblem | null;
   className?: string;
 };
 
@@ -53,21 +57,60 @@ export function ProblemHeader({
   complexity,
   paper,
   approach,
+  prev,
+  next,
   className = "",
 }: ProblemHeaderProps) {
   return (
     <div
       className={`flex flex-col gap-16 border-b border-border-hairline px-24 py-20 lg:px-32 lg:py-24 ${className}`}
     >
-      {/* The learning view can't carry SiteHeader — it lays out with
-          `lg:h-screen` and a global bar would push it past the fold. Without
-          this link there is no way back to the catalog at all. */}
-      <Link
-        href="/problems"
-        className="font-mono text-mono-13 tracking-label-wide text-text-muted transition-colors hover:text-text-primary"
-      >
-        <span aria-hidden="true">←</span> ALL PROBLEMS
-      </Link>
+      <div className="flex flex-wrap items-center justify-between gap-14">
+        {/* The learning view can't carry SiteHeader — it lays out with
+            `lg:h-screen` and a global bar would push it past the fold. Without
+            this link there is no way back to the catalog at all. */}
+        <Link
+          href="/problems"
+          className="font-mono text-mono-13 tracking-label-wide text-text-muted transition-colors hover:text-text-primary"
+        >
+          <span aria-hidden="true">←</span> ALL PROBLEMS
+        </Link>
+
+        {/* Steps to the previous/next built problem in catalog order — see
+            AdjacentProblem. `null` at either end of the built list renders as
+            inert text rather than a link, so the row never shifts width. */}
+        <nav
+          aria-label="Adjacent problems"
+          className="flex items-center gap-16 font-mono text-mono-13 tracking-label-wide"
+        >
+          {prev ? (
+            <Link
+              href={`/problems/${prev.slug}`}
+              title={prev.title}
+              className="text-text-muted transition-colors hover:text-text-primary"
+            >
+              <span aria-hidden="true">←</span> PREV
+            </Link>
+          ) : (
+            <span className="text-text-muted/40" aria-disabled="true">
+              <span aria-hidden="true">←</span> PREV
+            </span>
+          )}
+          {next ? (
+            <Link
+              href={`/problems/${next.slug}`}
+              title={next.title}
+              className="text-text-muted transition-colors hover:text-text-primary"
+            >
+              NEXT <span aria-hidden="true">→</span>
+            </Link>
+          ) : (
+            <span className="text-text-muted/40" aria-disabled="true">
+              NEXT <span aria-hidden="true">→</span>
+            </span>
+          )}
+        </nav>
+      </div>
 
       <div className="flex flex-wrap items-center gap-14">
         <h1 className="font-display text-display-24 lg:text-display-32">

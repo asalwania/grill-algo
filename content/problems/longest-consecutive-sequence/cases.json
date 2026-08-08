@@ -1,0 +1,52 @@
+[
+  {
+    "id": "sample",
+    "label": "The walkthrough",
+    "nums": [
+      2,
+      20,
+      4,
+      10,
+      3,
+      4,
+      5
+    ],
+    "note": "A duplicate 4 collapses for free, and 2·3·4·5 is a run of four hiding among three loners."
+  },
+  {
+    "id": "first-pair",
+    "label": "Decided immediately",
+    "nums": [
+      50,
+      51,
+      52,
+      10,
+      11
+    ],
+    "note": "The very first value tried is the start of the winning run, and nothing later overtakes it."
+  },
+  {
+    "id": "late-answer",
+    "label": "Three short-lived leads",
+    "nums": [
+      30,
+      40,
+      20,
+      1,
+      2,
+      3
+    ],
+    "note": "Three isolated values each hold the lead at length one before a real run of three shows up last."
+  },
+  {
+    "id": "no-answer",
+    "label": "Nothing is a neighbour",
+    "nums": [
+      50,
+      10,
+      70,
+      30
+    ],
+    "note": "Every gap is 20 or more, so no value is ever one more than another — the longest run is a single element."
+  }
+]

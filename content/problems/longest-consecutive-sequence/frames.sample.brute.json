@@ -1,0 +1,1050 @@
+[
+  {
+    "step": 0,
+    "line": 2,
+    "kind": "init",
+    "narration": "No memory, no order. Every element is tried as a possible start, and each one is grown by scanning the whole array again for the next number.",
+    "why": "With nothing written down, the only way to know whether a value is present is to look at every element — and knowing that for one value says nothing about the next.",
+    "vars": {
+      "n": 7,
+      "comparisons": 0,
+      "longest": 0
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Try starting at nums[0] = 2.",
+    "why": "There is no way to tell, without scanning, whether this element is truly the start of a run or already the middle of one — so every element gets tried.",
+    "vars": {
+      "n": 7,
+      "comparisons": 5,
+      "longest": 0,
+      "i": 0,
+      "num": 2
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.i",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 8,
+    "kind": "compare",
+    "narration": "3 is at index 4. The chain from 2 is now length 2.",
+    "why": "Every step re-scans the ENTIRE array for one more number — the same cost whether this is the first check or the tenth.",
+    "vars": {
+      "n": 7,
+      "comparisons": 5,
+      "longest": 0,
+      "i": 0,
+      "current": 3,
+      "length": 2
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        4
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.current",
+      "vars.length",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 8,
+    "kind": "compare",
+    "narration": "4 is at index 2. The chain from 2 is now length 3.",
+    "why": "Every step re-scans the ENTIRE array for one more number — the same cost whether this is the first check or the tenth.",
+    "vars": {
+      "n": 7,
+      "comparisons": 8,
+      "longest": 0,
+      "i": 0,
+      "current": 4,
+      "length": 3
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "active",
+        "idle",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.length"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 8,
+    "kind": "compare",
+    "narration": "5 is at index 6. The chain from 2 is now length 4.",
+    "why": "Every step re-scans the ENTIRE array for one more number — the same cost whether this is the first check or the tenth.",
+    "vars": {
+      "n": 7,
+      "comparisons": 15,
+      "longest": 0,
+      "i": 0,
+      "current": 5,
+      "length": 4
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "active",
+        "idle",
+        "active",
+        "idle",
+        "active"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        6
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.length"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 8,
+    "kind": "compare",
+    "narration": "6 is nowhere in the array. The chain from 2 stops at length 4.",
+    "why": "Confirming absence costs a full scan, exactly like confirming presence — there is no faster way to ask either question here.",
+    "vars": {
+      "n": 7,
+      "comparisons": 22,
+      "longest": 0,
+      "i": 0,
+      "current": 5,
+      "length": 4
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "active",
+        "idle",
+        "active",
+        "idle",
+        "active"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "vars.comparisons"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 13,
+    "kind": "match",
+    "narration": "4 beats the previous best. New longest run: 4, starting at 2.",
+    "why": "Nothing here is cheaper for having already scanned index i − 1 — every candidate restarts the search from nothing.",
+    "vars": {
+      "n": 7,
+      "comparisons": 22,
+      "longest": 4,
+      "i": 0,
+      "num": 2,
+      "length": 4
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "active",
+        "idle",
+        "active",
+        "idle",
+        "active"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.result",
+      "vars.current",
+      "vars.longest",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Try starting at nums[1] = 20 — 21 is nowhere in the array, so the chain stops at length 1.",
+    "why": "There is no way to tell, without scanning, whether this element is truly the start of a run or already the middle of one — so every element gets tried, and confirming absence costs a full scan just like confirming presence.",
+    "vars": {
+      "n": 7,
+      "comparisons": 29,
+      "longest": 4,
+      "i": 1,
+      "current": 20,
+      "length": 1
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.i",
+      "vars.length",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Try starting at nums[2] = 4.",
+    "why": "There is no way to tell, without scanning, whether this element is truly the start of a run or already the middle of one — so every element gets tried.",
+    "vars": {
+      "n": 7,
+      "comparisons": 36,
+      "longest": 4,
+      "i": 2,
+      "num": 4
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.i",
+      "vars.length",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 8,
+    "kind": "compare",
+    "narration": "5 is at index 6. The chain from 4 is now length 2.",
+    "why": "Every step re-scans the ENTIRE array for one more number — the same cost whether this is the first check or the tenth.",
+    "vars": {
+      "n": 7,
+      "comparisons": 36,
+      "longest": 4,
+      "i": 2,
+      "current": 5,
+      "length": 2
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        6
+      ],
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.current",
+      "vars.length",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 8,
+    "kind": "compare",
+    "narration": "6 is nowhere in the array. The chain from 4 stops at length 2.",
+    "why": "Confirming absence costs a full scan, exactly like confirming presence — there is no faster way to ask either question here.",
+    "vars": {
+      "n": 7,
+      "comparisons": 43,
+      "longest": 4,
+      "i": 2,
+      "current": 5,
+      "length": 2
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "scene.link",
+      "vars.comparisons"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Try starting at nums[3] = 10 — 11 is nowhere in the array, so the chain stops at length 1.",
+    "why": "There is no way to tell, without scanning, whether this element is truly the start of a run or already the middle of one — so every element gets tried, and confirming absence costs a full scan just like confirming presence.",
+    "vars": {
+      "n": 7,
+      "comparisons": 50,
+      "longest": 4,
+      "i": 3,
+      "current": 10,
+      "length": 1
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.i",
+      "vars.length"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Try starting at nums[4] = 3.",
+    "why": "There is no way to tell, without scanning, whether this element is truly the start of a run or already the middle of one — so every element gets tried.",
+    "vars": {
+      "n": 7,
+      "comparisons": 53,
+      "longest": 4,
+      "i": 4,
+      "num": 3
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 4,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.i",
+      "vars.length",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 8,
+    "kind": "compare",
+    "narration": "4 is at index 2. The chain from 3 is now length 2.",
+    "why": "Every step re-scans the ENTIRE array for one more number — the same cost whether this is the first check or the tenth.",
+    "vars": {
+      "n": 7,
+      "comparisons": 53,
+      "longest": 4,
+      "i": 4,
+      "current": 4,
+      "length": 2
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 4,
+      "slots": [],
+      "probe": null,
+      "link": [
+        4,
+        2
+      ],
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.current",
+      "vars.length",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 14,
+    "line": 8,
+    "kind": "compare",
+    "narration": "5 is at index 6. The chain from 3 is now length 3.",
+    "why": "Every step re-scans the ENTIRE array for one more number — the same cost whether this is the first check or the tenth.",
+    "vars": {
+      "n": 7,
+      "comparisons": 60,
+      "longest": 4,
+      "i": 4,
+      "current": 5,
+      "length": 3
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "done",
+        "active",
+        "idle",
+        "active"
+      ],
+      "cursor": 4,
+      "slots": [],
+      "probe": null,
+      "link": [
+        4,
+        6
+      ],
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "scene.link",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.length"
+    ]
+  },
+  {
+    "step": 15,
+    "line": 8,
+    "kind": "compare",
+    "narration": "6 is nowhere in the array. The chain from 3 stops at length 3.",
+    "why": "Confirming absence costs a full scan, exactly like confirming presence — there is no faster way to ask either question here.",
+    "vars": {
+      "n": 7,
+      "comparisons": 67,
+      "longest": 4,
+      "i": 4,
+      "current": 5,
+      "length": 3
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "done",
+        "active",
+        "idle",
+        "active"
+      ],
+      "cursor": 4,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "scene.link",
+      "vars.comparisons"
+    ]
+  },
+  {
+    "step": 16,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Try starting at nums[5] = 4.",
+    "why": "There is no way to tell, without scanning, whether this element is truly the start of a run or already the middle of one — so every element gets tried.",
+    "vars": {
+      "n": 7,
+      "comparisons": 74,
+      "longest": 4,
+      "i": 5,
+      "num": 4
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 5,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.current",
+      "vars.i",
+      "vars.length",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 17,
+    "line": 8,
+    "kind": "compare",
+    "narration": "5 is at index 6. The chain from 4 is now length 2.",
+    "why": "Every step re-scans the ENTIRE array for one more number — the same cost whether this is the first check or the tenth.",
+    "vars": {
+      "n": 7,
+      "comparisons": 74,
+      "longest": 4,
+      "i": 5,
+      "current": 5,
+      "length": 2
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "active"
+      ],
+      "cursor": 5,
+      "slots": [],
+      "probe": null,
+      "link": [
+        5,
+        6
+      ],
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.tiles",
+      "vars.current",
+      "vars.length",
+      "vars.num"
+    ]
+  },
+  {
+    "step": 18,
+    "line": 8,
+    "kind": "compare",
+    "narration": "6 is nowhere in the array. The chain from 4 stops at length 2.",
+    "why": "Confirming absence costs a full scan, exactly like confirming presence — there is no faster way to ask either question here.",
+    "vars": {
+      "n": 7,
+      "comparisons": 81,
+      "longest": 4,
+      "i": 5,
+      "current": 5,
+      "length": 2
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "active"
+      ],
+      "cursor": 5,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "scene.link",
+      "vars.comparisons"
+    ]
+  },
+  {
+    "step": 19,
+    "line": 5,
+    "kind": "compare",
+    "narration": "Try starting at nums[6] = 5 — 6 is nowhere in the array, so the chain stops at length 1.",
+    "why": "There is no way to tell, without scanning, whether this element is truly the start of a run or already the middle of one — so every element gets tried, and confirming absence costs a full scan just like confirming presence.",
+    "vars": {
+      "n": 7,
+      "comparisons": 88,
+      "longest": 4,
+      "i": 6,
+      "current": 5,
+      "length": 1
+    },
+    "scene": {
+      "nums": [
+        2,
+        20,
+        4,
+        10,
+        3,
+        4,
+        5
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 6,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        0
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.comparisons",
+      "vars.i",
+      "vars.length"
+    ]
+  },
+  {
+    "step": 20,
+    "line": 16,
+    "kind": "return",
+    "narration": "The longest run has length 4, starting at 2.",
+    "why": "Every element re-triggers its own linear scan for every step of its own chain — up to n starts, each up to n steps long, each step an O(n) scan. That is O(n³) in the worst case, against the optimized approach's O(n).",
+    "vars": {
+      "n": 7,
+      "comparisons": 88,
+      "longest": 4,
+      "result": "4"
+    },
+    "scene": {
+      "nums": [
+        2,
+        3,
+        4,
+        5,
+        20,
+        10,
+        4
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        3
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.nums",
+      "scene.result",
+      "scene.tiles",
+      "vars.current",
+      "vars.i",
+      "vars.length",
+      "vars.result"
+    ]
+  }
+]
