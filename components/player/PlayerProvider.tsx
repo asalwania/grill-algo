@@ -181,7 +181,7 @@ export function PlayerProvider({
   initialCaseId,
   initialApproach,
   initialLanguage = "javascript",
-  initialRenderMode = "3d",
+  initialRenderMode = "2d",
   initialSpeed = 1,
   children,
 }: PlayerProviderProps) {
