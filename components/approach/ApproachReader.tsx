@@ -21,31 +21,68 @@ export function ApproachReader({ moves }: { moves: ApproachMove[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(moves[0]?.id ?? "");
 
+  // A click just jumped the spine — hold that choice through the smooth
+  // scroll it triggers. A short section can already have its successor
+  // crossing into the reading band before the animation settles, and letting
+  // the observer win that race lights up the wrong (later) node.
+  const jumpedTo = useRef<string | null>(null);
+
   // Scroll-spy: the spine node that lights up is whichever move sits in the
   // reading band. Observed against the content column, not the viewport, so it
   // works inside the dialog's own scroll.
   useEffect(() => {
     const root = scrollRef.current;
     if (!root) return;
-    const sections = root.querySelectorAll<HTMLElement>("[data-move]");
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActive((entry.target as HTMLElement).dataset.move ?? "");
-          }
+    const sections = Array.from(root.querySelectorAll<HTMLElement>("[data-move]"));
+
+    // Recompute from live geometry rather than trusting which entries the
+    // observer happened to batch this callback — during a smooth
+    // `scrollIntoView`, several sections can cross the band in one frame and
+    // the one that "changed" isn't necessarily the one that should be active.
+    const computeActive = () => {
+      if (jumpedTo.current) return;
+      const threshold = root.getBoundingClientRect().top + root.clientHeight * 0.3;
+      let current = sections[0];
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= threshold) {
+          current = section;
+        } else {
+          break;
         }
-      },
-      { root, rootMargin: "-45% 0px -50% 0px", threshold: 0 },
-    );
+      }
+      setActive(current?.dataset.move ?? "");
+    };
+
+    const observer = new IntersectionObserver(computeActive, {
+      root,
+      rootMargin: "0px 0px -70% 0px",
+      threshold: 0,
+    });
     sections.forEach((section) => observer.observe(section));
+    computeActive();
     return () => observer.disconnect();
   }, [moves]);
 
   const jump = (id: string) => {
-    scrollRef.current
-      ?.querySelector(`[data-move="${id}"]`)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    const root = scrollRef.current;
+    const target = root?.querySelector<HTMLElement>(`[data-move="${id}"]`);
+    if (!root || !target) return;
+
+    setActive(id);
+    jumpedTo.current = id;
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+
+    // Release the hold once the scroll actually stops, with a timer fallback
+    // for browsers without `scrollend`.
+    let settled = false;
+    const release = () => {
+      if (settled) return;
+      settled = true;
+      jumpedTo.current = null;
+      root.removeEventListener("scrollend", release);
+    };
+    root.addEventListener("scrollend", release);
+    setTimeout(release, 1000);
   };
 
   return (

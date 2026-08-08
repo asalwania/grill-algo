@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls \"C:/Users/SYR00766/AppData/Local/ms-playwright/\" 2>&1)",
+      "Read(//c/Users/SYR00766/AppData/Local/ms-playwright/**)",
+      "Bash(cat \"C:/Users/SYR00766/AppData/Local/npm-cache/_npx/9833c18b2d85bc59/node_modules/playwright/package.json\" | grep '\"version\"' *)",
+      "Read(//c/Users/SYR00766/AppData/Local/npm-cache/_npx/9833c18b2d85bc59/node_modules/playwright/**)",
+      "Read(//c/Users/SYR00766/AppData/Local/npm-cache/_npx/e41f203b7505f1fb/node_modules/playwright/**)",
+      "Bash(NODE_PATH=C:/Users/SYR00766/AppData/Local/npm-cache/_npx/e41f203b7505f1fb/node_modules node c:/Users/SYR00766/Documents/grill-algo/verify-sidebar.tmp.js)",
+      "Bash(NODE_PATH=C:/Users/SYR00766/AppData/Local/npm-cache/_npx/e41f203b7505f1fb/node_modules node c:/Users/SYR00766/Documents/grill-algo/verify-click.tmp.js)",
+      "Bash(NODE_PATH=C:/Users/SYR00766/AppData/Local/npm-cache/_npx/e41f203b7505f1fb/node_modules node c:/Users/SYR00766/Documents/grill-algo/verify-scroll.tmp.js)"
+    ]
+  }
+}
