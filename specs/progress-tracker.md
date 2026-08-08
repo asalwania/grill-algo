@@ -139,6 +139,7 @@ single-problem machinery into a reusable family is recorded here.
 | G8 | Valid Sudoku — new GRID scene family | Done | 2026-08-04 | Ajay | `lib/types.ts` (`GridScene`), `components/scene/GridScene.tsx` + `GridLabelLayer.tsx`, `components/problem/Grid*`, `app/problems/[slug]/page.tsx` branch, `content/problems/valid-sudoku/`. First problem NOT in the array-plus-memory family — see full entry below |
 | G9 | Longest Consecutive Sequence | Done | 2026-08-08 | Ajay | `content/problems/longest-consecutive-sequence/`, three approaches, paper trace (2 tables), approach walkthrough. First problem whose ANSWER is a plain LENGTH rather than a pair, a boolean or an array — see full entry below |
 | - | Prev/next problem navigation | Done | 2026-08-08 | Ajay | `ProblemHeader` gains a PREV/NEXT nav beside "ALL PROBLEMS"; `app/problems/[slug]/page.tsx` resolves neighbours from `readyProblems(getCatalog())` — see full entry below |
+| G10 | Valid Palindrome | Done | 2026-08-08 | Ajay | `content/problems/valid-palindrome/`, two approaches (`optimized`, `brute`, no `sorted`), paper trace, approach walkthrough. First problem in the "Two Pointers" category, and the first genuine two-pointer trace — see full entry below |
 
 ---
 
@@ -1910,3 +1911,74 @@ already-running dev server confirmed all three cases directly — middle
 **Not verified visually** — no browser extension connected this session,
 same gap most entries above have carried; only the emitted HTML/classes were
 inspected, not a rendered screenshot.
+
+### G10 — Valid Palindrome
+
+**Status:** Done
+**Date:** 2026-08-08
+**Owner:** Ajay
+
+The tenth problem, built to `specs/add-a-problem.md`, and the first in
+NeetCode's "Two Pointers" category — the first genuinely two-pointer trace in
+this codebase (every earlier string/array problem drove a single index).
+Stays in the array-plus-memory family (G1); no scene or component change was
+needed.
+
+- **The two-pointer -> `ArrayMemoryScene` mapping, worth recording since no
+  future two-pointer problem should have to re-derive it:** `cursor` is
+  pinned to the LEFT pointer's tile index ONLY, never the right one — the
+  same convention brute-force generators already use for an "outer/driving"
+  index. `link = [left, right]` carries the beam between the two pointers and
+  renders for free via the existing tile-to-tile `CompareBeam` path (drawn
+  whenever `slots` is empty — `lib/types.ts`'s own `link` doc already covers
+  this case). `slots` stays `[]` and `probe` stays `null` on EVERY frame of
+  BOTH approaches — this is the first problem with no memory structure on
+  either tab, so the wall never rises at all, on either side of the
+  approach toggle.
+- **`scene.result`'s direction had to be worked out deliberately, and it is
+  NOT what a first pass suggests.** `ArrayMemoryProblemView` derives its
+  "found" pill straight from `result !== null`, hard-coded — not from
+  `chrome.formatAnswer(result)`, unlike the grid family's `GridProblemView`
+  (Appendix D's note about G8's conflict-pair). The natural "decisive pair"
+  for this problem is the MISMATCH — the two characters that prove the
+  string is not a palindrome — but marking `result` there would mean
+  `result !== null` fires on the FALSE answer, inverting the pill. So
+  `result` is populated only on the SUCCESS path (same direction Contains
+  Duplicate's already points, for an unrelated reason), while the mismatch
+  pair still gets a purely visual `'match'` tile flash with `result` left
+  `null`. Recorded in `trace.ts`'s and `chrome.ts`'s doc comments so this
+  doesn't get "fixed" backwards later.
+- **Two approaches, not three — `sorted` was never on the table.** Sorting
+  the characters destroys the very order a palindrome check depends on, the
+  same reasoning Two Sum's `trace.ts` already documents for its own missing
+  tab.
+- **Brute force is a genuinely different algorithm shape, not the same scan
+  on pre-cleaned input**, per the task brief: it builds a whole second
+  array (filtered to alphanumeric, lowercased) and then compares it against
+  its own reverse — and deliberately walks the FULL cleaned length rather
+  than stopping at the midpoint, so a matching pair gets compared twice
+  (once as `(i, j)`, again as `(j, i)`). That redundancy plus the
+  filter-every-character pass is what pushes the sample case's brute trace
+  to 74 frames against optimized's 21 — large, but explicable: 30 characters
+  processed twice (filter, then compare) is exactly what "pay for a second
+  array" costs.
+- **The cleaned array's positions are mapped back onto ORIGINAL tile
+  indices (`origIndex`)** so brute's comparison pass still lights up real
+  tiles of `s` even though the algorithm itself never looks at `s` again
+  once `cleaned` is built — `nums.length` stays invariant across the whole
+  trace (F1's rule 2) without needing a second, shorter scene.
+- **`memoryLabel`/`formatProbe` are dead code, present only because
+  `ProblemChrome`'s shape requires them.** `probe` is `null` on every frame
+  of both approaches, so `FlatView`'s probe pill never mounts — noted in
+  `chrome.ts` so nobody spends time trying to trigger it.
+
+Verified: `pnpm traces` (sample 21/74, fails-fast 3/9, fails-deep 7/24,
+skip-heavy 8/14 — optimized/brute, all pinned in `trace.test.ts`),
+`tsc --noEmit` (clean), `pnpm test` (2515 passing, repo-wide), `eslint`
+(clean on every new file; pre-existing `design-reference/support.js` and
+`SiteFooter.tsx` findings unrelated), `pnpm build` (clean, statically
+generates `/problems/valid-palindrome` — read the prerendered HTML directly:
+correct `<title>`, `Two Pointers` pattern pill, both `HOW TO SOLVE IT` and
+`RUN IT ON PAPER` present).
+**Not verified visually** — no browser extension connected this session,
+same gap every problem except G8 has carried.

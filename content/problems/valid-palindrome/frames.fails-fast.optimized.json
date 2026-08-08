@@ -1,0 +1,133 @@
+[
+  {
+    "step": 0,
+    "line": 3,
+    "kind": "init",
+    "narration": "Two pointers close in from both ends: left at 0, right at 2.",
+    "why": "A palindrome reads the same from either direction, so the fastest check is to walk in from both ends at once and stop the moment two letters disagree.",
+    "vars": {
+      "n": 3,
+      "left": 0,
+      "right": 2
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        2
+      ],
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 10,
+    "kind": "compare",
+    "narration": "Compare 'a' and 'c'. Different.",
+    "why": "Case never matters here — only whether the two letters are the same once lowercased.",
+    "vars": {
+      "n": 3,
+      "left": 0,
+      "right": 2,
+      "a": "a",
+      "b": "c",
+      "same": false
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "active"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.a",
+      "vars.b",
+      "vars.same"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 11,
+    "kind": "return",
+    "narration": "'a' and 'c' disagree. Return false.",
+    "why": "One disagreement anywhere is enough — the two halves can never mirror each other once a single pair breaks.",
+    "vars": {
+      "n": 3,
+      "left": 0,
+      "right": 2,
+      "a": "a",
+      "b": "c",
+      "result": "false"
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "idle",
+        "match"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.result",
+      "vars.same"
+    ]
+  }
+]

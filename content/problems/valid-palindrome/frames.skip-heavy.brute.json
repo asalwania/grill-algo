@@ -1,0 +1,800 @@
+[
+  {
+    "step": 0,
+    "line": 3,
+    "kind": "init",
+    "narration": "Build a cleaned copy first: letters and digits only, all lowercase.",
+    "why": "Filtering once up front turns \"ignore the punctuation while comparing\" into a plain string-equals-its-reverse check — at the cost of a whole second array.",
+    "vars": {
+      "n": 8
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 6,
+    "kind": "compare",
+    "narration": "'.' isn't a letter or digit.",
+    "why": "Every character gets looked at once, whether or not it survives the filter.",
+    "vars": {
+      "n": 8,
+      "i": 0,
+      "ch": ".",
+      "keep": false
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 6,
+    "kind": "compare",
+    "narration": "'.' isn't a letter or digit.",
+    "why": "Every character gets looked at once, whether or not it survives the filter.",
+    "vars": {
+      "n": 8,
+      "i": 1,
+      "ch": ".",
+      "keep": false
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 6,
+    "kind": "compare",
+    "narration": "'A' is a letter or digit.",
+    "why": "Every character gets looked at once, whether or not it survives the filter.",
+    "vars": {
+      "n": 8,
+      "i": 2,
+      "ch": "A",
+      "keep": true
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 7,
+    "kind": "store",
+    "narration": "Keep 'a'. Cleaned so far: \"a\".",
+    "why": "The cleaned copy is a whole new array, sized for the worst case — this is exactly what the two-pointer version spends nothing on.",
+    "vars": {
+      "n": 8,
+      "i": 2,
+      "cleaned": "\"a\""
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.ch",
+      "vars.cleaned",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 6,
+    "kind": "compare",
+    "narration": "'.' isn't a letter or digit.",
+    "why": "Every character gets looked at once, whether or not it survives the filter.",
+    "vars": {
+      "n": 8,
+      "i": 3,
+      "ch": ".",
+      "keep": false
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.ch",
+      "vars.cleaned",
+      "vars.i",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 6,
+    "kind": "compare",
+    "narration": "'.' isn't a letter or digit.",
+    "why": "Every character gets looked at once, whether or not it survives the filter.",
+    "vars": {
+      "n": 8,
+      "i": 4,
+      "ch": ".",
+      "keep": false
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 4,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 6,
+    "kind": "compare",
+    "narration": "'a' is a letter or digit.",
+    "why": "Every character gets looked at once, whether or not it survives the filter.",
+    "vars": {
+      "n": 8,
+      "i": 5,
+      "ch": "a",
+      "keep": true
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 5,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 7,
+    "kind": "store",
+    "narration": "Keep 'a'. Cleaned so far: \"aa\".",
+    "why": "The cleaned copy is a whole new array, sized for the worst case — this is exactly what the two-pointer version spends nothing on.",
+    "vars": {
+      "n": 8,
+      "i": 5,
+      "cleaned": "\"aa\""
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 5,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.ch",
+      "vars.cleaned",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 9,
+    "line": 6,
+    "kind": "compare",
+    "narration": "'.' isn't a letter or digit.",
+    "why": "Every character gets looked at once, whether or not it survives the filter.",
+    "vars": {
+      "n": 8,
+      "i": 6,
+      "ch": ".",
+      "keep": false
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 6,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.ch",
+      "vars.cleaned",
+      "vars.i",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 10,
+    "line": 6,
+    "kind": "compare",
+    "narration": "'.' isn't a letter or digit.",
+    "why": "Every character gets looked at once, whether or not it survives the filter.",
+    "vars": {
+      "n": 8,
+      "i": 7,
+      "ch": ".",
+      "keep": false
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 7,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.tiles",
+      "vars.i"
+    ]
+  },
+  {
+    "step": 11,
+    "line": 12,
+    "kind": "match",
+    "narration": "Compare cleaned[0] 'a' with cleaned[1] 'a'. Same letter.",
+    "why": "Checking the cleaned copy against its own mirror image is easy to trust — it is exactly what \"reads the same backward\" means.",
+    "vars": {
+      "n": 8,
+      "i": 0,
+      "j": 1,
+      "same": true
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "done",
+        "done",
+        "active",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        5
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i",
+      "vars.j",
+      "vars.keep",
+      "vars.same"
+    ]
+  },
+  {
+    "step": 12,
+    "line": 12,
+    "kind": "match",
+    "narration": "Compare cleaned[1] 'a' with cleaned[0] 'a'. Same letter.",
+    "why": "Checking the cleaned copy against its own mirror image is easy to trust — it is exactly what \"reads the same backward\" means.",
+    "vars": {
+      "n": 8,
+      "i": 1,
+      "j": 0,
+      "same": true
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "done",
+        "done",
+        "active",
+        "done",
+        "done"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        5,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.link",
+      "vars.i",
+      "vars.j"
+    ]
+  },
+  {
+    "step": 13,
+    "line": 17,
+    "kind": "return",
+    "narration": "The cleaned copy reads the same forward and backward. Return true.",
+    "why": "2 characters kept, each compared against its mirror — correct, but only after paying for a second array to get there.",
+    "vars": {
+      "n": 8,
+      "result": "true"
+    },
+    "scene": {
+      "nums": [
+        46,
+        46,
+        65,
+        46,
+        46,
+        97,
+        46,
+        46
+      ],
+      "labels": [
+        ".",
+        ".",
+        "A",
+        ".",
+        ".",
+        "a",
+        ".",
+        "."
+      ],
+      "tiles": [
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": [
+        0,
+        7
+      ]
+    },
+    "changed": [
+      "line",
+      "scene.link",
+      "scene.result",
+      "scene.tiles",
+      "vars.i",
+      "vars.j",
+      "vars.result",
+      "vars.same"
+    ]
+  }
+]

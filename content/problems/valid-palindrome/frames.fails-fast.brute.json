@@ -1,0 +1,381 @@
+[
+  {
+    "step": 0,
+    "line": 3,
+    "kind": "init",
+    "narration": "Build a cleaned copy first: letters and digits only, all lowercase.",
+    "why": "Filtering once up front turns \"ignore the punctuation while comparing\" into a plain string-equals-its-reverse check — at the cost of a whole second array.",
+    "vars": {
+      "n": 3
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 6,
+    "kind": "compare",
+    "narration": "'a' is a letter or digit.",
+    "why": "Every character gets looked at once, whether or not it survives the filter.",
+    "vars": {
+      "n": 3,
+      "i": 0,
+      "ch": "a",
+      "keep": true
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.ch",
+      "vars.i",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 7,
+    "kind": "store",
+    "narration": "Keep 'a'. Cleaned so far: \"a\".",
+    "why": "The cleaned copy is a whole new array, sized for the worst case — this is exactly what the two-pointer version spends nothing on.",
+    "vars": {
+      "n": 3,
+      "i": 0,
+      "cleaned": "\"a\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.ch",
+      "vars.cleaned",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 6,
+    "kind": "compare",
+    "narration": "'b' is a letter or digit.",
+    "why": "Every character gets looked at once, whether or not it survives the filter.",
+    "vars": {
+      "n": 3,
+      "i": 1,
+      "ch": "b",
+      "keep": true
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.ch",
+      "vars.cleaned",
+      "vars.i",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 7,
+    "kind": "store",
+    "narration": "Keep 'b'. Cleaned so far: \"ab\".",
+    "why": "The cleaned copy is a whole new array, sized for the worst case — this is exactly what the two-pointer version spends nothing on.",
+    "vars": {
+      "n": 3,
+      "i": 1,
+      "cleaned": "\"ab\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "idle"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.ch",
+      "vars.cleaned",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 6,
+    "kind": "compare",
+    "narration": "'c' is a letter or digit.",
+    "why": "Every character gets looked at once, whether or not it survives the filter.",
+    "vars": {
+      "n": 3,
+      "i": 2,
+      "ch": "c",
+      "keep": true
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.tiles",
+      "vars.ch",
+      "vars.cleaned",
+      "vars.i",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 7,
+    "kind": "store",
+    "narration": "Keep 'c'. Cleaned so far: \"abc\".",
+    "why": "The cleaned copy is a whole new array, sized for the worst case — this is exactly what the two-pointer version spends nothing on.",
+    "vars": {
+      "n": 3,
+      "i": 2,
+      "cleaned": "\"abc\""
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": null,
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.ch",
+      "vars.cleaned",
+      "vars.keep"
+    ]
+  },
+  {
+    "step": 7,
+    "line": 12,
+    "kind": "compare",
+    "narration": "Compare cleaned[0] 'a' with cleaned[2] 'c'. Different.",
+    "why": "Checking the cleaned copy against its own mirror image is easy to trust — it is exactly what \"reads the same backward\" means.",
+    "vars": {
+      "n": 3,
+      "i": 0,
+      "j": 2,
+      "same": false
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "active",
+        "done",
+        "active"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.cleaned",
+      "vars.i",
+      "vars.j",
+      "vars.same"
+    ]
+  },
+  {
+    "step": 8,
+    "line": 13,
+    "kind": "return",
+    "narration": "cleaned[0] and cleaned[2] disagree. Return false.",
+    "why": "The same conclusion the two-pointer version reaches — just after paying to build and hold the whole cleaned copy first.",
+    "vars": {
+      "n": 3,
+      "i": 0,
+      "j": 2,
+      "result": "false"
+    },
+    "scene": {
+      "nums": [
+        97,
+        98,
+        99
+      ],
+      "labels": [
+        "a",
+        "b",
+        "c"
+      ],
+      "tiles": [
+        "match",
+        "done",
+        "match"
+      ],
+      "cursor": null,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        2
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.result",
+      "vars.same"
+    ]
+  }
+]

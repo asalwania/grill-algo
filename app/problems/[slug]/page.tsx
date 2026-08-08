@@ -19,6 +19,7 @@ import { ProblemView as EncodeAndDecodeStringsView } from "@/content/problems/en
 import { ProblemView as ProductOfArrayExceptSelfView } from "@/content/problems/product-of-array-except-self/ProblemView";
 import { ProblemView as ValidSudokuView } from "@/content/problems/valid-sudoku/ProblemView";
 import { ProblemView as LongestConsecutiveSequenceView } from "@/content/problems/longest-consecutive-sequence/ProblemView";
+import { ProblemView as ValidPalindromeView } from "@/content/problems/valid-palindrome/ProblemView";
 
 const LANGUAGES: Language[] = ["javascript", "python", "java", "go"];
 
@@ -52,6 +53,7 @@ const ARRAY_VIEWS: Record<
   "encode-and-decode-strings": EncodeAndDecodeStringsView,
   "product-of-array-except-self": ProductOfArrayExceptSelfView,
   "longest-consecutive-sequence": LongestConsecutiveSequenceView,
+  "valid-palindrome": ValidPalindromeView,
 };
 
 /** The grid-problem family's own registry — see `ARRAY_VIEWS`. */

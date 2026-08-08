@@ -1,0 +1,473 @@
+[
+  {
+    "step": 0,
+    "line": 3,
+    "kind": "init",
+    "narration": "Two pointers close in from both ends: left at 0, right at 9.",
+    "why": "A palindrome reads the same from either direction, so the fastest check is to walk in from both ends at once and stop the moment two letters disagree.",
+    "vars": {
+      "n": 10,
+      "left": 0,
+      "right": 9
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        99,
+        101,
+        32,
+        97,
+        32,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "c",
+        "e",
+        " ",
+        "a",
+        " ",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        9
+      ],
+      "result": null
+    },
+    "changed": []
+  },
+  {
+    "step": 1,
+    "line": 10,
+    "kind": "match",
+    "narration": "Compare 'r' and 'r'. Same letter.",
+    "why": "Case never matters here — only whether the two letters are the same once lowercased.",
+    "vars": {
+      "n": 10,
+      "left": 0,
+      "right": 9,
+      "a": "r",
+      "b": "r",
+      "same": true
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        99,
+        101,
+        32,
+        97,
+        32,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "c",
+        "e",
+        " ",
+        "a",
+        " ",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "active"
+      ],
+      "cursor": 0,
+      "slots": [],
+      "probe": null,
+      "link": [
+        0,
+        9
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.a",
+      "vars.b",
+      "vars.same"
+    ]
+  },
+  {
+    "step": 2,
+    "line": 10,
+    "kind": "match",
+    "narration": "Compare 'a' and 'a'. Same letter.",
+    "why": "Case never matters here — only whether the two letters are the same once lowercased.",
+    "vars": {
+      "n": 10,
+      "left": 1,
+      "right": 8,
+      "a": "a",
+      "b": "a",
+      "same": true
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        99,
+        101,
+        32,
+        97,
+        32,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "c",
+        "e",
+        " ",
+        "a",
+        " ",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "active",
+        "done"
+      ],
+      "cursor": 1,
+      "slots": [],
+      "probe": null,
+      "link": [
+        1,
+        8
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.a",
+      "vars.b",
+      "vars.left",
+      "vars.right"
+    ]
+  },
+  {
+    "step": 3,
+    "line": 10,
+    "kind": "match",
+    "narration": "Compare 'c' and 'c'. Same letter.",
+    "why": "Case never matters here — only whether the two letters are the same once lowercased.",
+    "vars": {
+      "n": 10,
+      "left": 2,
+      "right": 7,
+      "a": "c",
+      "b": "c",
+      "same": true
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        99,
+        101,
+        32,
+        97,
+        32,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "c",
+        "e",
+        " ",
+        "a",
+        " ",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "active",
+        "idle",
+        "idle",
+        "idle",
+        "idle",
+        "active",
+        "done",
+        "done"
+      ],
+      "cursor": 2,
+      "slots": [],
+      "probe": null,
+      "link": [
+        2,
+        7
+      ],
+      "result": null
+    },
+    "changed": [
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.a",
+      "vars.b",
+      "vars.left",
+      "vars.right"
+    ]
+  },
+  {
+    "step": 4,
+    "line": 8,
+    "kind": "compare",
+    "narration": "' ' isn't a letter or digit — right steps past it.",
+    "why": "The same rule from the other end: right keeps stepping inward until it lands on something worth comparing.",
+    "vars": {
+      "n": 10,
+      "left": 3,
+      "right": 5
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        99,
+        101,
+        32,
+        97,
+        32,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "c",
+        "e",
+        " ",
+        "a",
+        " ",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "idle",
+        "idle",
+        "idle",
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": [
+        3,
+        5
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.cursor",
+      "scene.link",
+      "scene.tiles",
+      "vars.a",
+      "vars.b",
+      "vars.left",
+      "vars.right",
+      "vars.same"
+    ]
+  },
+  {
+    "step": 5,
+    "line": 10,
+    "kind": "compare",
+    "narration": "Compare 'e' and 'a'. Different.",
+    "why": "Case never matters here — only whether the two letters are the same once lowercased.",
+    "vars": {
+      "n": 10,
+      "left": 3,
+      "right": 5,
+      "a": "e",
+      "b": "a",
+      "same": false
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        99,
+        101,
+        32,
+        97,
+        32,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "c",
+        "e",
+        " ",
+        "a",
+        " ",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "active",
+        "idle",
+        "active",
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": [
+        3,
+        5
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.a",
+      "vars.b",
+      "vars.same"
+    ]
+  },
+  {
+    "step": 6,
+    "line": 11,
+    "kind": "return",
+    "narration": "'e' and 'a' disagree. Return false.",
+    "why": "One disagreement anywhere is enough — the two halves can never mirror each other once a single pair breaks.",
+    "vars": {
+      "n": 10,
+      "left": 3,
+      "right": 5,
+      "a": "e",
+      "b": "a",
+      "result": "false"
+    },
+    "scene": {
+      "nums": [
+        114,
+        97,
+        99,
+        101,
+        32,
+        97,
+        32,
+        99,
+        97,
+        114
+      ],
+      "labels": [
+        "r",
+        "a",
+        "c",
+        "e",
+        " ",
+        "a",
+        " ",
+        "c",
+        "a",
+        "r"
+      ],
+      "tiles": [
+        "done",
+        "done",
+        "done",
+        "match",
+        "idle",
+        "match",
+        "done",
+        "done",
+        "done",
+        "done"
+      ],
+      "cursor": 3,
+      "slots": [],
+      "probe": null,
+      "link": [
+        3,
+        5
+      ],
+      "result": null
+    },
+    "changed": [
+      "line",
+      "scene.tiles",
+      "vars.result",
+      "vars.same"
+    ]
+  }
+]

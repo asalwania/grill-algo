@@ -1,0 +1,81 @@
+[
+  {
+    "id": "sample",
+    "label": "The walkthrough",
+    "nums": [
+      65,
+      32,
+      109,
+      97,
+      110,
+      44,
+      32,
+      97,
+      32,
+      112,
+      108,
+      97,
+      110,
+      44,
+      32,
+      97,
+      32,
+      99,
+      97,
+      110,
+      97,
+      108,
+      58,
+      32,
+      80,
+      97,
+      110,
+      97,
+      109,
+      97
+    ],
+    "note": "Spaces, commas and a colon all get skipped — the letters still mirror once they’re gone."
+  },
+  {
+    "id": "fails-fast",
+    "label": "Fails on the first pair",
+    "nums": [
+      97,
+      98,
+      99
+    ],
+    "note": "‘a’ and ‘c’ disagree immediately — there is no punctuation to skip past either."
+  },
+  {
+    "id": "fails-deep",
+    "label": "Fails after several matches",
+    "nums": [
+      114,
+      97,
+      99,
+      101,
+      32,
+      97,
+      32,
+      99,
+      97,
+      114
+    ],
+    "note": "r/r, a/a and c/c all agree — then ‘e’ and ‘a’ finally break it."
+  },
+  {
+    "id": "skip-heavy",
+    "label": "Mostly punctuation",
+    "nums": [
+      46,
+      46,
+      65,
+      46,
+      46,
+      97,
+      46,
+      46
+    ],
+    "note": "Six punctuation characters get skipped from both ends before the one real pair, ‘A’ and ‘a’, ever gets compared."
+  }
+]
